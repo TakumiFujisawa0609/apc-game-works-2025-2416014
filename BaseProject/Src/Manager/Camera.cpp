@@ -32,6 +32,7 @@ void Camera::SetBeforeDraw(void)
 {
 	// クリップ距離を設定する(SetDrawScreenでリセットされる)
 	SetCameraNearFar(VIEW_NEAR, VIEW_FAR);
+
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
@@ -56,22 +57,26 @@ void Camera::SetBeforeDrawFixedPoint(void)
 }
 void Camera::SetBeforeDrawFree(void)
 {
-	auto& ins = InputManager::GetInstance();
-	// 矢印キーでカメラの角度を変える
-	float rotPow = 1.0f * DX_PI_F / 180.0f;
-	if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x += rotPow; }
-	if (ins.IsNew(KEY_INPUT_UP)) { angles_.x -= rotPow; }
-	if (ins.IsNew(KEY_INPUT_RIGHT)) { angles_.y += rotPow; }
-	if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }
+	//auto& ins = InputManager::GetInstance();
+	//// 矢印キーでカメラの角度を変える
+	//float rotPow = 1.0f * DX_PI_F / 180.0f;
+	//if (ins.IsNew(KEY_INPUT_DOWN)) { angles_.x += rotPow; }
+	//if (ins.IsNew(KEY_INPUT_UP)) { angles_.x -= rotPow; }
+	//if (ins.IsNew(KEY_INPUT_RIGHT)) { angles_.y += rotPow; }
+	//if (ins.IsNew(KEY_INPUT_LEFT)) { angles_.y -= rotPow; }
 
-	// WASDでカメラを移動させる
-	float movePow = 3.0f;
-	if (ins.IsNew(KEY_INPUT_W)) { pos_.z += movePow; }
-	if (ins.IsNew(KEY_INPUT_A)) { pos_.x -= movePow; }
-	if (ins.IsNew(KEY_INPUT_S)) { pos_.z -= movePow; }
-	if (ins.IsNew(KEY_INPUT_D)) { pos_.x += movePow; }
-	if (ins.IsNew(KEY_INPUT_Q)) { pos_.y += movePow; }
-	if (ins.IsNew(KEY_INPUT_E)) { pos_.y -= movePow; }
+	//// WASDでカメラを移動させる
+	//float movePow = 3.0f;
+	//if (ins.IsNew(KEY_INPUT_W)) { pos_.z += movePow; }
+	//if (ins.IsNew(KEY_INPUT_A)) { pos_.x -= movePow; }
+	//if (ins.IsNew(KEY_INPUT_S)) { pos_.z -= movePow; }
+	//if (ins.IsNew(KEY_INPUT_D)) { pos_.x += movePow; }
+	//if (ins.IsNew(KEY_INPUT_Q)) { pos_.y += movePow; }
+	//if (ins.IsNew(KEY_INPUT_E)) { pos_.y -= movePow; }
+
+	// カメラの方向移動XYZ
+	MoveXYZDirection();
+
 }
 void Camera::DrawDebug(void)
 {
@@ -103,6 +108,44 @@ void Camera::ChangeMode(MODE mode)
 		break;
 	}
 }
+void Camera::MoveXYZDirection(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// 矢印キーでカメラの角度を変える
+	float rotPow = 1.0f * DX_PI_F / 180.0f;
+	if (ins.IsNew(KEY_INPUT_DOWN))	{ angles_.x += rotPow;}
+	if (ins.IsNew(KEY_INPUT_UP))	{ angles_.x -= rotPow; }
+	if (ins.IsNew(KEY_INPUT_RIGHT)) { angles_.y += rotPow; }
+	if (ins.IsNew(KEY_INPUT_LEFT))	{ angles_.y -= rotPow; }
+
+	// WASDでカメラを移動させる
+	const float movePow = 3.0f;
+	VECTOR dir = AsoUtility::VECTOR_ZERO;
+
+	if (ins.IsNew(KEY_INPUT_W)) { dir = { 0.0f,0.0f,1.0f }; }
+	if (ins.IsNew(KEY_INPUT_A)) { dir = { -1.0f,0.0f,0.0f }; }
+	if (ins.IsNew(KEY_INPUT_S)) { dir = { 0.0f,0.0f,-1.0f }; }
+	if (ins.IsNew(KEY_INPUT_D)) { dir = { 1.0f,0.0f,0.0f }; }
+
+	if (!AsoUtility::EqualsVZero(dir))
+	{
+		// XYZの回転行列
+		// XZ平面移動にする場合は、XZの回転を考慮しないようにする
+		MATRIX mat = MGetIdent();
+		mat = MMult(mat, MGetRotX(angles_.x));
+		mat = MMult(mat, MGetRotY(angles_.y));
+		//mat = MMult(mat, MGetRotZ(angles_.z));
+
+		// 回転行列を使用して、ベクトルを回転させる
+		VECTOR moveDir = VTransform(dir, mat);
+
+		// 方向×スピードで移動量を作って、座標に足して移動
+		pos_ = VAdd(pos_, VScale(moveDir, movePow));
+	}
+}
+
+
 void Camera::Release(void)
 {
 }
@@ -116,3 +159,4 @@ const VECTOR& Camera::GetAngles(void) const
 {
 	return angles_;
 }
+

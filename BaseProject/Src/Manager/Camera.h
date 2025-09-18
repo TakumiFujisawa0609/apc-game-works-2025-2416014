@@ -69,4 +69,5 @@ private:
 	// ƒJƒƒ‰‚ÌŠp“x
 	VECTOR angles_;
 
+	void MoveXYZDirection(void);
 };
