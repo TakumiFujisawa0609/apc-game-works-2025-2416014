@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "../../Application.h"
+#include "../../Manager/InputManager.h"
 #include "../../Common/AnimationController.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
@@ -61,8 +62,8 @@ void Player::Init(void)
 void Player::Update(void)
 {
 
-	// モデルのY軸回転
-	angles_.y += AsoUtility::Deg2RadF(0.7f);
+	//// モデルのY軸回転
+	//angles_.y += AsoUtility::Deg2RadF(0.7f);
 	
 	//// モデルの回転行列
 	//MATRIX mat = MatrixUtility::GetMatrixRotateXYZ(angles_);
@@ -79,14 +80,15 @@ void Player::Update(void)
 	//// 行列の合成(子, 親と指定すると親⇒子の順に適用される)
 	//mat = MMult(localMat, mat);
 
-	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
+	//MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
 
-	// 回転行列をモデルに反映
-	MV1SetRotationMatrix(modelId_, mat);
+	//// 回転行列をモデルに反映
+	//MV1SetRotationMatrix(modelId_, mat);
 
 	// アニメーションの更新
 	animationController_->Update();
 
+	Move();
 }
 
 void Player::Draw(void)
@@ -113,4 +115,92 @@ void Player::Release(void)
 	delete animationController_;
 
 
+}
+
+//void Player::Move(void)
+//{
+//	auto& ins = InputManager::GetInstance();
+//
+//	// WASDでプレイヤーを移動させる
+//	const float movePow = 3.0f;
+//	VECTOR dir = AsoUtility::VECTOR_ZERO;
+//
+//	if (ins.IsNew(KEY_INPUT_W)) { dir = { 0.0f,0.0f,1.0f }; }
+//	if (ins.IsNew(KEY_INPUT_A)) { dir = { -1.0f,0.0f,0.0f }; }
+//	if (ins.IsNew(KEY_INPUT_S)) { dir = { 0.0f,0.0f,-1.0f }; }
+//	if (ins.IsNew(KEY_INPUT_D)) { dir = { 1.0f,0.0f,0.0f }; }
+//
+//	if (!AsoUtility::EqualsVZero(dir))
+//	{
+//		// XYZの回転行列(今回はXZ平面上の移動)
+//		// XZ平面移動にする場合は、XZの回転を考慮しないようにする
+//		MATRIX mat = MGetIdent();
+//		mat = MMult(mat, MGetRotX(angles_.x));
+//		//mat = MMult(mat, MGetRotY(angles_.y));
+//		mat = MMult(mat, MGetRotZ(angles_.z));
+//
+//		// 回転行列を使用して、ベクトルを回転させる
+//		VECTOR moveDir = VTransform(dir, mat);
+//
+//		// 方向×スピードで移動量を作って、座標に足して移動
+//		pos_ = VAdd(pos_, VScale(moveDir, movePow));
+//	}
+//
+//	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
+//
+//	MV1SetPosition(modelId_, pos_);
+//	MV1SetRotationMatrix(modelId_, mat);
+//
+//
+//
+//
+//}
+
+
+void Player::Move(void)
+{
+    auto& ins = InputManager::GetInstance();
+    
+    // WASDでプレイヤーを移動させる
+    const float movePow = 3.0f;
+    VECTOR dir = AsoUtility::VECTOR_ZERO;
+    bool isMove = false;
+    
+    if (ins.IsNew(KEY_INPUT_W)) { dir = VAdd(dir, { 0.0f, 0.0f, 1.0f }); isMove = true; }
+    if (ins.IsNew(KEY_INPUT_A)) { dir = VAdd(dir, { -1.0f, 0.0f, 0.0f }); isMove = true; }
+    if (ins.IsNew(KEY_INPUT_S)) { dir = VAdd(dir, { 0.0f, 0.0f, -1.0f }); isMove = true; }
+    if (ins.IsNew(KEY_INPUT_D)) { dir = VAdd(dir, { 1.0f, 0.0f, 0.0f }); isMove = true; }
+    
+    if (isMove && !AsoUtility::EqualsVZero(dir))
+    {
+        // 方向ベクトルを正規化
+        dir = VNorm(dir);
+        
+        // キャラクターの向きを移動方向に向ける
+        angles_.y = atan2f(dir.x, dir.z);
+        
+        // 移動処理
+        pos_ = VAdd(pos_, VScale(dir, movePow));
+        
+        // アニメーション切り替え（歩行）
+        if (animationController_->GetPlayType() != static_cast<int>(ANIM_TYPE::WALK))
+        {
+            animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+        }
+    }
+    else
+    {
+        // アニメーション切り替え（待機）
+        if (animationController_->GetPlayType() != static_cast<int>(ANIM_TYPE::IDLE))
+        {
+            animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+        }
+    }
+    
+    // ローカル回転と移動方向回転を合成
+    MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
+    
+    // モデルに反映
+    MV1SetPosition(modelId_, pos_);
+    MV1SetRotationMatrix(modelId_, mat);
 }

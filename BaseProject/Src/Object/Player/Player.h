@@ -46,4 +46,7 @@ private:
 
 	// ƒ[ƒJƒ‹Šp“x
 	VECTOR localAngles_;
+
+	// ˆÚ“®ˆ—
+	void Move(void);
 };

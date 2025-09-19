@@ -123,10 +123,10 @@ void Camera::MoveXYZDirection(void)
 	const float movePow = 3.0f;
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 
-	if (ins.IsNew(KEY_INPUT_W)) { dir = { 0.0f,0.0f,1.0f }; }
-	if (ins.IsNew(KEY_INPUT_A)) { dir = { -1.0f,0.0f,0.0f }; }
-	if (ins.IsNew(KEY_INPUT_S)) { dir = { 0.0f,0.0f,-1.0f }; }
-	if (ins.IsNew(KEY_INPUT_D)) { dir = { 1.0f,0.0f,0.0f }; }
+	//if (ins.IsNew(KEY_INPUT_W)) { dir = { 0.0f,0.0f,1.0f }; }
+	//if (ins.IsNew(KEY_INPUT_A)) { dir = { -1.0f,0.0f,0.0f }; }
+	//if (ins.IsNew(KEY_INPUT_S)) { dir = { 0.0f,0.0f,-1.0f }; }
+	//if (ins.IsNew(KEY_INPUT_D)) { dir = { 1.0f,0.0f,0.0f }; }
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
