@@ -1,1 +1,49 @@
-﻿
+﻿  Application.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\InputManager.h(15,37): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Application.cpp(28,2): error C2665: 'DxLib::SetWindowTextW': オーバーロードされた関数ですべての引数の型を変換できませんでした
+  AnimationController.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Common\AnimationController.cpp(22,20): error C2664: 'int DxLib::MV1LoadModel(const TCHAR *)': 引数 1 を 'const _Elem *' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Common\AnimationController.cpp(22,20): error C2664:         with
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Common\AnimationController.cpp(22,20): error C2664:         [
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Common\AnimationController.cpp(22,20): error C2664:             _Elem=char
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Common\AnimationController.cpp(22,20): error C2664:         ]
+  Fader.cpp
+  Quaternion.cpp
+  Vector2.cpp
+  main.cpp
+  Camera.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\InputManager.h(15,37): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\Camera.cpp(81,2): error C2664: 'int DxLib::DrawFormatString(int,int,unsigned int,const TCHAR *,...)': 引数 4 を 'const char [37]' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\Camera.cpp(86,2): error C2664: 'int DxLib::DrawFormatString(int,int,unsigned int,const TCHAR *,...)': 引数 4 を 'const char [37]' から 'const TCHAR *' へ変換できません。
+  InputManager.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\InputManager.h(15,37): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+  MiniCamera.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\MiniCamera.cpp(23,13): error C2664: 'int DxLib::MV1LoadModel(const TCHAR *)': 引数 1 を 'const _Elem *' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\MiniCamera.cpp(23,13): error C2664:         with
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\MiniCamera.cpp(23,13): error C2664:         [
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\MiniCamera.cpp(23,13): error C2664:             _Elem=char
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\MiniCamera.cpp(23,13): error C2664:         ]
+  SceneManager.cpp
+  Grid.cpp
+  Player.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\InputManager.h(15,37): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(22,13): error C2664: 'int DxLib::MV1LoadModel(const TCHAR *)': 引数 1 を 'const _Elem *' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(22,13): error C2664:         with
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(22,13): error C2664:         [
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(22,13): error C2664:             _Elem=char
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(22,13): error C2664:         ]
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(114,2): error C2664: 'int DxLib::DrawFormatString(int,int,unsigned int,const TCHAR *,...)': 引数 4 を 'const char [39]' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(124,2): error C2664: 'int DxLib::DrawFormatString(int,int,unsigned int,const TCHAR *,...)': 引数 4 を 'const char [37]' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(151,17): error C2664: 'int DxLib::MV1LoadModel(const TCHAR *)': 引数 1 を 'const _Elem *' から 'const TCHAR *' へ変換できません。
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(151,17): error C2664:         with
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(151,17): error C2664:         [
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(151,17): error C2664:             _Elem=char
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Player\Player.cpp(151,17): error C2664:         ]
+  Stage.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Object\Stage\Stage.cpp(17,13): error C2664: 'int DxLib::MV1LoadModel(const TCHAR *)': 引数 1 を 'const char [21]' から 'const TCHAR *' へ変換できません。
+  SceneBase.cpp
+  TitleScene.cpp
+D:\ドキュメント\デスクトップ\AGS\AGS\Src\Manager\InputManager.h(15,37): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+  AsoUtility.cpp
+  MatrixUtility.cpp
+  コードを生成中...

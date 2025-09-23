@@ -1,7 +1,24 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|solutionrelative:Src\\Manager\\InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Common\\Fader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|solutionrelative:Src\\Common\\Fader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Object\\Grid.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|solutionrelative:Src\\Object\\Grid.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{99230771-BBD8-4EDC-816D-D9F9705FB21D}|AGS.vcxproj|solutionrelative:Src\\Manager\\Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +26,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Camera.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\Camera.cpp",
+              "RelativeDocumentMoniker": "Src\\Manager\\Camera.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\Camera.cpp",
+              "RelativeToolTip": "Src\\Manager\\Camera.cpp",
+              "ViewState": "AQIAABsAAAAAAAAAAAAAACEAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-23T23:04:59.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Fader.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Common\\Fader.cpp",
+              "RelativeDocumentMoniker": "Src\\Common\\Fader.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Common\\Fader.cpp",
+              "RelativeToolTip": "Src\\Common\\Fader.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-23T23:04:59.045Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InputManager.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\InputManager.cpp",
+              "RelativeDocumentMoniker": "Src\\Manager\\InputManager.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\InputManager.cpp",
+              "RelativeToolTip": "Src\\Manager\\InputManager.cpp",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAB0AAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-23T23:04:58.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Grid.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Object\\Grid.cpp",
+              "RelativeDocumentMoniker": "Src\\Object\\Grid.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Object\\Grid.cpp",
+              "RelativeToolTip": "Src\\Object\\Grid.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-23T23:04:57.34Z",
+              "EditorCaption": ""
             }
           ]
         }
