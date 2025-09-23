@@ -42,8 +42,7 @@
               "RelativeToolTip": "Src\\Manager\\Camera.cpp",
               "ViewState": "AQIAABsAAAAAAAAAAAAAACEAAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-23T23:04:59.518Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-23T23:04:59.518Z"
             },
             {
               "$type": "Document",
@@ -55,8 +54,7 @@
               "RelativeToolTip": "Src\\Common\\Fader.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-23T23:04:59.045Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-23T23:04:59.045Z"
             },
             {
               "$type": "Document",
@@ -66,7 +64,7 @@
               "RelativeDocumentMoniker": "Src\\Manager\\InputManager.cpp",
               "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\AGS\\Src\\Manager\\InputManager.cpp",
               "RelativeToolTip": "Src\\Manager\\InputManager.cpp",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAB0AAAAuAAAA",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAAB0AAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-23T23:04:58.036Z",
               "EditorCaption": ""
@@ -81,8 +79,7 @@
               "RelativeToolTip": "Src\\Object\\Grid.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-23T23:04:57.34Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-23T23:04:57.34Z"
             }
           ]
         }
