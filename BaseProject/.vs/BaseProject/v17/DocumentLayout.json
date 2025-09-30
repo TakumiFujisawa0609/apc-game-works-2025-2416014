@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\2416014\\Desktop\\AGS\\BaseProject\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|C:\\Users\\2416014\\Desktop\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|solutionrelative:Src\\Object\\Actor\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Users\\2416014\\Desktop\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp",
+              "RelativeDocumentMoniker": "Src\\Object\\Actor\\Player.cpp",
+              "ToolTip": "C:\\Users\\2416014\\Desktop\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp",
+              "RelativeToolTip": "Src\\Object\\Actor\\Player.cpp",
+              "ViewState": "AgIAAMkAAAAAAAAAAAAAAF4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-30T03:49:11.31Z",
+              "EditorCaption": ""
             }
           ]
         },
