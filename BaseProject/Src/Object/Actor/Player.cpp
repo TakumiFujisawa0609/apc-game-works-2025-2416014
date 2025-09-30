@@ -94,7 +94,12 @@ void Player::InitAnimation(void)
 		static_cast<int>(ANIM_TYPE::WALK), 30.0f, Application::PATH_MODEL + "Player/Walk.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::RUN), 30.0f, Application::PATH_MODEL + "Player/Run.mv1");
-
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::ATTACK), 30.0f, Application::PATH_MODEL + "Player/Slash.mv1");
+	// 未追加
+	//animationController_->Add(
+	//	static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Player/Damage.mv1");
+	
 	// 初期アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 
@@ -138,9 +143,6 @@ void Player::SyncDice(void)
 	// 回転行列をモデルに反映
 	MV1SetRotationMatrix(diceModelId_, mat);
 
-
-
-
 	// サイコロのローカル座標を親の回転行列で回転
 	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
 	
@@ -148,7 +150,45 @@ void Player::SyncDice(void)
 	dicePos_ = VAdd(localRotPos_, pos_);
 	MV1SetPosition(diceModelId_, dicePos_);
 
+}
+
+void Player::playerAttack(void)
+{
+
+	auto& ins = InputManager::GetInstance();
 	
+	// 攻撃しているか判定
+	bool isAttack;
+	isAttack = false;
+
+	// ゲームパッドが接続されている数で処理を分ける
+	if (GetJoypadNum() == 0)
+	{
+		// キーボード操作
+		// アタックキー
+		isAttack = ins.IsNew(KEY_INPUT_K);
+	}
+	else
+	{
+		// ゲームパッド操作
+		// 接続されているゲームパッド１の情報を取得
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		isAttack = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+			InputManager::JOYPAD_BTN::RIGHT);
+	}
+
+	if (isAttack)
+	{
+		// アニメーションを攻撃にする
+		animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK),false);
+	}
+
+}
+
+void Player::playerDamage(void)
+{
 
 }
 
@@ -156,9 +196,23 @@ void Player::Move(void)
 {
 	auto& ins = InputManager::GetInstance();
 
+	// 攻撃中かチェック
+	int currentAnim = animationController_->GetPlayType();
+	bool isAttacking = (currentAnim == static_cast<int>(ANIM_TYPE::ATTACK));
+
+	// 攻撃アニメーションが終わったらIDLEに戻す
+	if (isAttacking)
+	{
+		if (animationController_->IsEnd())
+		{
+			animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+		}
+		return;  // 攻撃中は移動処理をスキップ
+	}	
+
 	// カメラの角度を取得
 	VECTOR camAngles = 
-		SceneManager::GetInstance().GetCamera()->GetAngles();
+	SceneManager::GetInstance().GetCamera()->GetAngles();
 	
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 	// ダッシュ判定
@@ -228,5 +282,7 @@ void Player::Move(void)
 		animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 
 	}
+
+	playerAttack();
 
 }

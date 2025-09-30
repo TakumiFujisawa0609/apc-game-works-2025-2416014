@@ -18,6 +18,8 @@ public:
 		IDLE,
 		WALK,
 		RUN,
+		ATTACK,
+		DAMAGE,
 		MAX,
 	};
 
@@ -69,5 +71,7 @@ private:
 	void InitDice(void);
 	void SyncDice(void);
 
+	void playerAttack(void);
+	void playerDamage(void);
 
 };

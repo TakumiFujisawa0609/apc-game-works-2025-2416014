@@ -114,7 +114,6 @@ void Camera::SetBeforeDrawFollow(void)
 	VECTOR followPos = follow_->GetPos();
 	VECTOR targetLocalRotPos = VTransform(FOLLOW_TARGET_LOCAL_POS, mat);
 	targetPos_ = followPos;
-
 	
 	// カメラの移動
 	// 相対座標を回転させて、回転後の相対座標を取得する
