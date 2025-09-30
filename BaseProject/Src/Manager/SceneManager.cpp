@@ -2,6 +2,10 @@
 #include <DxLib.h>
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
+#include "../Scene/Tutorial.h"
+#include "../Scene/GameScene.h"
+#include "../Scene/GameClear.h"
+#include "../Scene/GameOver.h"
 #include "Camera.h"
 #include "MiniCamera.h"
 #include "SceneManager.h"
@@ -38,6 +42,7 @@ void SceneManager::Init(void)
 
 	scene_ = new TitleScene();
 	scene_->Init();
+
 
 	miniCamera_ = new MiniCamera(camera_);
 	miniCamera_->Init();
@@ -116,35 +121,60 @@ void SceneManager::Update(void)
 	
 }
 
+//void SceneManager::Draw(void)
+//{
+//	
+//	miniCamera_->DrawScreen();
+//
+//	// 描画先グラフィック領域の指定
+//	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
+//	SetDrawScreen(DX_SCREEN_BACK);
+//
+//	// 画面を初期化
+//	ClearDrawScreen();
+//
+//	// カメラ設定
+//	camera_->SetBeforeDraw();
+//
+//	// 各シーンの描画処理
+//	scene_->Draw();
+//
+//	// カメラ描画
+//	camera_->DrawDebug();
+//
+//	// ミニカメラ
+//	miniCamera_->Draw();
+//
+//	// 暗転・明転
+//	fader_->Draw();
+//
+//}
+
+// SceneManager.cpp の Draw() 関数を修正
 void SceneManager::Draw(void)
 {
-	
 	miniCamera_->DrawScreen();
 
-	// 描画先グラフィック領域の指定
-	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
 	SetDrawScreen(DX_SCREEN_BACK);
-
-	// 画面を初期化
 	ClearDrawScreen();
 
-	// カメラ設定
-	camera_->SetBeforeDraw();
+	// タイトルシーン以外でカメラ設定
+	if (sceneId_ != SCENE_ID::TITLE)
+	{
+		camera_->SetBeforeDraw();
+	}
 
-	// 各シーンの描画処理
 	scene_->Draw();
 
-	// カメラ描画
-	camera_->DrawDebug();
+	// カメラデバッグ描画（タイトル以外）
+	if (sceneId_ != SCENE_ID::TITLE)
+	{
+		camera_->DrawDebug();
+	}
 
-	// ミニカメラ
 	miniCamera_->Draw();
-
-	// 暗転・明転
 	fader_->Draw();
-
 }
-
 void SceneManager::Destroy(void)
 {
 
@@ -238,9 +268,20 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	case SCENE_ID::TITLE:
 		scene_ = new TitleScene();
 		break;
+	case SCENE_ID::TUTORIAL:
+		scene_ = new Tutorial();
+		break;
 	case SCENE_ID::GAME:
+		scene_ = new GameScene();
+		break;
+	case SCENE_ID::GAMEOVER:
+		scene_ = new GameOver();
+		break;
+	case SCENE_ID::GAMECLEAR:
+		scene_ = new GameClear();
 		break;
 	}
+
 
 	// 各シーンの初期化
 	scene_->Init();

@@ -1,21 +1,13 @@
 #pragma once
 #include "SceneBase.h"
-class Grid;
-class Stage;
-class Player;
-class Enemy;
-
 
 class TitleScene : public SceneBase
 {
-
 public:
-
 	// コンストラクタ
 	TitleScene(void);
-
 	// デストラクタ
-	~TitleScene(void) override;
+	~TitleScene(void);
 
 	void Init(void) override;
 	void Update(void) override;
@@ -23,16 +15,6 @@ public:
 	void Release(void) override;
 
 private:
-
-	// グリッド線
-	Grid* grid_;
-
-	// ステージ
-	Stage* stage_;
-
-	// プレイヤー
-	Player* player_;
-
-	// エネミー
-	Enemy* enemy_;
+	// ゲームオーバー画像
+	int imgTitle_;
 };

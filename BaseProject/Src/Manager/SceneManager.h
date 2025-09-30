@@ -22,8 +22,12 @@ public:
 	enum class SCENE_ID
 	{
 		NONE,
+		TUTORIAL,
 		TITLE,
-		GAME
+		GAME,
+		GAMECLEAR,
+		GAMEOVER,
+		MAX
 	};
 	
 	// インスタンスの生成
