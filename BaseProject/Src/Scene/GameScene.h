@@ -35,4 +35,14 @@ private:
 
 	// エネミー
 	Enemy* enemy_;
+
+	// 衝突判定
+	void Collision(void);
+
+// エネミーとプレイヤーの衝突
+	void CollisionEnemy(void);
+
+	// 武器とエネミーの衝突
+	void CollisionWeapon(void);
+
 };

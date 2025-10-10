@@ -20,25 +20,90 @@ void Player::Update(void)
 {
 	ActorBase::Update();
 
+	switch (state_)
+	{
+	case Player::STATE::IDLE:
+		UpdateIdle();
+		break;
+	case Player::STATE::WALK:
+		UpdateWalk();
+		break;
+	case Player::STATE::RUN:
+		UpdateRun();
+		break;
+	case Player::STATE::DODGE:
+		UpdateDodge();
+		break;
+	case Player::STATE::ATTACK:
+		UpdateAttack();
+		break;
+	case Player::STATE::DEAD:
+		UpdateDead();
+		break;
+	case Player::STATE::END:
+		UpdateEnd();
+		break;
+	case Player::STATE::VICTORY:
+		UpdateVictory();
+		break;
+
+	}
+
+	// 武器モデルの位置、角度同期
+	SyncSword();
+
 	// サイコロモデルのZ軸回転
-	diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
-	SyncDice();
+	//diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
+	//SyncDice();
 }
 
 void Player::Draw(void)
 {
 	ActorBase::Draw();
 
-	MV1DrawModel(diceModelId_);
+	switch (state_)
+	{
+	case Player::STATE::IDLE:
+		DrawIdle();
+		break;
+	case Player::STATE::WALK:
+		DrawWalk();
+		break;
+	case Player::STATE::RUN:
+		DrawRun();
+		break;
+	case Player::STATE::DODGE:
+		DrawDodge();
+		break;
+	case Player::STATE::ATTACK:
+		DrawAttack();
+		break;
+	case Player::STATE::DEAD:
+		DrawDead();
+		break;
+	case Player::STATE::END:
+		DrawEnd();
+		break;
+	case Player::STATE::VICTORY:
+		DrawVictory();
+		break;
 
-	// デバッグ表示
-	DrawFormatString(
-		0, 100, 0xffffff,
-		"サイコロ角度　 ：(% .1f, % .1f, % .1f)",
-		AsoUtility::Rad2DegF(diceAngles_.x),
-		AsoUtility::Rad2DegF(diceAngles_.y),
-		AsoUtility::Rad2DegF(diceAngles_.z)
-		);
+	}
+
+	//// サイコロモデルの描画
+	//MV1DrawModel(diceModelId_);
+
+	//// デバッグ表示
+	//DrawFormatString(
+	//	0, 100, 0xffffff,
+	//	"サイコロ角度　 ：(% .1f, % .1f, % .1f)",
+	//	AsoUtility::Rad2DegF(diceAngles_.x),
+	//	AsoUtility::Rad2DegF(diceAngles_.y),
+	//	AsoUtility::Rad2DegF(diceAngles_.z)
+	//	);
+	
+	// 武器モデルの描画
+	MV1DrawModel(swordModelId_);
 
 	DrawFormatString(
 		0, 50, 0xffffff,
@@ -48,21 +113,70 @@ void Player::Draw(void)
 		AsoUtility::Rad2DegF(angles_.z)
 	);
 
+	DrawFormatString(
+		0, 70, 0xffffff,
+		"キャラ座標　 ：(% .1f, % .1f, % .1f)",
+		pos_.x,
+		pos_.y,
+		pos_.z
+	);
+
+	DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+
 }
 
 void Player::Release(void)
 {
 	ActorBase::Release();
 
-	// モデルの解放
-	MV1DeleteModel(diceModelId_);
+	//// モデルの解放
+	//MV1DeleteModel(diceModelId_);
+	MV1DeleteModel(swordModelId_);
 
+}
+
+void Player::ChangeState(STATE state)
+{
+	state_ = state;
+
+	switch (state_)
+	{
+	case STATE::IDLE:
+		ChangeIdle();
+		break;
+	case STATE::WALK:
+		ChangeWalk();
+		break;
+	case STATE::RUN:
+		ChangeRun();
+		break;
+	case STATE::DODGE:
+		ChangeDodge();
+		break;
+	case STATE::ATTACK:
+		ChangeAttack();
+		break;
+	case STATE::DEAD:
+		ChangeDead();
+		break;
+	case STATE::END:
+		ChangeEnd();
+		break;
+	case STATE::VICTORY:
+		ChangeVictory();
+		break;
+	}
+}
+
+float Player::GetcollisionRadius(void)
+{
+	return collisionRadius_;
 }
 
 void Player::InitLoad(void)
 {
 	// モデル読み込み
-	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
+	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Hero.mv1").c_str());
 
 }
 
@@ -107,50 +221,115 @@ void Player::InitAnimation(void)
 
 void Player::InitPost(void)
 {
+
+	// 衝突判定用半径
+	collisionRadius_ = PLAYER_RADIUS;
+
 	// ここに個別の初期化処理を追加できる
-	InitDice();
+	//InitDice();
+	InitSword();
+
+	// 状態初期化
+	ChangeState(STATE::IDLE);
 
 }
 
-void Player::InitDice(void)
+void Player::InitSword(void)
 {
-	// サイコロモデル読み込み
-	diceModelId_ = MV1LoadModel((Application::PATH_MODEL + "Dice.mv1").c_str());
+	// 武器モデル読み込み
+	swordModelId_ = MV1LoadModel((Application::PATH_MODEL + "Sword.mv1").c_str());
 
-	diceLocalPos_ = { 200.0f,100.0f,0.0f };
-	MV1SetPosition(diceModelId_, diceLocalPos_);
+	//swordPos_ = MV1GetFramePosition(modelId_, 44);
 
-	diceAngles_ = { 0.0f, 0.0f, 0.0f };
-	diceLocalAngles_ = { 0.0f,AsoUtility::Deg2RadF(0.0f), 0.0f };
+	swordLocalPos_ = VGet(10.0f, -10.0f, 0.0f);
+	MV1SetPosition(swordModelId_, swordLocalPos_);
 
-	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
+	swordAngles_ = { 0.0f, 50.0f, 0.0f };
+	swordLocalAngles_ = VGet(
+		AsoUtility::Deg2RadF(-20.0f),
+		AsoUtility::Deg2RadF(120.0f),
+		AsoUtility::Deg2RadF(0.0f)
+		);
 
-	MV1SetRotationMatrix(diceModelId_, diceMat);
+	// 武器の大きさ設定
+	swordScales_ = { 0.2f, 0.2f, 0.2f };
 
-	diceScales_ = { 0.1f, 0.1f, 0.1f };
-	MV1SetScale(diceModelId_, diceScales_);
-
-}
-
-void Player::SyncDice(void)
-{
-	// サイコロモデルの回転行列
-	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
-	// 親の回転行列
-	MATRIX parentMat = MatrixUtility::GetMatrixRotateXYZ(angles_);
-	// 親子の回転行列を合成(子:サイコロ, 親:プレイヤーと指定すると親⇒子の順に適用される)
-	MATRIX mat = MMult(diceMat, parentMat);
-	// 回転行列をモデルに反映
-	MV1SetRotationMatrix(diceModelId_, mat);
-
-	// サイコロのローカル座標を親の回転行列で回転
-	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
+	//MATRIX swordMat = MatrixUtility::Multiplication(swordLocalAngles_, swordAngles_);
+	//MV1SetRotationMatrix(swordModelId_, swordMat);
 	
-	// サイコロのワールド座標
-	dicePos_ = VAdd(localRotPos_, pos_);
-	MV1SetPosition(diceModelId_, dicePos_);
-
 }
+
+void Player::SyncSword(void)
+{
+
+	// 剣(子)のローカル回転行列
+	MATRIX swordMat = MatrixUtility::GetMatrixRotateXYZ(swordLocalAngles_);
+	// 剣のローカル位置の変換行列
+	MATRIX transMatPos = MGetTranslate(swordLocalPos_);
+	// 剣のスケール変換行列
+	MATRIX scaleMat = MGetScale(swordScales_);
+
+
+	// 手(親)の回転行列
+	// プレイヤーの手の回転行列
+	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 44);
+	
+
+	// 回転行列の合成
+	// スケールの行列を剣と合成
+	MATRIX localMat = MMult(scaleMat,swordMat);
+	// 武器のローカル位置の変換行列を合成
+	localMat = MMult(localMat, transMatPos);
+	// 親子の回転行列を合成(子:武器, 親:手と指定すると親⇒子の順に適用される)
+	MATRIX mat = MMult(localMat, handMat);
+	
+
+	// 回転行列をモデルに反映
+	MV1SetMatrix(swordModelId_, mat);
+	// 剣の位置を保存（当たり判定用）
+	swordPos_ = MV1GetPosition(swordModelId_);
+	
+}
+
+//void Player::InitDice(void)
+//{
+//	// サイコロモデル読み込み
+//	diceModelId_ = MV1LoadModel((Application::PATH_MODEL + "Sword.mv1").c_str());
+//
+//	diceLocalPos_ = { 200.0f,100.0f,0.0f };
+//	MV1SetPosition(diceModelId_, diceLocalPos_);
+//
+//	diceAngles_ = { 0.0f, 0.0f, 0.0f };
+//	diceLocalAngles_ = { 0.0f,AsoUtility::Deg2RadF(0.0f), 0.0f };
+//
+//	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
+//
+//	MV1SetRotationMatrix(diceModelId_, diceMat);
+//
+//	diceScales_ = { 0.5f, 0.5f, 0.5f };
+//	MV1SetScale(diceModelId_, diceScales_);
+//
+//}
+
+//void Player::SyncDice(void)
+//{
+//	// サイコロモデルの回転行列
+//	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
+//	// 親の回転行列
+//	MATRIX parentMat = MatrixUtility::GetMatrixRotateXYZ(angles_);
+//	// 親子の回転行列を合成(子:サイコロ, 親:プレイヤーと指定すると親⇒子の順に適用される)
+//	MATRIX mat = MMult(diceMat, parentMat);
+//	// 回転行列をモデルに反映
+//	MV1SetRotationMatrix(diceModelId_, mat);
+//
+//	// サイコロのローカル座標を親の回転行列で回転
+//	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
+//	
+//	// サイコロのワールド座標
+//	dicePos_ = VAdd(localRotPos_, pos_);
+//	MV1SetPosition(diceModelId_, dicePos_);
+//
+//}
 
 void Player::playerAttack(void)
 {
@@ -181,19 +360,194 @@ void Player::playerAttack(void)
 
 	if (isAttack)
 	{
-		// アニメーションを攻撃にする
-		animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK),false);
+		ChangeAttack();
 	}
 
 }
 
-void Player::playerDamage(void)
+//void Player::playerDamage(void)
+//{
+//
+//}
+
+void Player::ChangeIdle(void)
 {
+
+	// 歩くアニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
 
 }
 
+void Player::ChangeWalk(void)
+{
+
+	// 歩くアニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
+
+}
+
+void Player::ChangeRun(void)
+{
+	// 走るアニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::RUN), true);
+}
+
+void Player::ChangeDodge(void)
+{
+}
+
+void Player::ChangeAttack(void)
+{
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
+}
+
+void Player::ChangeDead(void)
+{
+}
+
+void Player::ChangeEnd(void)
+{
+}
+
+void Player::ChangeVictory(void)
+{
+}
+
+void Player::UpdateIdle(void)
+{
+}
+
+void Player::UpdateWalk(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateRun(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateDodge(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateAttack(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateDead(void)
+{
+}
+
+void Player::UpdateEnd(void)
+{
+}
+
+void Player::UpdateVictory(void)
+{
+}
+
+void Player::DrawIdle(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawWalk(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawRun(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawDodge(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawAttack(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawDead(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawEnd(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawVictory(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+// プレイヤージャンプ処理
+//void Player::playerJump(void)
+//{
+//	auto& ins = InputManager::GetInstance();
+//
+//	// 攻撃しているか判定
+//	bool isJump;
+//	isJump = false;
+//
+//	// ゲームパッドが接続されている数で処理を分ける
+//	if (GetJoypadNum() == 0)
+//	{
+//		// キーボード操作
+//		// アタックキー
+//		isJump = ins.IsNew(KEY_INPUT_SPACE);
+//	}
+//	else
+//	{
+//		// ゲームパッド操作
+//		// 接続されているゲームパッド１の情報を取得
+//		InputManager::JOYPAD_IN_STATE padState =
+//			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+//
+//		isJump = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+//			InputManager::JOYPAD_BTN::RIGHT);
+//	}
+//
+//	if (isJump)
+//	{
+//		// アニメーションを攻撃にする
+//		animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP), false);
+//	}
+//
+//}
+
 void Player::Move(void)
 {
+
 	auto& ins = InputManager::GetInstance();
 
 	// 攻撃中かチェック
@@ -203,10 +557,7 @@ void Player::Move(void)
 	// 攻撃アニメーションが終わったらIDLEに戻す
 	if (isAttacking)
 	{
-		if (animationController_->IsEnd())
-		{
-			animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
-		}
+		UpdateAttack();
 		return;  // 攻撃中は移動処理をスキップ
 	}	
 
@@ -267,20 +618,19 @@ void Player::Move(void)
 		if (isDash_)
 		{
 			// アニメーションを走りにする
-			animationController_->Play(static_cast<int>(ANIM_TYPE::RUN));
+			ChangeRun();
 		}
 		else
 		{
 			// アニメーションを歩きにする
-			animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
+			ChangeWalk();
 		}
 	}
 	else
 	{
 
 		// アニメーションをIDLEにする
-		animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
-
+		ChangeIdle();
 	}
 
 	playerAttack();

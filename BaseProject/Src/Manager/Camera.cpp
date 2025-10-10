@@ -236,6 +236,10 @@ void Camera::MoveXYZDirection(void)
 
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
 
+	// 上下の傾きが35度以上、-35度以下にならないように制限
+	if (angles_.x > AsoUtility::Deg2RadF(35.0f)) angles_.x = AsoUtility::Deg2RadF(35.0f);
+	if (angles_.x < AsoUtility::Deg2RadF(-25.0f)) angles_.x = AsoUtility::Deg2RadF(-25.0f);
+
 	// 矢印キーでカメラの角度を変える
 	if (ins.IsNew(KEY_INPUT_DOWN))	{ angles_.x += rotPow; }
 	if (ins.IsNew(KEY_INPUT_UP))	{ angles_.x -= rotPow; }
@@ -253,6 +257,10 @@ void Camera::MoveXYZDirectionPad(void)
 	// 接続されているゲームパッド１の情報を取得
 	InputManager::JOYPAD_IN_STATE padState =
 		ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+	// 上下の傾きが35度以上、-35度以下にならないように制限
+	if (angles_.x > AsoUtility::Deg2RadF(35.0f)) angles_.x = AsoUtility::Deg2RadF(35.0f);
+	if (angles_.x < AsoUtility::Deg2RadF(-35.0f)) angles_.x = AsoUtility::Deg2RadF(-35.0f);
 
 	// アナログキーの入力値から方向を取得
 	VECTOR dir = ins.GetDirectionXZAKey(padState.AKeyRX, padState.AKeyRY);

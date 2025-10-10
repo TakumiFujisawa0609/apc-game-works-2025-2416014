@@ -46,7 +46,7 @@ void ActorBase::Update(void)
 
 void ActorBase::Draw(void)
 {
-	MV1DrawModel(modelId_);
+	isAlive_ ? MV1DrawModel(modelId_) : 0;
 }
 
 void ActorBase::Release(void)
@@ -58,6 +58,11 @@ void ActorBase::Release(void)
 const VECTOR& ActorBase::GetPos(void) const
 {
 	return pos_;
+}
+
+void ActorBase::SetPos(const VECTOR& pos)
+{
+	pos_ = pos;
 }
 
 void ActorBase::InitTransformPost(void)
