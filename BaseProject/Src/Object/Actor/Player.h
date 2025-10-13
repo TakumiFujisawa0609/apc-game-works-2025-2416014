@@ -40,6 +40,7 @@ public:
 		VICTORY,
 	};
 
+<<<<<<< HEAD
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 3.0f;
 
@@ -48,6 +49,10 @@ public:
 
 	// HP
 	static constexpr int PLAYER_HP = 3;
+=======
+	// 衝突判定用半径
+	static constexpr float PLAYER_RADIUS = 30.0f;
+>>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 	// コンストラクタ
 	Player(void);
@@ -63,6 +68,7 @@ public:
 	// 状態遷移
 	void ChangeState(STATE state);
 
+<<<<<<< HEAD
 	// 衝突用半径
 	float GetcollisionRadius(void) const;
 
@@ -75,6 +81,10 @@ public:
 	// 座標を取得・設定
 	const VECTOR& GetAttackPos(void) const;
 	void SetAttackPos(const VECTOR& pos);
+=======
+	//衝突用半径
+	float GetcollisionRadius(void);
+>>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 protected:
 
@@ -104,6 +114,7 @@ private:
 	// 状態
 	STATE state_;
 
+<<<<<<< HEAD
 	// 回避変数
 	// 回避方向
 	VECTOR dodgeDir_; 
@@ -151,6 +162,37 @@ private:
 	//void playerJump(void);
 	void PlayerDodge(void);
 
+=======
+	// 衝突判定用半径
+	float collisionRadius_;
+
+	//// サイコロモデル情報
+	//int diceModelId_;
+	//VECTOR dicePos_;
+	//VECTOR diceAngles_;
+	//VECTOR diceScales_;
+	//VECTOR diceLocalPos_;
+	//VECTOR diceLocalAngles_;
+
+	// 武器モデル情報
+	int swordModelId_;
+	VECTOR swordPos_;
+	VECTOR swordAngles_;
+	VECTOR swordScales_;
+	VECTOR swordLocalPos_;
+	VECTOR swordLocalAngles_;
+
+	void InitSword(void);
+	void SyncSword(void);
+
+	//void InitDice(void);
+	//void SyncDice(void);
+
+	void playerAttack(void);
+	//void playerDamage(void);
+	//void playerJump(void);
+
+>>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// 状態遷移
 	void ChangeIdle(void);
 	void ChangeWalk(void);
