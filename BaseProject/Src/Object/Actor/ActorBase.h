@@ -46,12 +46,9 @@ protected:
 
 	VECTOR preInputDir_;
 
-<<<<<<< HEAD
 	// HP
 	int hp_;
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// ¶‘¶”»’èƒtƒ‰ƒO
 	bool isAlive_;
 

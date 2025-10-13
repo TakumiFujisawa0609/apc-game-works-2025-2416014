@@ -89,24 +89,6 @@ void Player::Draw(void)
 		break;
 
 	}
-<<<<<<< HEAD
-=======
-
-	//// サイコロモデルの描画
-	//MV1DrawModel(diceModelId_);
-
-	//// デバッグ表示
-	//DrawFormatString(
-	//	0, 100, 0xffffff,
-	//	"サイコロ角度　 ：(% .1f, % .1f, % .1f)",
-	//	AsoUtility::Rad2DegF(diceAngles_.x),
-	//	AsoUtility::Rad2DegF(diceAngles_.y),
-	//	AsoUtility::Rad2DegF(diceAngles_.z)
-	//	);
-	
-	// 武器モデルの描画
-	MV1DrawModel(swordModelId_);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 	//// サイコロモデルの描画
 	//MV1DrawModel(diceModelId_);
@@ -160,16 +142,6 @@ void Player::Draw(void)
 
 	DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 
-	DrawFormatString(
-		0, 70, 0xffffff,
-		"キャラ座標　 ：(% .1f, % .1f, % .1f)",
-		pos_.x,
-		pos_.y,
-		pos_.z
-	);
-
-	DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
-
 }
 
 void Player::Release(void)
@@ -215,17 +187,12 @@ void Player::ChangeState(STATE state)
 	}
 }
 
-<<<<<<< HEAD
 
 float Player::GetcollisionRadius(void) const
-=======
-float Player::GetcollisionRadius(void)
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 {
 	return collisionRadius_;
 }
 
-<<<<<<< HEAD
 int Player::GetHp(void) const
 {
 	return hp_;
@@ -246,8 +213,6 @@ void Player::SetAttackPos(const VECTOR& attackPos)
 	attackPos_ = attackPos;
 }
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 void Player::InitLoad(void)
 {
 	// モデル読み込み
@@ -302,7 +267,6 @@ void Player::InitPost(void)
 	// 衝突判定用半径
 	collisionRadius_ = PLAYER_RADIUS;
 
-<<<<<<< HEAD
 	// 持ちHP
 	hp_ = 10;
 
@@ -313,8 +277,6 @@ void Player::InitPost(void)
 	// 攻撃判定用半径
 	attackCollisionRadius_ = ATTACK_RADIUS;
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// ここに個別の初期化処理を追加できる
 	//InitDice();
 	InitSword();
@@ -329,11 +291,7 @@ void Player::InitSword(void)
 	// 武器モデル読み込み
 	swordModelId_ = MV1LoadModel((Application::PATH_MODEL + "Sword.mv1").c_str());
 
-<<<<<<< HEAD
 	swordPos_ = MV1GetFramePosition(modelId_, 44);
-=======
-	//swordPos_ = MV1GetFramePosition(modelId_, 44);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 	swordLocalPos_ = VGet(10.0f, -10.0f, 0.0f);
 	MV1SetPosition(swordModelId_, swordLocalPos_);
@@ -348,7 +306,6 @@ void Player::InitSword(void)
 	// 武器の大きさ設定
 	swordScales_ = { 0.2f, 0.2f, 0.2f };
 
-<<<<<<< HEAD
 	// 攻撃判定用デバッグ
 	attackPos_ = MV1GetFramePosition(modelId_, 44);
 	attackLocalPos_ = VGet(0.0f, -300.0f, 0.0f);  
@@ -388,45 +345,6 @@ void Player::SyncSword(void)
 	attackPos_ = VTransform(attackLocalPos_, mat);
 }
 
-=======
-	//MATRIX swordMat = MatrixUtility::Multiplication(swordLocalAngles_, swordAngles_);
-	//MV1SetRotationMatrix(swordModelId_, swordMat);
-	
-}
-
-void Player::SyncSword(void)
-{
-
-	// 剣(子)のローカル回転行列
-	MATRIX swordMat = MatrixUtility::GetMatrixRotateXYZ(swordLocalAngles_);
-	// 剣のローカル位置の変換行列
-	MATRIX transMatPos = MGetTranslate(swordLocalPos_);
-	// 剣のスケール変換行列
-	MATRIX scaleMat = MGetScale(swordScales_);
-
-
-	// 手(親)の回転行列
-	// プレイヤーの手の回転行列
-	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 44);
-	
-
-	// 回転行列の合成
-	// スケールの行列を剣と合成
-	MATRIX localMat = MMult(scaleMat,swordMat);
-	// 武器のローカル位置の変換行列を合成
-	localMat = MMult(localMat, transMatPos);
-	// 親子の回転行列を合成(子:武器, 親:手と指定すると親⇒子の順に適用される)
-	MATRIX mat = MMult(localMat, handMat);
-	
-
-	// 回転行列をモデルに反映
-	MV1SetMatrix(swordModelId_, mat);
-	// 剣の位置を保存（当たり判定用）
-	swordPos_ = MV1GetPosition(swordModelId_);
-	
-}
-
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 //void Player::InitDice(void)
 //{
 //	// サイコロモデル読み込み
@@ -467,11 +385,7 @@ void Player::SyncSword(void)
 //
 //}
 
-<<<<<<< HEAD
 void Player::PlayerAttack(void)
-=======
-void Player::playerAttack(void)
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 {
 
 	auto& ins = InputManager::GetInstance();
@@ -505,16 +419,7 @@ void Player::playerAttack(void)
 
 }
 
-<<<<<<< HEAD
 void Player::PlayerDodge(void)
-=======
-//void Player::playerDamage(void)
-//{
-//
-//}
-
-void Player::ChangeIdle(void)
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 {
 	auto& ins = InputManager::GetInstance();
 
@@ -557,9 +462,6 @@ void Player::ChangeIdle(void)
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
 
-	// 歩くアニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
-
 }
 
 void Player::ChangeWalk(void)
@@ -578,7 +480,6 @@ void Player::ChangeRun(void)
 
 void Player::ChangeDodge(void)
 {
-<<<<<<< HEAD
 	// 回避アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DODGE),false);
 
@@ -597,8 +498,6 @@ void Player::ChangeDodge(void)
 	// 回避のスピードと時間をセット
 	dodgeSpeed_ = 15.0f;
 	dodgeTimer_ = 0.0f;
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 }
 
 void Player::ChangeAttack(void)
@@ -641,15 +540,12 @@ void Player::UpdateRun(void)
 
 void Player::UpdateDodge(void)
 {
-<<<<<<< HEAD
 	// 回避移動処理
 	dodgeSpeed_ *= 0.96f;
 
 	// 移動距離を加算
 	pos_ = VAdd(pos_, VScale(dodgeDir_, dodgeSpeed_));
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	if (animationController_->IsEnd())
 	{
 		ChangeState(STATE::IDLE);

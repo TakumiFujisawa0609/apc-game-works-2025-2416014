@@ -19,14 +19,11 @@ void Enemy::Update(void)
 {
 	ActorBase::Update();
 
-<<<<<<< HEAD
 	// 索敵
 	Search();
 	// 攻撃
 	Attack();
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	switch (state_)
 	{
 	case STATE::IDLE:
@@ -48,10 +45,6 @@ void Enemy::Update(void)
 		UpdateEnd();
 		break;
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 }
 
 void Enemy::Draw(void)
@@ -82,7 +75,6 @@ void Enemy::Draw(void)
 			DrawEnd();
 			break;
 		}
-<<<<<<< HEAD
 	}
 	//	if (isNotice_)
 	//	{
@@ -154,28 +146,6 @@ void Enemy::Draw(void)
 
 	//	DrawLine3D(p1, p2, GetColor(255, 0, 0));
 	//}
-=======
-
-	}
-	
-	DrawFormatString(
-		0, 90, 0xffffff,
-		"エネミー角度　 ：(% .1f, % .1f, % .1f)",
-		AsoUtility::Rad2DegF(angles_.x),
-		AsoUtility::Rad2DegF(angles_.y),
-		AsoUtility::Rad2DegF(angles_.z)
-	);
-
-	DrawFormatString(
-		0, 110, 0xffffff,
-		"エネミー座標　 ：(% .1f, % .1f, % .1f)",
-		pos_.x,
-		pos_.y,
-		pos_.z
-	);
-
-	DrawSphere3D(VGet(pos_.x,pos_.y + 100,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 }
 
@@ -224,14 +194,11 @@ void Enemy::SetAlive(bool isAlive)
 {
 	isAlive_ = isAlive;
 }
-<<<<<<< HEAD
 
 int Enemy::GetHp(void)
 {
 	return hp_;
 }
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 void Enemy::InitLoad(void)
 {
@@ -256,11 +223,7 @@ void Enemy::InitTransform(void)
 	speed_ = SPEED_MOVE;
 
 	// 移動・攻撃判定用フラグ
-<<<<<<< HEAD
 	isMove_ = false;
-=======
-	isMove_ = true;
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	isAlive_ = true;
 	isAttack_ = false;
 }
@@ -269,22 +232,10 @@ void Enemy::InitAnimation(void)
 {
 	//モデルアニメーション制御の初期化
 	animationController_ = new AnimationController(modelId_);
-<<<<<<< HEAD
 	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
 	{
 		animationController_->AddInFbx(i, 30.0f, i);
 	}
-=======
-
-	// アニメーション追加
-	animationController_->Add(
-		0, 30.0f, Application::PATH_MODEL + "Enemy/Idle.mv1");
-	animationController_->Add(
-		1, 30.0f, Application::PATH_MODEL + "Enemy/Walk.mv1");
-
-	// 初期アニメーション再生
-	animationController_->Play(0);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 }
 
@@ -292,7 +243,6 @@ void Enemy::InitPost(void)
 {
 	// ここに個別の初期化処理を追加できる
 
-<<<<<<< HEAD
 	// 衝突判定用半径
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
 	
@@ -409,26 +359,6 @@ void Enemy::Search(void)
 		isNotice_ = false;
 		ChangeState(STATE::IDLE);
 	}
-=======
-	//モデルアニメーション制御の初期化
-	animationController_ = new AnimationController(modelId_);
-	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
-	{
-		animationController_->AddInFbx(i, 30.0f, i);
-	}
-
-	// 衝突判定用半径
-	collisionRadius_ = ENEMY_DEMON_RADIUS;
-	
-	// 初期アニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
-
-	//プレイヤーの方向を向く
-	LookPlayer();
-
-	// 初期状態
-	ChangeState(STATE::WALK);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 }
 
 void Enemy::LookPlayer(void)
@@ -470,16 +400,11 @@ void Enemy::Move(void)
 		//モデルに座標を設定する
 		MV1SetPosition(modelId_, pos_);
 
-<<<<<<< HEAD
-=======
-		//プレイヤーの方向を向く
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 		LookPlayer();
 	}
 
 }
 
-<<<<<<< HEAD
 void Enemy::Attack(void)
 {
 }
@@ -487,10 +412,6 @@ void Enemy::Attack(void)
 void Enemy::ChangeIdle(void)
 {
 
-=======
-void Enemy::ChangeIdle(void)
-{
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// 待機アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
 
@@ -509,32 +430,20 @@ void Enemy::ChangeAttack(void)
 	cntAttack_ = 0;
 
 	// 攻撃アニメーション再生
-<<<<<<< HEAD
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK),false);
-=======
-	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), true);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 }
 
 void Enemy::ChangeDamage(void)
 {
 	// ダメージアニメーション再生
-<<<<<<< HEAD
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE));
-=======
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE), true);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 
 }
 
 void Enemy::ChangeDead(void)
 {
 	// 死亡アニメーション再生
-<<<<<<< HEAD
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD));
-=======
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD), false);
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 }
 
 void Enemy::ChangeEnd(void)

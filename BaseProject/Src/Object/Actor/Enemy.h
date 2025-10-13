@@ -49,7 +49,6 @@ public:
 	// 衝突判定用半径
 	static constexpr float ENEMY_DEMON_RADIUS = 60.0f;
 
-<<<<<<< HEAD
 	// 視野の広さ
 	static constexpr float VIEW_RANGE = 500.0f;
 
@@ -65,8 +64,6 @@ public:
 	// HP
 	static constexpr int ENEMY_HP = 10;
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// コンストラクタ
 	Enemy(Player* player);
 	~Enemy(void) override;
@@ -86,12 +83,9 @@ public:
 	bool IsAlive(void) const;
 	void SetAlive(bool isAlive);
 
-<<<<<<< HEAD
 	// HPの取得
 	int GetHp(void);
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 protected:
 
 	// リソースロード
@@ -106,12 +100,9 @@ protected:
 	// 初期化後の個別処理
 	void InitPost(void) override;
 
-<<<<<<< HEAD
 	// 視野描画
 	void DrawViewRange(void);
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 private:
 
 	// プレイヤー
@@ -137,7 +128,6 @@ private:
 	// 衝突判定用半径
 	float collisionRadius_;
 
-<<<<<<< HEAD
 	// 検知フラグ
 	bool isNotice_;
 
@@ -156,14 +146,6 @@ private:
 	// 攻撃
 	void Attack(void);
 
-=======
-	//プレイヤー監視
-	void LookPlayer(void);
-
-	//移動
-	void Move(void);
-
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// 状態遷移
 	void ChangeIdle(void);
 	void ChangeWalk(void);

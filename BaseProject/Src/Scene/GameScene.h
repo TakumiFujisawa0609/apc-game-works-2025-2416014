@@ -36,12 +36,9 @@ private:
 	// エネミー
 	Enemy* enemy_;
 
-<<<<<<< HEAD
 	// HP
 	HpManager* hpManager_;
 
-=======
->>>>>>> 76444a7717c703a94b3ddfb0af416f923a0cb40f
 	// 衝突判定
 	void Collision(void);
 
