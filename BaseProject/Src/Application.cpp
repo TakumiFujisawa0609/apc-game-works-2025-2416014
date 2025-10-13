@@ -31,10 +31,13 @@ void Application::Init(void)
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
 	ChangeWindowMode(true);
+	//垂直同期を切る
+	SetWaitVSyncFlag(60);
 
 	// DxLibの初期化
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
 	isInitFail_ = false;
+
 	if (DxLib_Init() == -1)
 	{
 		isInitFail_ = true;

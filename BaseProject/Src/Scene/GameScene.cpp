@@ -7,6 +7,8 @@
 #include "../Object/Stage/Stage.h"
 #include "../Object/Actor/Player.h"
 #include "../Object/Actor/Enemy.h"
+#include "../Ui/HpManager.h"
+#include "../Utility/AsoUtility.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void) : SceneBase()
@@ -34,8 +36,12 @@ void GameScene::Init(void)
 	player_->Init();
 
 	// エネミー初期化
-	enemy_ = new Enemy();
+	enemy_ = new Enemy(player_);
 	enemy_->Init();
+
+	// Ui初期化
+	hpManager_ = new HpManager(player_);
+	hpManager_->Init();
 
 	// カメラモード変更
 	Camera* camera = SceneManager::GetInstance().GetCamera();
@@ -55,8 +61,11 @@ void GameScene::Update(void)
 	// プレイヤー更新
 	player_->Update();
 
-	// エネミー更新
-	enemy_->Update();
+	//// エネミー更新
+	//enemy_->Update();
+
+	// Ui更新
+	hpManager_->Update();
 
 	// デバッグ
 	// スペースキーとCキーが押下されたら、ゲームクリアへ遷移する
@@ -70,6 +79,9 @@ void GameScene::Update(void)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 	}
+
+	// 衝突判定
+	Collision();
 }
 
 void GameScene::Draw(void)
@@ -85,6 +97,10 @@ void GameScene::Draw(void)
 
 	// エネミー描画
 	enemy_->Draw();
+
+	// Ui描画
+	hpManager_->Draw();
+
 }
 
 void GameScene::Release(void)
@@ -104,4 +120,140 @@ void GameScene::Release(void)
 	// エネミー解放
 	enemy_->Release();
 	delete enemy_;
+
+	// Ui解放
+	hpManager_->Release();
+	delete hpManager_;
+
+}
+
+void GameScene::Collision(void)
+{
+	CollisionEnemy();
+	CollisionWeapon();
+}
+
+void GameScene::CollisionEnemy(void)
+{
+	//if (player_->IsInvincible())
+	//{
+	//	return;
+	//}
+
+	// エネミーとプレイヤーの衝突判定
+	VECTOR playerPos = player_->GetPos();
+
+	VECTOR enemyPos = enemy_->GetPos();
+
+	//エネミーとプレイヤーの衝突判定
+	if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyPos, enemy_->GetcollisionRadius()))
+	{
+		//ベクトルを求める
+		VECTOR diff = VSub(playerPos, enemyPos);
+		diff.y = 0.0f;
+
+		//ベクトルを正規化(これで方向を取得する)
+		VECTOR dir = VNorm(diff);
+
+		////プレイヤーがノックバックする
+		//player_->KnockBack(dir, 20.0f);
+
+		////プレイヤーがダメージを食らう
+		//player_->Damage(1);
+		enemy_->SetAlive(false);
+
+		//std::vector<ShotBase*> shots = enemy->GetShots();
+
+
+		//for (ShotBase* shot : shots)
+		//{
+		//	if (player_->IsInvincible())
+		//	{
+		//		return;
+		//	}
+
+		//	VECTOR shotPos = shot->GetPos();
+
+		//	//ベクトルを求める
+		//	VECTOR diff = VSub(playerPos, shotPos);
+		//	diff.y = 0.0f;
+
+		//	//ベクトルを正規化(これで方向を取得する)
+		//	VECTOR dir = VNorm(diff);
+
+		//	//エネミー弾とプレイヤーの当たり判定
+		//	if (AsoUtility::IsHitSpheres(shotPos, shot->GetCollisionRadius(), playerPos, enemy->GetcollisionRadius()))
+		//	{
+		//		//プレイヤーをノックバックさせる
+		//		player_->KnockBack(dir, 20.0f);
+		//		//プレイヤーがダメージを食らう
+		//		player_->Damage(1);
+		//		shot->SetAlive(false);
+		//	}
+		//}
+	}
+
+}
+
+void GameScene::CollisionWeapon(void)
+{
+	//if (player_->IsInvincible())
+//{
+//	return;
+//}
+
+// エネミーと攻撃座標の衝突判定
+	VECTOR attackPos = player_->GetAttackPos();
+
+	VECTOR enemyPos = enemy_->GetPos();
+
+	//エネミーとプレイヤーの衝突判定
+	if (AsoUtility::IsHitSpheres(attackPos, player_->GetAttackCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()))
+	{
+		//ベクトルを求める
+		VECTOR diff = VSub(attackPos, enemyPos);
+		diff.y = 0.0f;
+
+		//ベクトルを正規化(これで方向を取得する)
+		VECTOR dir = VNorm(diff);
+
+		////プレイヤーがノックバックする
+		//player_->KnockBack(dir, 20.0f);
+
+		////プレイヤーがダメージを食らう
+		//player_->Damage(1);
+		enemy_->SetAlive(false);
+
+		//std::vector<ShotBase*> shots = enemy->GetShots();
+
+
+		//for (ShotBase* shot : shots)
+		//{
+		//	if (player_->IsInvincible())
+		//	{
+		//		return;
+		//	}
+
+		//	VECTOR shotPos = shot->GetPos();
+
+		//	//ベクトルを求める
+		//	VECTOR diff = VSub(playerPos, shotPos);
+		//	diff.y = 0.0f;
+
+		//	//ベクトルを正規化(これで方向を取得する)
+		//	VECTOR dir = VNorm(diff);
+
+		//	//エネミー弾とプレイヤーの当たり判定
+		//	if (AsoUtility::IsHitSpheres(shotPos, shot->GetCollisionRadius(), playerPos, enemy->GetcollisionRadius()))
+		//	{
+		//		//プレイヤーをノックバックさせる
+		//		player_->KnockBack(dir, 20.0f);
+		//		//プレイヤーがダメージを食らう
+		//		player_->Damage(1);
+		//		shot->SetAlive(false);
+		//	}
+		//}
+	}
+
+
 }

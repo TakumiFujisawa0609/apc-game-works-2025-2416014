@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ui\HpManager.cpp" />
     <ClCompile Include="Src\Scene\GameClear.cpp" />
     <ClCompile Include="Src\Scene\GameOver.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="Src\Scene\Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ui\HpManager.h" />
     <ClInclude Include="Src\Scene\GameClear.h" />
     <ClInclude Include="Src\Scene\GameOver.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />

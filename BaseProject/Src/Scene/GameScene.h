@@ -4,7 +4,7 @@ class Grid;
 class Stage;
 class Player;
 class Enemy;
-
+class HpManager;
 
 class GameScene : public SceneBase
 {
@@ -35,4 +35,17 @@ private:
 
 	// エネミー
 	Enemy* enemy_;
+
+	// HP
+	HpManager* hpManager_;
+
+	// 衝突判定
+	void Collision(void);
+
+// エネミーとプレイヤーの衝突
+	void CollisionEnemy(void);
+
+	// 武器とエネミーの衝突
+	void CollisionWeapon(void);
+
 };

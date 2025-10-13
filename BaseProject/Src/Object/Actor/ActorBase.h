@@ -21,10 +21,12 @@ public:
 	virtual void Draw(void);
 	virtual void Release(void);
 
-	// 座標を取得
+	// 座標を取得・設定
 	const VECTOR& GetPos(void) const;
+	void SetPos(const VECTOR& pos);
 
 protected:
+
 	// アニメーション制御
 	AnimationController* animationController_;
 
@@ -43,6 +45,12 @@ protected:
 	VECTOR moveDir_;
 
 	VECTOR preInputDir_;
+
+	// HP
+	int hp_;
+
+	// 生存判定フラグ
+	bool isAlive_;
 
 	// リソースロード
 	virtual void InitLoad(void) = 0;
