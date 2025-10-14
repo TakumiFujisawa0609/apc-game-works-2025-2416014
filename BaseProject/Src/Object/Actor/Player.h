@@ -9,12 +9,6 @@ class Player : public ActorBase
 {
 public:
 
-	// アニメーションの再生速度
-	static constexpr float SPEED_ANIM = 40.0f;
-
-	// 攻撃判定用半径
-	static constexpr float ATTACK_RADIUS = 20.0f;
-
 	// アニメーション種別
 	enum class ANIM_TYPE
 	{
@@ -39,6 +33,18 @@ public:
 		END,
 		VICTORY,
 	};
+
+	// アニメーションの再生速度
+	static constexpr float SPEED_ANIM = 40.0f;
+
+	// 攻撃判定用半径
+	static constexpr float ATTACK_RADIUS = 20.0f;
+
+	// プレイヤー通常速度
+	static constexpr float PLAYER_MOVE = 3.0f;
+
+	// プレイヤーダッシュ速度
+	static constexpr float PLAYER_DASH_MOVE = 6.0f;
 
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 3.0f;

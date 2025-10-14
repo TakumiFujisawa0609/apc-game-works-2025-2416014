@@ -714,7 +714,7 @@ void Player::Move(void)
 	}
 
 	// ダッシュ速度を歩行速度の2倍にする(書き方が違うけどif文と同じ意味)
-	float movePow = isDash_ ? 6.0f : 3.0f;
+	float movePow = isDash_ ? PLAYER_DASH_MOVE : PLAYER_MOVE;
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{

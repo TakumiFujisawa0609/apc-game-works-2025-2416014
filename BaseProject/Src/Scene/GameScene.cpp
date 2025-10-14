@@ -61,8 +61,8 @@ void GameScene::Update(void)
 	// プレイヤー更新
 	player_->Update();
 
-	//// エネミー更新
-	//enemy_->Update();
+	// エネミー更新
+	enemy_->Update();
 
 	// Ui更新
 	hpManager_->Update();
