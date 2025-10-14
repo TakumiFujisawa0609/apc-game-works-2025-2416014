@@ -1,2 +1,3 @@
 D:\ドキュメント\デスクトップ\AGS Copy - コピー (2)\BaseProject\x64\Debug\BaseProject.exe
 C:\Users\2416014\Desktop\AGS\BaseProject\x64\Debug\BaseProject.exe
+C:\Users\2416014\Desktop\AGS - コピー\BaseProject\x64\Debug\BaseProject.exe

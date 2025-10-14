@@ -68,8 +68,8 @@ void GameScene::Update(void)
 	hpManager_->Update();
 
 	// デバッグ
-	// スペースキーとCキーが押下されたら、ゲームクリアへ遷移する
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE) && InputManager::GetInstance().IsTrgDown(KEY_INPUT_C))
+	// 敵が倒されたらゲームクリアへ遷移する
+	if (!enemy_->IsAlive())
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
 	}
@@ -160,7 +160,7 @@ void GameScene::CollisionEnemy(void)
 
 		////プレイヤーがダメージを食らう
 		//player_->Damage(1);
-		enemy_->SetAlive(false);
+		//enemy_->SetAlive(false);
 
 		//std::vector<ShotBase*> shots = enemy->GetShots();
 
@@ -207,8 +207,8 @@ void GameScene::CollisionWeapon(void)
 
 	VECTOR enemyPos = enemy_->GetPos();
 
-	//エネミーとプレイヤーの衝突判定
-	if (AsoUtility::IsHitSpheres(attackPos, player_->GetAttackCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()))
+	//エネミーと武器の衝突判定
+	if (AsoUtility::IsHitSpheres(attackPos, player_->GetAttackCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()) && player_->GetAttackAlive())
 	{
 		//ベクトルを求める
 		VECTOR diff = VSub(attackPos, enemyPos);
@@ -222,6 +222,8 @@ void GameScene::CollisionWeapon(void)
 
 		////プレイヤーがダメージを食らう
 		//player_->Damage(1);
+		//エネミーがダメージを食らう
+		enemy_->Damage(1);
 		enemy_->SetAlive(false);
 
 		//std::vector<ShotBase*> shots = enemy->GetShots();

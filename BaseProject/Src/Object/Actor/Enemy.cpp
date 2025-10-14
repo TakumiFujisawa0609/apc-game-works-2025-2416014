@@ -116,6 +116,7 @@ void Enemy::Draw(void)
 	//	pos_.z
 	//);
 
+	// 当たり判定デバッグ表示
 	//DrawSphere3D(VGet(pos_.x,pos_.y + 100,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
 	//// 視野描画
@@ -200,6 +201,27 @@ int Enemy::GetHp(void)
 	return hp_;
 }
 
+void Enemy::Damage(int damage)
+{
+	hp_ -= damage;
+	if (hp_ < 0)
+	{
+		hp_ = 0;
+	}
+
+	if (hp_ <= 0)
+	{
+		// 撃破状態
+		ChangeState(STATE::DEAD);
+	}
+	else
+	{
+		// 被ダメ状態
+		ChangeState(STATE::DAMAGE);
+	}
+
+}
+
 void Enemy::InitLoad(void)
 {
 	// モデル読み込み
@@ -247,7 +269,7 @@ void Enemy::InitPost(void)
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
 	
 	// 持ちHP
-	hp_ = 10;
+	hp_ = ENEMY_HP;
 
 	// 初期アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
@@ -435,6 +457,8 @@ void Enemy::ChangeAttack(void)
 
 void Enemy::ChangeDamage(void)
 {
+	cntDamaged_ = CNT_HIT_REACT;
+
 	// ダメージアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE));
 
@@ -442,13 +466,15 @@ void Enemy::ChangeDamage(void)
 
 void Enemy::ChangeDead(void)
 {
+	cntDamaged_ = CNT_DEAD_REACT;
+
 	// 死亡アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD));
 }
 
 void Enemy::ChangeEnd(void)
 {
-
+	isAlive_ = false;
 }
 
 void Enemy::UpdateIdle(void)
@@ -459,6 +485,17 @@ void Enemy::UpdateIdle(void)
 
 	//移動
 	Move();
+
+	//cntAttack_++;
+	//// 一定間隔で攻撃させる
+	//if (cntAttack_ % TERM_ATTACK == 0)
+	//{
+	//	cntAttack_ = 0;
+
+	//	ChangeState(STATE::ATTACK);
+
+	//}
+
 }
 
 void Enemy::UpdateWalk(void)
@@ -477,8 +514,9 @@ void Enemy::UpdateAttack(void)
 
 void Enemy::UpdateDamage(void)
 {
-	//攻撃アニメーションが終わったら通常状態に戻る
-	if (animationController_->IsEnd())
+	cntDamaged_--;
+	//ダメージアニメーションが終わったら通常状態に戻る
+	if (cntDamaged_ < 0)
 	{
 		ChangeState(STATE::IDLE);
 	}
@@ -486,8 +524,9 @@ void Enemy::UpdateDamage(void)
 
 void Enemy::UpdateDead(void)
 {
-	//死亡アニメーションが終わったら終了状態にする
-	if (animationController_->IsEnd())
+	cntDamaged_--;
+	//死亡アニメーションが終わったら終了
+	if (cntDamaged_ < 0 && animationController_->IsEnd())
 	{
 		ChangeState(STATE::END);
 	}

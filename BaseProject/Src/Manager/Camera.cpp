@@ -191,20 +191,20 @@ void Camera::SetBeforeDrawFollow(void)
 }
 void Camera::DrawDebug(void)
 {
-	DrawFormatString(
-		0, 10, 0xffffff,
-		"カメラ座標　 ：(% .1f, % .1f, % .1f)",
-		pos_.x, pos_.y, pos_.z
-	);
-	DrawFormatString(
-		0, 30, 0xffffff,
-		"カメラ角度　 ：(% .1f, % .1f, % .1f)",
-		AsoUtility::Rad2DegF(angles_.x),
-		AsoUtility::Rad2DegF(angles_.y),
-		AsoUtility::Rad2DegF(angles_.z)
-	);
+	//DrawFormatString(
+	//	0, 10, 0xffffff,
+	//	"カメラ座標　 ：(% .1f, % .1f, % .1f)",
+	//	pos_.x, pos_.y, pos_.z
+	//);
+	//DrawFormatString(
+	//	0, 30, 0xffffff,
+	//	"カメラ角度　 ：(% .1f, % .1f, % .1f)",
+	//	AsoUtility::Rad2DegF(angles_.x),
+	//	AsoUtility::Rad2DegF(angles_.y),
+	//	AsoUtility::Rad2DegF(angles_.z)
+	//);
 
-	DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
+	//DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
 }
 
 void Camera::ChangeMode(MODE mode)

@@ -138,9 +138,12 @@ void Player::Draw(void)
 	//);
 
 
-	DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+	//DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
-	DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	//if (isAttackAlive_)
+	//{
+	//	DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	//}
 
 }
 
@@ -213,6 +216,36 @@ void Player::SetAttackPos(const VECTOR& attackPos)
 	attackPos_ = attackPos;
 }
 
+bool Player::IsAttackAlive(void) const
+{
+	return isAttackAlive_;
+}
+
+void Player::SetAttackAlive(bool isAttackAlive)
+{
+	isAttackAlive = isAttackAlive_;
+}
+
+const bool Player::GetAttackAlive(void) const
+{
+	return isAttackAlive_;
+}
+
+void Player::Damage(int damage)
+{
+	hp_ -= damage;
+	if (hp_ < 0)
+	{
+		hp_ = 0;
+	}
+
+	if (hp_ == 0)
+	{
+		ChangeState(STATE::DEAD);
+	}
+
+}
+
 void Player::InitLoad(void)
 {
 	// モデル読み込み
@@ -235,6 +268,7 @@ void Player::InitTransform(void)
 	// 角度から方向に変換する
 	moveDir_ = { sinf(angles_.y), 0.0f, cosf(angles_.y) };
 
+	isAttackAlive_ = false;
 }
 
 void Player::InitAnimation(void)
@@ -268,7 +302,7 @@ void Player::InitPost(void)
 	collisionRadius_ = PLAYER_RADIUS;
 
 	// 持ちHP
-	hp_ = 10;
+	hp_ = PLAYER_HP;
 
 	// 回避初期速度と時間
 	dodgeSpeed_ = 0.0f;
@@ -414,9 +448,11 @@ void Player::PlayerAttack(void)
 
 	if (isAttack)
 	{
+
+		isAttackAlive_ = true;
+
 		ChangeAttack();
 	}
-
 }
 
 void Player::PlayerDodge(void)
@@ -462,6 +498,7 @@ void Player::ChangeIdle(void)
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
 
+	isAttackAlive_ = false;
 }
 
 void Player::ChangeWalk(void)

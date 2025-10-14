@@ -47,7 +47,7 @@ public:
 	static constexpr float SPEED_MOVE = 2.0f;
 
 	// 衝突判定用半径
-	static constexpr float ENEMY_DEMON_RADIUS = 60.0f;
+	static constexpr float ENEMY_DEMON_RADIUS = 80.0f;
 
 	// 視野の広さ
 	static constexpr float VIEW_RANGE = 500.0f;
@@ -62,7 +62,16 @@ public:
 	static constexpr float ATTACK_RANGE = 300.0f;
 
 	// HP
-	static constexpr int ENEMY_HP = 10;
+	static constexpr int ENEMY_HP = 2;
+
+
+	// ダメージアニメーション用カウンタ
+	static constexpr int CNT_HIT_REACT = 40;
+	// 死亡アニメーション用カウンタ
+	static constexpr int CNT_DEAD_REACT = 80;
+
+	// 攻撃間隔用
+	static constexpr int TERM_ATTACK = 40;
 
 	// コンストラクタ
 	Enemy(Player* player);
@@ -85,6 +94,9 @@ public:
 
 	// HPの取得
 	int GetHp(void);
+
+	// ダメージを与える
+	void Damage(int damage);
 
 protected:
 
@@ -116,6 +128,9 @@ private:
 	// 移動速度
 	float speed_;
 
+	// HP
+	int hp_;
+
 	// 移動・攻撃判定用フラグ
 	bool isMove_;
 	bool isAttack_;
@@ -133,6 +148,9 @@ private:
 
 	// 聴覚フラグ
 	bool isHear_;
+
+	// 被ダメージ間隔用カウンタ
+	int cntDamaged_;
 
 	// 索敵
 	void Search(void);

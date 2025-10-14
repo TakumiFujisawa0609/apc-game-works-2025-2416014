@@ -41,10 +41,10 @@ public:
 	static constexpr float ATTACK_RADIUS = 20.0f;
 
 	// プレイヤー通常速度
-	static constexpr float PLAYER_MOVE = 3.0f;
+	static constexpr float PLAYER_MOVE = 4.0f;
 
 	// プレイヤーダッシュ速度
-	static constexpr float PLAYER_DASH_MOVE = 6.0f;
+	static constexpr float PLAYER_DASH_MOVE = 8.0f;
 
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 3.0f;
@@ -81,6 +81,16 @@ public:
 	// 座標を取得・設定
 	const VECTOR& GetAttackPos(void) const;
 	void SetAttackPos(const VECTOR& pos);
+
+	// 生存フラグ
+	bool IsAttackAlive(void) const;
+	void SetAttackAlive(bool isAttackAlive);
+
+	// 攻撃判定を取得
+	const bool GetAttackAlive(void) const;
+
+	// ダメージを与える
+	void Damage(int damage);
 
 protected:
 
@@ -143,6 +153,10 @@ private:
 	VECTOR attackScales_;
 	VECTOR attackLocalPos_;
 	VECTOR attackLocalAngles_;
+
+	// 攻撃判定フラグ
+	bool isAttackAlive_;
+	
 	// 衝突判定用半径
 	float attackCollisionRadius_;
 
