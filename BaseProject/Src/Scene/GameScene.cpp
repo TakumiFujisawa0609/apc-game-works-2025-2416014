@@ -131,6 +131,7 @@ void GameScene::Collision(void)
 {
 	CollisionEnemy();
 	CollisionWeapon();
+	CollisionStage();
 }
 
 void GameScene::CollisionEnemy(void)
@@ -223,4 +224,34 @@ void GameScene::CollisionWeapon(void)
 
 		int a = 1;
 	}
+}
+
+void GameScene::CollisionStage(void)
+{
+	// ステージブロックとプレイヤーの衝突
+	VECTOR playerPos = player_->GetPos();
+
+	// 線分の上座標
+	VECTOR topPos = playerPos;
+
+	topPos.y = playerPos.y + (Player::COLLISION_LEN * 2.0f);
+
+	lineTopPos_ = topPos;
+
+	// 線分の下座標
+	VECTOR downPos = playerPos;
+
+	downPos.y = playerPos.y - Player::COLLISION_LEN;
+
+	lineDownPos_ = downPos;
+
+	// 線分とブロックモデルの衝突判定
+	MV1_COLL_RESULT_POLY result;
+	result = MV1CollCheck_Line(stage_->GetModelId(), -1, topPos, downPos);
+
+	if (result.HitFlag == 1)
+	{
+		player_->CollisionStage(result.HitPosition);
+	}
+
 }

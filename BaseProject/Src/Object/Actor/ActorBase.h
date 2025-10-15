@@ -32,6 +32,9 @@ protected:
 
 	// アニメーション種別
 	int animType_;
+	
+	// 重力
+	float jumpPow_;
 
 	// モデル情報
 	int modelId_;
@@ -40,6 +43,9 @@ protected:
 	VECTOR angles_;
 	VECTOR scales_;
 	VECTOR localAngles_;
+
+	// ジャンプ判定
+	bool isJump_;
 
 	// 移動方向
 	VECTOR moveDir_;

@@ -20,6 +20,12 @@ void Player::Update(void)
 {
 	ActorBase::Update();
 
+	//重力（加速度を速度に加算していく）
+	jumpPow_ -= GRAVITY_POW;
+
+	//プレイヤーの座標に移動量（速度、ジャンプ力）を加算する
+	pos_.y += jumpPow_;
+
 	switch (state_)
 	{
 	case Player::STATE::IDLE:
@@ -227,6 +233,14 @@ void Player::SetAttackAlive(bool isAttackAlive)
 	isAttackAlive = isAttackAlive_;
 }
 
+void Player::CollisionStage(VECTOR pos)
+{
+	// 衝突判定に指定座標に押し戻す
+	pos_ = pos;
+	jumpPow_ = 0.0f;
+	isJump_ = false;
+}
+
 const bool Player::GetAttackAlive(void) const
 {
 	return isAttackAlive_;
@@ -257,7 +271,7 @@ void Player::InitLoad(void)
 void Player::InitTransform(void)
 {
 	// モデルの位置設定
-	pos_ = VGet(0.0f, 0.0f, -950.0f);
+	pos_ = VGet(0.0f, 1000.0f, -950.0f);
 
 	// モデルの角度
 	angles_ = { 0.0f, 0.0f, 0.0f };

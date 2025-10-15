@@ -49,11 +49,17 @@ public:
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 3.0f;
 
+	//重力
+	static constexpr float GRAVITY_POW = 0.8f;
+
 	// 衝突判定用半径
 	static constexpr float PLAYER_RADIUS = 40.0f;
 
 	// HP
 	static constexpr int PLAYER_HP = 3;
+
+	// 地面衝突用線分の長さ
+	static constexpr float COLLISION_LEN = 10.0f;
 
 	// コンストラクタ
 	Player(void);
@@ -88,6 +94,9 @@ public:
 	// 攻撃判定を取得
 	const bool GetAttackAlive(void) const;
 	void SetAttackAlive(bool isAttackAlive);
+
+	// 衝突判定
+	void CollisionStage(VECTOR pos);
 
 	// ダメージを与える
 	void Damage(int damage);

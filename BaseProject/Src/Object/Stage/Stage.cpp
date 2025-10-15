@@ -39,3 +39,8 @@ void Stage::Release(void)
 	MV1DeleteModel(modelId_);
 
 }
+
+int Stage::GetModelId(void) const
+{
+	return modelId_;
+}

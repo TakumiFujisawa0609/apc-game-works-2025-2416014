@@ -17,6 +17,9 @@ public:
 
 	void Release(void);
 
+	// モデルハンドルを取得
+	int GetModelId(void) const;
+
 private:
 
 	// ３ＤモデルのハンドルID

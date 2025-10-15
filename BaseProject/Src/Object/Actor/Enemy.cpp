@@ -17,34 +17,37 @@ Enemy::~Enemy(void)
 
 void Enemy::Update(void)
 {
-	ActorBase::Update();
-
-	LookPlayer();
-	// çıìG
-	Search();
-	// çUåÇ
-	Attack();
-
-	switch (state_)
+	if (isAlive_)
 	{
-	case STATE::IDLE:
-		UpdateIdle();
-		break;
-	case STATE::WALK:
-		UpdateWalk();
-		break;
-	case STATE::ATTACK:
-		UpdateAttack();
-		break;
-	case STATE::DAMAGE:
-		UpdateDamage();
-		break;
-	case STATE::DEAD:
-		UpdateDead();
-		break;
-	case STATE::END:
-		UpdateEnd();
-		break;
+		ActorBase::Update();
+
+		LookPlayer();
+		// çıìG
+		Search();
+		// çUåÇ
+		Attack();
+
+		switch (state_)
+		{
+		case STATE::IDLE:
+			UpdateIdle();
+			break;
+		case STATE::WALK:
+			UpdateWalk();
+			break;
+		case STATE::ATTACK:
+			UpdateAttack();
+			break;
+		case STATE::DAMAGE:
+			UpdateDamage();
+			break;
+		case STATE::DEAD:
+			UpdateDead();
+			break;
+		case STATE::END:
+			UpdateEnd();
+			break;
+		}
 	}
 }
 
