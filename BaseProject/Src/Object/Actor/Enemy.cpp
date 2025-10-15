@@ -19,6 +19,7 @@ void Enemy::Update(void)
 {
 	ActorBase::Update();
 
+	LookPlayer();
 	// 索敵
 	Search();
 	// 攻撃
@@ -76,6 +77,7 @@ void Enemy::Draw(void)
 			break;
 		}
 	}
+
 	//	if (isNotice_)
 	//	{
 	//		// 視野範囲内：ディフューズカラーを赤色にする
@@ -365,22 +367,40 @@ void Enemy::Search(void)
 		isAttack_ = false;
 	}
 
-	// 聴覚範囲ならプレイヤーに近づく
-	if (isHear_)
+	if (isAttack_)
+	{
+		// ダメージ状態か死亡状態なら遷移処理をスキップする
+		if (state_ == STATE::DAMAGE || state_ == STATE::DEAD)
+		{
+			return; 
+		}
+
+		isMove_ = false;
+		cntAttack_++;
+		// 一定間隔で攻撃させる
+		if (cntAttack_ % TERM_ATTACK == 0)
+		{
+			cntAttack_ = 0;
+
+			ChangeState(STATE::ATTACK);
+
+		}
+	}
+	else if (isHear_)
 	{
 		isMove_ = true;
+		isAttack_ = false;
 		ChangeState(STATE::WALK);
-	}
-	else if (isAttack_)
-	{
-		ChangeState(STATE::ATTACK);
 	}
 	else
 	{
 		isMove_ = false;
 		isNotice_ = false;
+		isAttack_ = false;
 		ChangeState(STATE::IDLE);
 	}
+
+
 }
 
 void Enemy::LookPlayer(void)
@@ -421,8 +441,6 @@ void Enemy::Move(void)
 
 		//モデルに座標を設定する
 		MV1SetPosition(modelId_, pos_);
-
-		LookPlayer();
 	}
 
 }
@@ -457,10 +475,12 @@ void Enemy::ChangeAttack(void)
 
 void Enemy::ChangeDamage(void)
 {
+	isAttack_ = false;
+
 	cntDamaged_ = CNT_HIT_REACT;
 
 	// ダメージアニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE));
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE), false);
 
 }
 
@@ -469,7 +489,7 @@ void Enemy::ChangeDead(void)
 	cntDamaged_ = CNT_DEAD_REACT;
 
 	// 死亡アニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD));
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD),false);
 }
 
 void Enemy::ChangeEnd(void)
@@ -480,22 +500,8 @@ void Enemy::ChangeEnd(void)
 void Enemy::UpdateIdle(void)
 {
 
-	//プレイヤーの方向を向く
-	LookPlayer();
-
 	//移動
 	Move();
-
-	//cntAttack_++;
-	//// 一定間隔で攻撃させる
-	//if (cntAttack_ % TERM_ATTACK == 0)
-	//{
-	//	cntAttack_ = 0;
-
-	//	ChangeState(STATE::ATTACK);
-
-	//}
-
 }
 
 void Enemy::UpdateWalk(void)
@@ -535,6 +541,8 @@ void Enemy::UpdateDead(void)
 void Enemy::UpdateEnd(void)
 {
 	//停止
+	isMove_ = false;
+	isAttack_ = false;
 }
 
 void Enemy::DrawIdle(void)

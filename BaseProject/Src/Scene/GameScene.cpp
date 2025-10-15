@@ -197,12 +197,8 @@ void GameScene::CollisionEnemy(void)
 
 void GameScene::CollisionWeapon(void)
 {
-	//if (player_->IsInvincible())
-//{
-//	return;
-//}
 
-// エネミーと攻撃座標の衝突判定
+	// エネミーと攻撃座標の衝突判定
 	VECTOR attackPos = player_->GetAttackPos();
 
 	VECTOR enemyPos = enemy_->GetPos();
@@ -220,42 +216,11 @@ void GameScene::CollisionWeapon(void)
 		////プレイヤーがノックバックする
 		//player_->KnockBack(dir, 20.0f);
 
-		////プレイヤーがダメージを食らう
-		//player_->Damage(1);
 		//エネミーがダメージを食らう
 		enemy_->Damage(1);
-		enemy_->SetAlive(false);
 
-		//std::vector<ShotBase*> shots = enemy->GetShots();
+		player_->SetAttackAlive(false);
 
-
-		//for (ShotBase* shot : shots)
-		//{
-		//	if (player_->IsInvincible())
-		//	{
-		//		return;
-		//	}
-
-		//	VECTOR shotPos = shot->GetPos();
-
-		//	//ベクトルを求める
-		//	VECTOR diff = VSub(playerPos, shotPos);
-		//	diff.y = 0.0f;
-
-		//	//ベクトルを正規化(これで方向を取得する)
-		//	VECTOR dir = VNorm(diff);
-
-		//	//エネミー弾とプレイヤーの当たり判定
-		//	if (AsoUtility::IsHitSpheres(shotPos, shot->GetCollisionRadius(), playerPos, enemy->GetcollisionRadius()))
-		//	{
-		//		//プレイヤーをノックバックさせる
-		//		player_->KnockBack(dir, 20.0f);
-		//		//プレイヤーがダメージを食らう
-		//		player_->Damage(1);
-		//		shot->SetAlive(false);
-		//	}
-		//}
+		int a = 1;
 	}
-
-
 }

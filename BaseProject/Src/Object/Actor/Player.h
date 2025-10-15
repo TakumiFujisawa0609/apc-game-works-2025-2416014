@@ -83,11 +83,11 @@ public:
 	void SetAttackPos(const VECTOR& pos);
 
 	// 生存フラグ
-	bool IsAttackAlive(void) const;
-	void SetAttackAlive(bool isAttackAlive);
+	const bool IsAttackAlive(void) const;
 
 	// 攻撃判定を取得
 	const bool GetAttackAlive(void) const;
+	void SetAttackAlive(bool isAttackAlive);
 
 	// ダメージを与える
 	void Damage(int damage);
@@ -157,11 +157,18 @@ private:
 	// 攻撃判定フラグ
 	bool isAttackAlive_;
 	
+	// 攻撃判定時間
+	int cntAttackAlive_;
+
 	// 衝突判定用半径
 	float attackCollisionRadius_;
 
+	// 武器
 	void InitSword(void);
 	void SyncSword(void);
+
+	// 攻撃判定生存期間の減少
+	void ReduceCntAlive(void);
 
 	//void InitDice(void);
 	//void SyncDice(void);

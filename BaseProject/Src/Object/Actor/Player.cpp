@@ -140,10 +140,10 @@ void Player::Draw(void)
 
 	//DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
-	//if (isAttackAlive_)
-	//{
-	//	DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
-	//}
+	if (isAttackAlive_)
+	{
+		DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	}
 
 }
 
@@ -216,10 +216,11 @@ void Player::SetAttackPos(const VECTOR& attackPos)
 	attackPos_ = attackPos;
 }
 
-bool Player::IsAttackAlive(void) const
+const bool Player::IsAttackAlive(void) const
 {
 	return isAttackAlive_;
 }
+
 
 void Player::SetAttackAlive(bool isAttackAlive)
 {
@@ -308,6 +309,9 @@ void Player::InitPost(void)
 	dodgeSpeed_ = 0.0f;
 	dodgeTimer_ = 0.0f;
 
+	// 弾の生存期間
+	cntAttackAlive_ = 100;
+
 	// 攻撃判定用半径
 	attackCollisionRadius_ = ATTACK_RADIUS;
 
@@ -379,6 +383,18 @@ void Player::SyncSword(void)
 	attackPos_ = VTransform(attackLocalPos_, mat);
 }
 
+void Player::ReduceCntAlive(void)
+{
+	isAttackAlive_ = true;
+	cntAttackAlive_--;
+
+	if (cntAttackAlive_ < 0)
+	{
+		isAttackAlive_ = false;
+	}
+
+}
+
 //void Player::InitDice(void)
 //{
 //	// サイコロモデル読み込み
@@ -448,9 +464,6 @@ void Player::PlayerAttack(void)
 
 	if (isAttack)
 	{
-
-		isAttackAlive_ = true;
-
 		ChangeAttack();
 	}
 }
@@ -539,6 +552,12 @@ void Player::ChangeDodge(void)
 
 void Player::ChangeAttack(void)
 {
+	//// 攻撃判定の生成
+	//isAttackAlive_ = true;
+
+	// 攻撃判定生存カウンタ時間の減少
+	ReduceCntAlive();
+
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 }
@@ -563,6 +582,7 @@ void Player::UpdateWalk(void)
 {
 	if (animationController_->IsEnd())
 	{
+		isAttackAlive_ = false;
 		ChangeState(STATE::IDLE);
 	}
 }
@@ -593,6 +613,7 @@ void Player::UpdateAttack(void)
 {
 	if (animationController_->IsEnd())
 	{
+		isAttackAlive_ = false;
 		ChangeState(STATE::IDLE);
 	}
 }
