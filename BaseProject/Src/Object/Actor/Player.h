@@ -29,7 +29,7 @@ public:
 		IDLE,
 		WALK,
 		RUN,
-		//JUMP,
+		JUMP,
 		DODGE,
 		ATTACK,
 		COMBO,
@@ -45,13 +45,13 @@ public:
 	static constexpr float ATTACK_RADIUS = 20.0f;
 
 	// プレイヤー通常速度
-	static constexpr float PLAYER_MOVE = 4.0f;
+	static constexpr float PLAYER_MOVE = 5.0f;
 
 	// プレイヤーダッシュ速度
-	static constexpr float PLAYER_DASH_MOVE = 8.0f;
+	static constexpr float PLAYER_DASH_MOVE = 10.0f;
 
 	//ジャンプ力
-	static constexpr float JUMP_POW = 20.0f;
+	static constexpr float JUMP_POW = 15.0f;
 
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 10.0f;
@@ -215,7 +215,7 @@ private:
 	void ChangeIdle(void);
 	void ChangeWalk(void);
 	void ChangeRun(void);
-	//void ChangeJump(void);
+	void ChangeJump(void);
 	void ChangeDodge(void);
 	void ChangeAttack(void);
 	void ChangeCombo(void);
@@ -226,7 +226,7 @@ private:
 	void UpdateIdle(void);
 	void UpdateWalk(void);
 	void UpdateRun(void);
-	//void UpdateJump(void);
+	void UpdateJump(void);
 	void UpdateDodge(void);
 	void UpdateAttack(void);
 	void UpdateCombo(void);
@@ -237,7 +237,7 @@ private:
 	void DrawIdle(void);
 	void DrawWalk(void);
 	void DrawRun(void);
-	//void DrawJump(void);
+	void DrawJump(void);
 	void DrawDodge(void);
 	void DrawAttack(void);
 	void DrawCombo(void);

@@ -37,6 +37,9 @@ void Player::Update(void)
 	case Player::STATE::RUN:
 		UpdateRun();
 		break;
+	case Player::STATE::JUMP:
+		UpdateJump();
+		break;
 	case Player::STATE::DODGE:
 		UpdateDodge();
 		break;
@@ -61,6 +64,8 @@ void Player::Update(void)
 	// 武器モデルの位置、角度同期
 	SyncSword();
 
+	PlayerJump();
+
 	// サイコロモデルのZ軸回転
 	//diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
 	//SyncDice();
@@ -80,6 +85,9 @@ void Player::Draw(void)
 		break;
 	case Player::STATE::RUN:
 		DrawRun();
+		break;
+	case Player::STATE::JUMP:
+		DrawJump();
 		break;
 	case Player::STATE::DODGE:
 		DrawDodge();
@@ -183,6 +191,9 @@ void Player::ChangeState(STATE state)
 		break;
 	case STATE::RUN:
 		ChangeRun();
+		break;
+	case Player::STATE::JUMP:
+		ChangeJump();
 		break;
 	case STATE::DODGE:
 		ChangeDodge();
@@ -492,10 +503,8 @@ void Player::PlayerJump(void)
 	// ジャンプ開始判定
 	if (isJumpInput && !isJump_)
 	{
-		isJump_ = true;
-		jumpPow_ = JUMP_POW;
-		// ジャンプアニメーション再生
-		animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP));
+		ChangeJump();
+
 	}
 
 	// ジャンプ中のみ重力を適用
@@ -637,6 +646,14 @@ void Player::ChangeRun(void)
 	animationController_->Play(static_cast<int>(ANIM_TYPE::RUN), true);
 }
 
+void Player::ChangeJump(void)
+{
+	isJump_ = true;
+	jumpPow_ = JUMP_POW;
+	// ジャンプアニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP),false);
+}
+
 void Player::ChangeDodge(void)
 {
 	// 回避アニメーション再生
@@ -693,7 +710,7 @@ void Player::ChangeVictory(void)
 
 void Player::UpdateIdle(void)
 {
-	PlayerJump();
+
 }
 
 void Player::UpdateWalk(void)
@@ -706,6 +723,14 @@ void Player::UpdateWalk(void)
 }
 
 void Player::UpdateRun(void)
+{
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateJump(void)
 {
 	if (animationController_->IsEnd())
 	{
@@ -734,16 +759,11 @@ void Player::UpdateAttack(void)
 
 void Player::UpdateCombo(void)
 {
-
-	//// 移動距離を加算
-	//pos_ = VAdd(pos_, VScale(comboDir_, comboSpeed_));
-
 	if (animationController_->IsEnd())
 	{
 		isAttackAlive_ = false;
 		ChangeState(STATE::IDLE);
 	}
-
 }
 
 void Player::UpdateDead(void)
@@ -771,6 +791,12 @@ void Player::DrawWalk(void)
 }
 
 void Player::DrawRun(void)
+{
+	MV1DrawModel(modelId_);
+
+}
+
+void Player::DrawJump(void)
 {
 	MV1DrawModel(modelId_);
 
@@ -822,8 +848,10 @@ void Player::Move(void)
 
 	// 回避中かチェック
 	bool isDodging = (currentAnim == static_cast<int>(ANIM_TYPE::DODGE));
-
+	// 範囲攻撃中かチェック
 	bool isComboing = (currentAnim == static_cast<int>(ANIM_TYPE::COMBO));
+	// ジャンプ中かチェック
+	bool isJumping = (currentAnim == static_cast<int>(ANIM_TYPE::JUMP));
 
 	// 攻撃アニメーションが終わったらIDLEに戻す
 	if (isAttacking)
@@ -842,6 +870,11 @@ void Player::Move(void)
 	{
 		UpdateCombo();
 		return;
+	}
+
+	if (isJumping)
+	{
+		UpdateJump();
 	}
 
 	// カメラの角度を取得
@@ -892,27 +925,27 @@ void Player::Move(void)
 		// 回転行列を使用して、ベクトルを回転させる
 		moveDir_ = VTransform(dir, mat);
 
-		// 移動方向から角度に変換する
-		//angles_.y = atan2f(moveDir_.x, moveDir_.z);
-
 		// 方向×スピードで移動量を作って、座標に足して移動
 		pos_ = VAdd(pos_, VScale(moveDir_, movePow));
 
-		if (isDash_)
+		if (!isJumping)
 		{
-			// アニメーションを走りにする
-			ChangeRun();
-		}
-		else
-		{
-			// アニメーションを歩きにする
-			ChangeWalk();
+			if (isDash_)
+			{
+				ChangeRun();
+			}
+			else
+			{
+				ChangeWalk();
+			}
 		}
 	}
 	else
 	{
-		// アニメーションをIDLEにする
-		ChangeIdle();
+		if (!isJumping)
+		{
+			ChangeIdle();
+		}
 	}
 
 	PlayerAttack();
