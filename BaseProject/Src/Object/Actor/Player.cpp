@@ -4,6 +4,7 @@
 #include "../../Manager/Camera.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
+#include "./RangeAttack.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
 #include "Player.h"
@@ -164,7 +165,6 @@ void Player::Draw(void)
 	{
 		DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 	}
-
 }
 
 void Player::Release(void)

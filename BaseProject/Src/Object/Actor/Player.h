@@ -4,6 +4,7 @@
 class AnimationController;
 class MatrixUtility;
 class Camera;
+class RangeAttack;
 
 class Player : public ActorBase
 {
@@ -132,6 +133,9 @@ private:
 
 	// matrixUtility§Œä
 	MatrixUtility* matrixUtility_;
+	
+	// ”ÍˆÍUŒ‚
+	RangeAttack* rangeAttack_;
 
 	// ó‘Ô
 	STATE state_;

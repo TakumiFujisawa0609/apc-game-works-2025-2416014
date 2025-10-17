@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Actor\RangeAttack.cpp" />
     <ClCompile Include="Src\Ui\HpManager.cpp" />
     <ClCompile Include="Src\Scene\GameClear.cpp" />
     <ClCompile Include="Src\Scene\GameOver.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="Src\Scene\Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Actor\RangeAttack.h" />
     <ClInclude Include="Src\Ui\HpManager.h" />
     <ClInclude Include="Src\Scene\GameClear.h" />
     <ClInclude Include="Src\Scene\GameOver.h" />
