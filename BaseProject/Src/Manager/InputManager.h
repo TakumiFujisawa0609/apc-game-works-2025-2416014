@@ -51,6 +51,12 @@ public:
 		DOWN,
 		R_TRIGGER,
 		L_TRIGGER,
+		R_STICK,      // 右スティック押し込み
+		L_STICK,      // 左スティック押し込み
+		START,        // オプションボタン（PS）/スタートボタン（Xbox）
+		SELECT,       // シェアボタン（PS）/セレクトボタン（Xbox）
+		R_BUMPER,     // R1/RB（トリガーの上のボタン）
+		L_BUMPER,     // L1/LB
 		MAX
 	};
 

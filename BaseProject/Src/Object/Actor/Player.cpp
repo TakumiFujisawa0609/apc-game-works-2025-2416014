@@ -20,11 +20,11 @@ void Player::Update(void)
 {
 	ActorBase::Update();
 
-	//重力（加速度を速度に加算していく）
-	jumpPow_ -= GRAVITY_POW;
+	////重力（加速度を速度に加算していく）
+	//jumpPow_ -= GRAVITY_POW;
 
-	//プレイヤーの座標に移動量（速度、ジャンプ力）を加算する
-	pos_.y += jumpPow_;
+	////プレイヤーの座標に移動量（速度、ジャンプ力）を加算する
+	//pos_.y += jumpPow_;
 
 	switch (state_)
 	{
@@ -42,6 +42,9 @@ void Player::Update(void)
 		break;
 	case Player::STATE::ATTACK:
 		UpdateAttack();
+		break;
+	case Player::STATE::COMBO:
+		UpdateCombo();
 		break;
 	case Player::STATE::DEAD:
 		UpdateDead();
@@ -84,6 +87,9 @@ void Player::Draw(void)
 	case Player::STATE::ATTACK:
 		DrawAttack();
 		break;
+	case Player::STATE::COMBO:
+		DrawCombo();
+		break;
 	case Player::STATE::DEAD:
 		DrawDead();
 		break;
@@ -107,7 +113,7 @@ void Player::Draw(void)
 	//	AsoUtility::Rad2DegF(diceAngles_.y),
 	//	AsoUtility::Rad2DegF(diceAngles_.z)
 	//	);
-	
+
 	// 武器モデルの描画
 	MV1DrawModel(swordModelId_);
 
@@ -184,6 +190,9 @@ void Player::ChangeState(STATE state)
 	case STATE::ATTACK:
 		ChangeAttack();
 		break;
+	case STATE::COMBO:
+		ChangeCombo();
+		break;
 	case STATE::DEAD:
 		ChangeDead();
 		break;
@@ -205,7 +214,7 @@ float Player::GetcollisionRadius(void) const
 int Player::GetHp(void) const
 {
 	return hp_;
-} 
+}
 
 float Player::GetAttackCollisionRadius(void) const
 {
@@ -271,7 +280,7 @@ void Player::InitLoad(void)
 void Player::InitTransform(void)
 {
 	// モデルの位置設定
-	pos_ = VGet(0.0f, 1000.0f, -950.0f);
+	pos_ = VGet(0.0f, 80.0f, -950.0f);
 
 	// モデルの角度
 	angles_ = { 0.0f, 0.0f, 0.0f };
@@ -284,6 +293,7 @@ void Player::InitTransform(void)
 	moveDir_ = { sinf(angles_.y), 0.0f, cosf(angles_.y) };
 
 	isAttackAlive_ = false;
+	isJump_ = false;
 }
 
 void Player::InitAnimation(void)
@@ -298,13 +308,17 @@ void Player::InitAnimation(void)
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::RUN), 30.0f, Application::PATH_MODEL + "Player/Run.mv1");
 	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::JUMP), 30.0f, Application::PATH_MODEL + "Player/Jump.mv1");
+	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::DODGE), 50.0f, Application::PATH_MODEL + "Player/Dodge.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Player/Slash.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::COMBO), 50.0f, Application::PATH_MODEL + "Player/Combo.mv1");
 	// 未追加
 	//animationController_->Add(
 	//	static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Player/Damage.mv1");
-	
+
 	// 初期アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 
@@ -312,6 +326,9 @@ void Player::InitAnimation(void)
 
 void Player::InitPost(void)
 {
+
+	//ジャンプ力の初期化
+	jumpPow_ = 0.0f;
 
 	// 衝突判定用半径
 	collisionRadius_ = PLAYER_RADIUS;
@@ -353,15 +370,15 @@ void Player::InitSword(void)
 		AsoUtility::Deg2RadF(-20.0f),
 		AsoUtility::Deg2RadF(120.0f),
 		AsoUtility::Deg2RadF(0.0f)
-		);
+	);
 
 	// 武器の大きさ設定
 	swordScales_ = { 0.2f, 0.2f, 0.2f };
 
 	// 攻撃判定用デバッグ
 	attackPos_ = MV1GetFramePosition(modelId_, 44);
-	attackLocalPos_ = VGet(0.0f, -300.0f, 0.0f);  
-	attackLocalAngles_ = swordLocalAngles_; 
+	attackLocalPos_ = VGet(0.0f, -300.0f, 0.0f);
+	attackLocalAngles_ = swordLocalAngles_;
 	attackScales_ = { 1.0f, 1.0f, 1.0f };
 
 }
@@ -382,7 +399,7 @@ void Player::SyncSword(void)
 
 	// 回転行列の合成
 	// スケールの行列を剣と合成
-	MATRIX localMat = MMult(scaleMat,swordMat);
+	MATRIX localMat = MMult(scaleMat, swordMat);
 	// 武器のローカル位置の変換行列を合成
 	localMat = MMult(localMat, transMatPos);
 	// 親子の回転行列を合成(子:武器, 親:手と指定すると親⇒子の順に適用される)
@@ -392,7 +409,7 @@ void Player::SyncSword(void)
 	MV1SetMatrix(swordModelId_, mat);
 	// 剣の位置を保存（当たり判定用）
 	swordPos_ = MV1GetPosition(swordModelId_);
-	
+
 	// 攻撃座標変換 
 	attackPos_ = VTransform(attackLocalPos_, mat);
 }
@@ -449,11 +466,57 @@ void Player::ReduceCntAlive(void)
 //
 //}
 
+
+void Player::PlayerJump(void)
+{
+	InputManager& ins = InputManager::GetInstance();
+
+	// ジャンプボタン入力判定
+	bool isJumpInput = false;
+
+	// ゲームパッドが接続されている数で処理を分ける
+	if (GetJoypadNum() == 0)
+	{
+		// キーボード操作
+		isJumpInput = ins.IsNew(KEY_INPUT_SPACE);
+	}
+	else
+	{
+		// ゲームパッド操作
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+		isJumpInput = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+			InputManager::JOYPAD_BTN::RIGHT);
+	}
+
+	// ジャンプ開始判定
+	if (isJumpInput && !isJump_)
+	{
+		isJump_ = true;
+		jumpPow_ = JUMP_POW;
+		// ジャンプアニメーション再生
+		animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP));
+	}
+
+	// ジャンプ中のみ重力を適用
+	if (isJump_)
+	{
+		// 重力（加速度を速度に加算していく）
+		jumpPow_ -= GRAVITY_POW;
+
+		// プレイヤーの座標に移動量を加算
+		pos_.y += jumpPow_;
+
+	}
+
+	// モデルに座標を設定する
+	MV1SetPosition(modelId_, pos_);
+}
 void Player::PlayerAttack(void)
 {
 
 	auto& ins = InputManager::GetInstance();
-	
+
 	// 攻撃しているか判定
 	bool isAttack;
 	isAttack = false;
@@ -473,7 +536,7 @@ void Player::PlayerAttack(void)
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
 		isAttack = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
-			InputManager::JOYPAD_BTN::RIGHT);
+			InputManager::JOYPAD_BTN::DOWN);
 	}
 
 	if (isAttack)
@@ -495,7 +558,7 @@ void Player::PlayerDodge(void)
 	{
 		// キーボード操作
 		// 回避キー
-		isDodge = ins.IsNew(KEY_INPUT_SPACE);
+		isDodge = ins.IsNew(KEY_INPUT_Q);
 	}
 	else
 	{
@@ -505,12 +568,44 @@ void Player::PlayerDodge(void)
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
 		isDodge = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
-			InputManager::JOYPAD_BTN::DOWN);
+			InputManager::JOYPAD_BTN::R_BUMPER);
 	}
 
 	if (isDodge)
 	{
 		ChangeDodge();
+	}
+}
+
+void Player::PlayerCombo(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// 攻撃しているか判定
+	bool isCombo;
+	isCombo = false;
+
+	// ゲームパッドが接続されている数で処理を分ける
+	if (GetJoypadNum() == 0)
+	{
+		// キーボード操作
+		// アタックキー
+		isCombo = ins.IsNew(KEY_INPUT_J);
+	}
+	else
+	{
+		// ゲームパッド操作
+		// 接続されているゲームパッド１の情報を取得
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		isCombo = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+			InputManager::JOYPAD_BTN::TOP);
+	}
+
+	if (isCombo)
+	{
+		ChangeCombo();
 	}
 }
 
@@ -545,7 +640,7 @@ void Player::ChangeRun(void)
 void Player::ChangeDodge(void)
 {
 	// 回避アニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DODGE),false);
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DODGE), false);
 
 	// 回避方向を決定
 	if (!AsoUtility::EqualsVZero(moveDir_))
@@ -560,15 +655,12 @@ void Player::ChangeDodge(void)
 	}
 
 	// 回避のスピードと時間をセット
-	dodgeSpeed_ = 15.0f;
+	dodgeSpeed_ = DODGE_SPEED;
 	dodgeTimer_ = 0.0f;
 }
 
 void Player::ChangeAttack(void)
 {
-	//// 攻撃判定の生成
-	//isAttackAlive_ = true;
-
 	// 攻撃判定生存カウンタ時間の減少
 	ReduceCntAlive();
 
@@ -576,8 +668,19 @@ void Player::ChangeAttack(void)
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 }
 
+void Player::ChangeCombo(void)
+{
+
+	// 攻撃判定生存カウンタ時間の減少
+	ReduceCntAlive();
+
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::COMBO), false);
+}
+
 void Player::ChangeDead(void)
 {
+
 }
 
 void Player::ChangeEnd(void)
@@ -590,6 +693,7 @@ void Player::ChangeVictory(void)
 
 void Player::UpdateIdle(void)
 {
+	PlayerJump();
 }
 
 void Player::UpdateWalk(void)
@@ -611,10 +715,7 @@ void Player::UpdateRun(void)
 
 void Player::UpdateDodge(void)
 {
-	// 回避移動処理
-	dodgeSpeed_ *= 0.96f;
-
-	// 移動距離を加算
+	// 実際に移動
 	pos_ = VAdd(pos_, VScale(dodgeDir_, dodgeSpeed_));
 
 	if (animationController_->IsEnd())
@@ -627,9 +728,22 @@ void Player::UpdateAttack(void)
 {
 	if (animationController_->IsEnd())
 	{
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Player::UpdateCombo(void)
+{
+
+	//// 移動距離を加算
+	//pos_ = VAdd(pos_, VScale(comboDir_, comboSpeed_));
+
+	if (animationController_->IsEnd())
+	{
 		isAttackAlive_ = false;
 		ChangeState(STATE::IDLE);
 	}
+
 }
 
 void Player::UpdateDead(void)
@@ -674,6 +788,11 @@ void Player::DrawAttack(void)
 
 }
 
+void Player::DrawCombo(void)
+{
+	MV1DrawModel(modelId_);
+}
+
 void Player::DrawDead(void)
 {
 	MV1DrawModel(modelId_);
@@ -692,41 +811,6 @@ void Player::DrawVictory(void)
 
 }
 
-// プレイヤージャンプ処理
-//void Player::playerJump(void)
-//{
-//	auto& ins = InputManager::GetInstance();
-//
-//	// 攻撃しているか判定
-//	bool isJump;
-//	isJump = false;
-//
-//	// ゲームパッドが接続されている数で処理を分ける
-//	if (GetJoypadNum() == 0)
-//	{
-//		// キーボード操作
-//		// アタックキー
-//		isJump = ins.IsNew(KEY_INPUT_SPACE);
-//	}
-//	else
-//	{
-//		// ゲームパッド操作
-//		// 接続されているゲームパッド１の情報を取得
-//		InputManager::JOYPAD_IN_STATE padState =
-//			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
-//
-//		isJump = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
-//			InputManager::JOYPAD_BTN::RIGHT);
-//	}
-//
-//	if (isJump)
-//	{
-//		// アニメーションを攻撃にする
-//		animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP), false);
-//	}
-//
-//}
-
 void Player::Move(void)
 {
 
@@ -739,12 +823,14 @@ void Player::Move(void)
 	// 回避中かチェック
 	bool isDodging = (currentAnim == static_cast<int>(ANIM_TYPE::DODGE));
 
+	bool isComboing = (currentAnim == static_cast<int>(ANIM_TYPE::COMBO));
+
 	// 攻撃アニメーションが終わったらIDLEに戻す
 	if (isAttacking)
 	{
 		UpdateAttack();
 		return;  // 攻撃中は移動処理をスキップ
-	}	
+	}
 
 	if (isDodging)
 	{
@@ -752,10 +838,16 @@ void Player::Move(void)
 		return;
 	}
 
+	if (isComboing)
+	{
+		UpdateCombo();
+		return;
+	}
+
 	// カメラの角度を取得
-	VECTOR camAngles = 
-	SceneManager::GetInstance().GetCamera()->GetAngles();
-	
+	VECTOR camAngles =
+		SceneManager::GetInstance().GetCamera()->GetAngles();
+
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
 	// ダッシュ判定
 	bool isDash_ = false;
@@ -782,7 +874,7 @@ void Player::Move(void)
 		dir = ins.GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
 
 		isDash_ = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
-			InputManager::JOYPAD_BTN::LEFT);
+			InputManager::JOYPAD_BTN::L_TRIGGER);
 	}
 
 	// ダッシュ速度を歩行速度の2倍にする(書き方が違うけどif文と同じ意味)
@@ -805,7 +897,7 @@ void Player::Move(void)
 
 		// 方向×スピードで移動量を作って、座標に足して移動
 		pos_ = VAdd(pos_, VScale(moveDir_, movePow));
-	
+
 		if (isDash_)
 		{
 			// アニメーションを走りにする
@@ -825,4 +917,5 @@ void Player::Move(void)
 
 	PlayerAttack();
 	PlayerDodge();
+	PlayerCombo();
 }

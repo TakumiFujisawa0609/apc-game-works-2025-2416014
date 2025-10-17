@@ -263,7 +263,6 @@ void Enemy::InitAnimation(void)
 	{
 		animationController_->AddInFbx(i, 30.0f, i);
 	}
-
 }
 
 void Enemy::InitPost(void)

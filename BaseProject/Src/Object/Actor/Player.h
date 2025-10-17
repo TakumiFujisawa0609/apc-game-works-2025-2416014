@@ -15,8 +15,10 @@ public:
 		IDLE,
 		WALK,
 		RUN,
+		JUMP,
 		DODGE,
 		ATTACK,
+		COMBO,
 		DAMAGE,
 		MAX,
 	};
@@ -27,8 +29,10 @@ public:
 		IDLE,
 		WALK,
 		RUN,
+		//JUMP,
 		DODGE,
 		ATTACK,
+		COMBO,
 		DEAD,
 		END,
 		VICTORY,
@@ -46,8 +50,11 @@ public:
 	// プレイヤーダッシュ速度
 	static constexpr float PLAYER_DASH_MOVE = 8.0f;
 
+	//ジャンプ力
+	static constexpr float JUMP_POW = 20.0f;
+
 	// プレイヤー回避距離
-	static constexpr float DODGE_SPEED = 3.0f;
+	static constexpr float DODGE_SPEED = 10.0f;
 
 	//重力
 	static constexpr float GRAVITY_POW = 0.8f;
@@ -163,14 +170,27 @@ private:
 	VECTOR attackLocalPos_;
 	VECTOR attackLocalAngles_;
 
+	// ジャンプ力
+	float jumpPow_;
+
+	// ジャンプ判定
+	bool isJump_;
+
 	// 攻撃判定フラグ
 	bool isAttackAlive_;
-	
 	// 攻撃判定時間
 	int cntAttackAlive_;
 
 	// 衝突判定用半径
 	float attackCollisionRadius_;
+
+	// コンボ変数
+	// コンボ方向
+	VECTOR comboDir_;
+	// コンボ速度
+	float comboSpeed_;
+	// コンボの経過時間
+	float comboTimer_;
 
 	// 武器
 	void InitSword(void);
@@ -182,17 +202,23 @@ private:
 	//void InitDice(void);
 	//void SyncDice(void);
 
-	void PlayerAttack(void);
-	//void playerDamage(void);
-	//void playerJump(void);
+	// プレイヤー行動制御
+	void PlayerJump(void);
 	void PlayerDodge(void);
+
+	void PlayerAttack(void);
+	void PlayerCombo(void);
+
+	//void playerDamage(void);
 
 	// 状態遷移
 	void ChangeIdle(void);
 	void ChangeWalk(void);
 	void ChangeRun(void);
+	//void ChangeJump(void);
 	void ChangeDodge(void);
 	void ChangeAttack(void);
+	void ChangeCombo(void);
 	void ChangeDead(void);
 	void ChangeEnd(void);
 	void ChangeVictory(void);
@@ -200,8 +226,10 @@ private:
 	void UpdateIdle(void);
 	void UpdateWalk(void);
 	void UpdateRun(void);
+	//void UpdateJump(void);
 	void UpdateDodge(void);
 	void UpdateAttack(void);
+	void UpdateCombo(void);
 	void UpdateDead(void);
 	void UpdateEnd(void);
 	void UpdateVictory(void);
@@ -209,8 +237,10 @@ private:
 	void DrawIdle(void);
 	void DrawWalk(void);
 	void DrawRun(void);
+	//void DrawJump(void);
 	void DrawDodge(void);
 	void DrawAttack(void);
+	void DrawCombo(void);
 	void DrawDead(void);
 	void DrawEnd(void);
 	void DrawVictory(void);
