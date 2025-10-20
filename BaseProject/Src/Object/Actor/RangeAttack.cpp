@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "./Enemy.h"
 #include "../../Utility/AsoUtility.h"
 #include "RangeAttack.h"
 
@@ -26,7 +27,7 @@ void RangeAttack::Init(void)
 	lightningCollisionRadius_ = LIGHTNING_RADIUS;
 
 	// îÕàÕçUåÇÇÃê∂ë∂ä˙ä‘
-	cntLightningAlive_ = 100;
+	cntLightning_ = 100;
 
 	isLightningAlive_ = false;
 
@@ -34,14 +35,14 @@ void RangeAttack::Init(void)
 
 void RangeAttack::Update(void)
 {
-
+	RangeAttackTime();
 }
 
 void RangeAttack::Draw(void)
 {
 	if (isLightningAlive_)
 	{
-		DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+		DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0xffff00, 0xffff00, true);
 	}
 
 }
@@ -79,4 +80,16 @@ const bool RangeAttack::GetLightningAlive(void) const
 void RangeAttack::SetLightningAlive(bool isLightningAlive)
 {
 	isLightningAlive_ = isLightningAlive;
+}
+
+void RangeAttack::RangeAttackTime(void)
+{
+	if (isLightningAlive_)
+	{
+		cntLightning_++;
+		if (cntLightning_ % 20 == 0)
+		{
+			isLightningAlive_ = false;
+		}
+	}
 }

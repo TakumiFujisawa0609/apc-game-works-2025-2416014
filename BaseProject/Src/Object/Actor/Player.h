@@ -64,10 +64,16 @@ public:
 	static constexpr float PLAYER_RADIUS = 40.0f;
 
 	// HP
-	static constexpr int PLAYER_HP = 3;
+	static constexpr int PLAYER_HP = 1;
 
 	// 地面衝突用線分の長さ
 	static constexpr float COLLISION_LEN = 10.0f;
+
+	// 視野の広さ
+	static constexpr float VIEW_RANGE = 600.0f;
+
+	// 視野角
+	static constexpr float VIEW_ANGLE = 30.0f;
 
 	// コンストラクタ
 	Player(void);
@@ -125,6 +131,9 @@ protected:
 
 	// 移動処理
 	void Move(void) override;
+
+	// 視野描画
+	void DrawViewRange(void);
 
 private:
 

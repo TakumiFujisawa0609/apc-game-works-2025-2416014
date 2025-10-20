@@ -76,6 +76,7 @@ void ActorBase::InitTransformPost(void)
 
 	// 行列の合成(子, 親と指定すると親⇒子の順に適用される)
 	MATRIX mat = MatrixUtility::Multiplication(localAngles_, angles_);
+
 	// 回転行列をモデルに反映
 	MV1SetRotationMatrix(modelId_, mat);
 	

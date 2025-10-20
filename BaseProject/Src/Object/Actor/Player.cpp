@@ -21,6 +21,8 @@ void Player::Update(void)
 {
 	ActorBase::Update();
 
+	rangeAttack_->Update();
+
 	////重力（加速度を速度に加算していく）
 	//jumpPow_ -= GRAVITY_POW;
 
@@ -76,6 +78,8 @@ void Player::Draw(void)
 {
 	ActorBase::Draw();
 
+	rangeAttack_->Draw();
+
 	switch (state_)
 	{
 	case Player::STATE::IDLE:
@@ -126,21 +130,21 @@ void Player::Draw(void)
 	// 武器モデルの描画
 	MV1DrawModel(swordModelId_);
 
-	//DrawFormatString(
-	//	0, 50, 0xffffff,
-	//	"キャラ角度　 ：(% .1f, % .1f, % .1f)",
-	//	AsoUtility::Rad2DegF(angles_.x),
-	//	AsoUtility::Rad2DegF(angles_.y),
-	//	AsoUtility::Rad2DegF(angles_.z)
-	//);
+	DrawFormatString(
+		0, 50, 0xffffff,
+		"キャラ角度　 ：(% .1f, % .1f, % .1f)",
+		AsoUtility::Rad2DegF(angles_.x),
+		AsoUtility::Rad2DegF(angles_.y),
+		AsoUtility::Rad2DegF(angles_.z)
+	);
 
-	//DrawFormatString(
-	//	0, 70, 0xffffff,
-	//	"キャラ座標　 ：(% .1f, % .1f, % .1f)",
-	//	pos_.x,
-	//	pos_.y,
-	//	pos_.z
-	//);
+	DrawFormatString(
+		0, 70, 0xffffff,
+		"キャラ座標　 ：(% .1f, % .1f, % .1f)",
+		pos_.x,
+		pos_.y,
+		pos_.z
+	);
 
 	//DrawFormatString(
 	//	0, 140, 0xffffff,
@@ -165,11 +169,16 @@ void Player::Draw(void)
 	{
 		DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 	}
+
+	// 視野描画
+	DrawViewRange();
 }
 
 void Player::Release(void)
 {
 	ActorBase::Release();
+
+	rangeAttack_->Release();
 
 	//// モデルの解放
 	//MV1DeleteModel(diceModelId_);
@@ -291,11 +300,11 @@ void Player::InitLoad(void)
 void Player::InitTransform(void)
 {
 	// モデルの位置設定
-	pos_ = VGet(0.0f, 80.0f, -950.0f);
+	pos_ = VGet(0.0f, 10.0f, -950.0f);
 
 	// モデルの角度
 	angles_ = { 0.0f, 0.0f, 0.0f };
-	localAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
+	localAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f),0.0f };
 
 	// モデルの大きさ設定
 	scales_ = { 1.0f, 1.0f, 1.0f };
@@ -337,6 +346,9 @@ void Player::InitAnimation(void)
 
 void Player::InitPost(void)
 {
+	// 範囲攻撃初期化
+	rangeAttack_ = new RangeAttack();
+	rangeAttack_->Init();
 
 	//ジャンプ力の初期化
 	jumpPow_ = 0.0f;
@@ -614,7 +626,13 @@ void Player::PlayerCombo(void)
 
 	if (isCombo)
 	{
+		rangeAttack_->SetLightningAlive(true);
+
 		ChangeCombo();
+	}
+	else
+	{
+		rangeAttack_->SetLightningAlive(false);
 	}
 }
 
@@ -951,4 +969,50 @@ void Player::Move(void)
 	PlayerAttack();
 	PlayerDodge();
 	PlayerCombo();
+}
+
+void Player::DrawViewRange(void)
+{
+	// 三角形の視野
+	float viewRad = AsoUtility::Deg2RadF(VIEW_ANGLE);
+
+	// 向き角度から方向を取得
+	MATRIX mat = MGetIdent();
+	// 視野はプレイヤーの向き（angles_）のみを使用
+	// localAngles_はモデル描画用の補正値なので含めない
+	VECTOR totalAngles = angles_;
+
+	mat = MatrixUtility::GetMatrixRotateXYZ(totalAngles);
+
+	// 前方方向
+	VECTOR forward = VTransform(AsoUtility::DIR_F, mat);
+
+	// 右方向
+	MATRIX rightMat = MMult(mat, MGetRotY(AsoUtility::Deg2RadF(VIEW_ANGLE)));
+	VECTOR right = VTransform(AsoUtility::DIR_F, rightMat);
+
+	// 左方向
+	MATRIX leftMat = MMult(mat, MGetRotY(AsoUtility::Deg2RadF(-VIEW_ANGLE)));
+	VECTOR left = VTransform(AsoUtility::DIR_F, leftMat);
+
+	// 自分の位置
+	VECTOR pos0 = pos_;
+
+	// 正面の位置
+	VECTOR pos1 = VAdd(pos0, VScale(forward, VIEW_RANGE));
+
+	// 正面から半時計周り
+	VECTOR pos2 = VAdd(pos0, VScale(left, VIEW_RANGE));
+
+	// 正面から時計回り
+	VECTOR pos3 = VAdd(pos0, VScale(right, VIEW_RANGE));
+
+	// 視野の描画
+	pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;	// 地面の少し上
+	DrawTriangle3D(pos0, pos2, pos1, 0x0000ff, true);
+	DrawTriangle3D(pos0, pos1, pos3, 0x0000ff, true);
+	DrawLine3D(pos0, pos1, 0xffff00);
+	DrawLine3D(pos0, pos2, 0xffff00);
+	DrawLine3D(pos0, pos3, 0xffff00);
+
 }

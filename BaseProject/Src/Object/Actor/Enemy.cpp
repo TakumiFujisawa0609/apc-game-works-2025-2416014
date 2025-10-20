@@ -15,7 +15,7 @@ Enemy::~Enemy(void)
 {
 }
 
-void Enemy::Update(void)
+void Enemy::Update()
 {
 	if (isAlive_)
 	{

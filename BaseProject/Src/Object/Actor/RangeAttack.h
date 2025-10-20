@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+class Enemy;
 
 // 範囲攻撃クラス
 class RangeAttack
@@ -8,7 +9,7 @@ class RangeAttack
 public:
 
     // 範囲攻撃判定用半径
-    static constexpr float LIGHTNING_RADIUS = 80.0f;
+    static constexpr float LIGHTNING_RADIUS = 50.0f;
 
     // コンストラクタ
     RangeAttack(void);
@@ -42,7 +43,12 @@ public:
     const bool GetLightningAlive(void) const;
     void SetLightningAlive(bool isLightningAlive);
 
+    // 範囲攻撃生存時間
+    void RangeAttackTime(void);
+
 private:
+
+    Enemy* enemy_;
 
     // 範囲攻撃用座標
     VECTOR lightningPos_;
@@ -58,6 +64,6 @@ private:
     bool isLightningAlive_;
 
     // 範囲攻撃判定時間
-    int cntLightningAlive_;
+    int cntLightning_;
 
 };

@@ -78,7 +78,7 @@ public:
 	~Enemy(void) override;
 
 	// 更新・描画・解放
-	void Update(void) override;
+	void Update() override;
 	void Draw(void) override;
 	void Release(void) override;
 
