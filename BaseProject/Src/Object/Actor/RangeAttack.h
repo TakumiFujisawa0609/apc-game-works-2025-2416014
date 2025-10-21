@@ -8,6 +8,22 @@ class RangeAttack
 {
 public:
 
+    // 横8枚
+    static constexpr int NUM_SPRITE_X = 8; 
+
+    // 縦1枚  
+    static constexpr int NUM_SPRITE_Y = 1;   
+
+    // 合計8枚
+    static constexpr int NUM_SPRITE_ALL = 8;    
+
+    // エフェクト画像の分割された大きさ
+    static constexpr int SIZE_XSPRITE_X = 80;   
+    static constexpr int SIZE_XSPRITE_Y = 236;  
+
+    // 画像の大きさ倍率
+    static constexpr float IMG_SCALE = 280.0f;
+
     // 範囲攻撃判定用半径
     static constexpr float LIGHTNING_RADIUS = 50.0f;
 
@@ -57,6 +73,9 @@ private:
     VECTOR lightningLocalPos_;
     VECTOR lightningLocalAngles_;
 
+    // 移動方向
+    VECTOR moveDir_;
+
     // 衝突判定用半径
     float lightningCollisionRadius_;
 
@@ -65,5 +84,11 @@ private:
 
     // 範囲攻撃判定時間
     int cntLightning_;
+
+    // アニメーションカウンタ
+    int cntAnimation_;
+
+    // エフェクト画像
+    int imgs_[NUM_SPRITE_ALL];
 
 };

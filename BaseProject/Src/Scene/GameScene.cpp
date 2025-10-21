@@ -7,6 +7,7 @@
 #include "../Object/Stage/Stage.h"
 #include "../Object/Actor/Player.h"
 #include "../Object/Actor/Enemy.h"
+#include "../Object/Actor/Collision.h"
 #include "../Ui/HpManager.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
@@ -48,6 +49,9 @@ void GameScene::Init(void)
 	camera->SetFollow(player_);
 	camera->ChangeMode(Camera::MODE::FOLLOW);
 
+	// “–‚½‚è”»’è
+	Collision::GetInstance()->CreatInstance();
+	Collision::GetInstance()->SetStage(stage_);
 }
 
 void GameScene::Update(void)
@@ -125,6 +129,8 @@ void GameScene::Release(void)
 	hpManager_->Release();
 	delete hpManager_;
 
+	// “–‚½‚è”»’è‚Ì‰ð•ú
+	Collision::GetInstance()->DeleteInstance();
 }
 
 void GameScene::Collision(void)
