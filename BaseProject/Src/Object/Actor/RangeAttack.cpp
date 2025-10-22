@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "../../Manager/InputManager.h"
 #include "./Enemy.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Application.h"
@@ -37,7 +38,7 @@ void RangeAttack::Init(void)
 	lightningCollisionRadius_ = LIGHTNING_RADIUS;
 
 	// ”ÍˆÍUŒ‚‚Ì¶‘¶ŠúŠÔ
-	cntLightning_ = 500;
+	cntLightning_ = LIGHTNING_POINT;
 
 	isLightningAlive_ = false;
 
@@ -56,6 +57,7 @@ void RangeAttack::Update(void)
 			cntAnimation_ = 0; 
 		}
 	}
+
 
 }
 

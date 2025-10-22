@@ -5,6 +5,7 @@ class AnimationController;
 class MatrixUtility;
 class Camera;
 class RangeAttack;
+class Enemy;
 
 class Player : public ActorBase
 {
@@ -75,15 +76,24 @@ public:
 	// 視野角
 	static constexpr float VIEW_ANGLE = 30.0f;
 
+	// 範囲攻撃可能の広さ
+	static constexpr float RANGE_ATTACK_REACH = 800.0f;
+
 	// 当たり判定の範囲
 	static constexpr float COLL_CAPSULE_UP_POS = 110.0f;	// カプセルの当たり判定(上)
 	static constexpr float COLL_CAPSULE_DOWN_POS = 30.0f;	// カプセルの当たり判定(下)
 	static constexpr float COLL_CAPSULE_RADIUS = 20.0f;		// カプセルの半径
 
+	// 範囲攻撃のY軸補正値
+	static constexpr float RANGE_Y_OFFSET = 400.0f;
+
 	// コンストラクタ
 	Player(void);
 	// デストラクタ
 	~Player(void) override;
+
+	// ターゲット
+	void SetEnemy(Enemy* enemy);
 
 	// 更新
 	void Update(void) override;
@@ -105,7 +115,7 @@ public:
 
 	// 座標を取得・設定
 	const VECTOR& GetAttackPos(void) const;
-	void SetAttackPos(const VECTOR& pos);
+	void SetAttackPos(const VECTOR& attackPos);
 
 	// 生存フラグ
 	const bool IsAttackAlive(void) const;
@@ -142,6 +152,9 @@ protected:
 
 private:
 
+	// エネミー
+	Enemy* enemy_;
+
 	// カメラ
 	Camera* camera_;
 
@@ -165,13 +178,13 @@ private:
 	// 衝突判定用半径
 	float collisionRadius_;
 
-	//// サイコロモデル情報
-	//int diceModelId_;
-	//VECTOR dicePos_;
-	//VECTOR diceAngles_;
-	//VECTOR diceScales_;
-	//VECTOR diceLocalPos_;
-	//VECTOR diceLocalAngles_;
+	// サイコロモデル情報
+	int diceModelId_;
+	VECTOR dicePos_;
+	VECTOR diceAngles_;
+	VECTOR diceScales_;
+	VECTOR diceLocalPos_;
+	VECTOR diceLocalAngles_;
 
 	// 武器モデル情報
 	int swordModelId_;
@@ -210,6 +223,9 @@ private:
 	// コンボの経過時間
 	float comboTimer_;
 
+	// コンボ攻撃判定フラグ
+	bool isCombo_;
+	
 	// 武器
 	void InitSword(void);
 	void SyncSword(void);
@@ -217,8 +233,8 @@ private:
 	// 攻撃判定生存期間の減少
 	void ReduceCntAlive(void);
 
-	//void InitDice(void);
-	//void SyncDice(void);
+	void InitDice(void);
+	void SyncDice(void);
 
 	// プレイヤー行動制御
 	void PlayerJump(void);
@@ -226,6 +242,9 @@ private:
 
 	void PlayerAttack(void);
 	void PlayerCombo(void);
+
+	// 索敵
+	void AttackSearch(void);
 
 	//void playerDamage(void);
 

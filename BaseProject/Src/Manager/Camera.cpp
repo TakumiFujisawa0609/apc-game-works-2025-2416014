@@ -53,6 +53,7 @@ void Camera::SetBeforeDraw(void)
 		angles_.y,
 		angles_.z
 	);
+
 }
 
 void Camera::SetBeforeDrawFixedPoint(void)
@@ -89,51 +90,6 @@ void Camera::SetBeforeDrawFree(void)
 	);
 }
 
-//void Camera::SetBeforeDrawFollow(void)
-//{
-//
-//	auto& ins = InputManager::GetInstance();
-//	if (GetJoypadNum() == 0)
-//	{
-//		// 方向回転によるXYZの移動
-//		MoveXYZDirection();
-//	}
-//	else
-//	{
-//		// 方向回転によるXYZの移動(ゲームパッド)
-//		MoveXYZDirectionPad();
-//	}
-//
-//	// カメラの移動
-//	// カメラの回転行列を作成
-//	MATRIX mat = MGetIdent();
-//	//mat = MMult(mat, MGetRotX(angles_.x));
-//	mat = MMult(mat, MGetRotY(angles_.y));
-//	//mat = MMult(mat, MGetRotZ(angles_.z));
-//
-//	// 注視点の移動
-//	VECTOR followPos = follow_->GetPos();
-//	VECTOR targetLocalRotPos = VTransform(FOLLOW_TARGET_LOCAL_POS, mat);
-//	targetPos_ = followPos;
-//	
-//	// カメラの移動
-//	// 相対座標を回転させて、回転後の相対座標を取得する
-//	VECTOR cameraLocalRotPos = VTransform(FOLLOW_CAMERA_LOCAL_POS, mat);
-//	
-//	// 相対座標からワールド座標に直して、カメラ座標とする
-//	pos_ = VAdd(followPos, cameraLocalRotPos);
-//	
-//	// カメラの上方向を計算
-//	VECTOR up = VTransform(AsoUtility::DIR_U, mat);
-//
-//	// カメラの設定(位置と注視点による制御)
-//	SetCameraPositionAndTargetAndUpVec(
-//		pos_,
-//		targetPos_,
-//		up
-//	);
-//
-//}
 
 void Camera::SetBeforeDrawFollow(void)
 {
@@ -204,7 +160,7 @@ void Camera::DrawDebug(void)
 	//	AsoUtility::Rad2DegF(angles_.z)
 	//);
 
-	//DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
+	DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
 }
 
 void Camera::ChangeMode(MODE mode)

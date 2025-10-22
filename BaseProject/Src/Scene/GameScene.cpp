@@ -8,6 +8,7 @@
 #include "../Object/Actor/Player.h"
 #include "../Object/Actor/Enemy.h"
 #include "../Object/Actor/Collision.h"
+#include "../Object/Actor/RangeAttack.h"
 #include "../Ui/HpManager.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
@@ -37,8 +38,16 @@ void GameScene::Init(void)
 	player_->Init();
 
 	// エネミー初期化
-	enemy_ = new Enemy(player_);
+	enemy_ = new Enemy();
 	enemy_->Init();
+
+	// 範囲攻撃初期化
+	rangeAttack_ = new RangeAttack();
+	rangeAttack_->Init();
+
+	// お互いの参照を設定
+	enemy_->SetTarget(player_);
+	player_->SetEnemy(enemy_);
 
 	// Ui初期化
 	hpManager_ = new HpManager(player_);
@@ -70,6 +79,9 @@ void GameScene::Update(void)
 
 	// Ui更新
 	hpManager_->Update();
+
+	// 範囲攻撃更新
+	rangeAttack_->Update();
 
 	// デバッグ
 	// 敵が倒されたらゲームクリアへ遷移する
@@ -105,6 +117,9 @@ void GameScene::Draw(void)
 	// Ui描画
 	hpManager_->Draw();
 
+	// 範囲攻撃描画
+	rangeAttack_->Draw();
+
 }
 
 void GameScene::Release(void)
@@ -129,6 +144,10 @@ void GameScene::Release(void)
 	hpManager_->Release();
 	delete hpManager_;
 
+	// 範囲攻撃解放
+	rangeAttack_->Release();
+	delete rangeAttack_;
+
 	// 当たり判定の解放
 	Collision::GetInstance()->DeleteInstance();
 }
@@ -137,6 +156,7 @@ void GameScene::Collision(void)
 {
 	CollisionEnemy();
 	CollisionWeapon();
+	CollisionRangeWeapon();
 	CollisionStage();
 }
 
@@ -220,9 +240,6 @@ void GameScene::CollisionWeapon(void)
 		//ベクトルを正規化(これで方向を取得する)
 		VECTOR dir = VNorm(diff);
 
-		////プレイヤーがノックバックする
-		//player_->KnockBack(dir, 20.0f);
-
 		//エネミーがダメージを食らう
 		enemy_->Damage(1);
 
@@ -230,6 +247,8 @@ void GameScene::CollisionWeapon(void)
 
 		int a = 1;
 	}
+
+
 }
 
 void GameScene::CollisionStage(void)
@@ -258,6 +277,33 @@ void GameScene::CollisionStage(void)
 	if (result.HitFlag == 1)
 	{
 		player_->CollisionStage(result.HitPosition);
+	}
+
+}
+
+void GameScene::CollisionRangeWeapon(void)
+{
+
+	// エネミーと範囲攻撃の衝突判定
+	VECTOR enemyPos = enemy_->GetPos();
+	VECTOR rangePos = rangeAttack_->GetLightningPos();
+
+	//エネミーと範囲攻撃の衝突判定
+	if (AsoUtility::IsHitSpheres(rangePos, rangeAttack_->GetLightningCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()) && rangeAttack_->GetLightningAlive())
+	{
+		//ベクトルを求める
+		VECTOR diff = VSub(rangePos, enemyPos);
+		diff.y = 500.0f;
+
+		//ベクトルを正規化(これで方向を取得する)
+		VECTOR dir = VNorm(diff);
+
+		//エネミーがダメージを食らう
+		enemy_->Damage(1);
+
+		rangeAttack_->SetLightningAlive(false);
+
+		int a = 1;
 	}
 
 }

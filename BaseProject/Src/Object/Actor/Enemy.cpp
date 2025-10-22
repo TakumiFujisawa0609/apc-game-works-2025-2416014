@@ -6,13 +6,17 @@
 #include "./Player.h"
 #include "Enemy.h"
 
-Enemy::Enemy(Player* player)
+Enemy::Enemy()
 {
-	player_ = player;
 }
 
 Enemy::~Enemy(void)
 {
+}
+
+void Enemy::SetTarget(Player* player)
+{
+	player_ = player;
 }
 
 void Enemy::Update()
@@ -81,27 +85,27 @@ void Enemy::Draw(void)
 		}
 	}
 
-	//	if (isNotice_)
-	//	{
-	//		// 視野範囲内：ディフューズカラーを赤色にする
-	//		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-	//	}
-	//	else if (isHear_)
-	//	{
-	//		// 聴覚範囲内：ディフューズカラーを黄色にする
-	//		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
-	//	}
-	//	else if (isAttack_)
-	//	{
-	//		// 聴覚範囲内：ディフューズカラーを蒼色にする
-	//		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
+		if (isNotice_)
+		{
+			// 視野範囲内：ディフューズカラーを赤色にする
+			MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+		}
+		else if (isHear_)
+		{
+			// 聴覚範囲内：ディフューズカラーを黄色にする
+			MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
+		}
+		else if (isAttack_)
+		{
+			// 聴覚範囲内：ディフューズカラーを蒼色にする
+			MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 0.5f, 1.0f));
 
-	//	}
-	//	else
-	//	{
-	//		// 視野範囲外：ディフューズカラーを灰色にする
-	//		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
-	//	}
+		}
+		else
+		{
+			// 視野範囲外：ディフューズカラーを灰色にする
+			MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
+		}
 
 	//}
 	//
@@ -121,37 +125,39 @@ void Enemy::Draw(void)
 	//	pos_.z
 	//);
 
-	// 当たり判定デバッグ表示
-	//DrawSphere3D(VGet(pos_.x,pos_.y + 100,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+	//当たり判定デバッグ表示
+	DrawSphere3D(VGet(pos_.x,pos_.y,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
-	//// 視野描画
-	//DrawViewRange();
+	// 視野描画
+	DrawViewRange();
 
-	//// 聴覚範囲描画
-	//const int DIV = 32;
-	//for (int i = 0; i < DIV; i++)
-	//{
-	//	float angle1 = (float)i / DIV * DX_TWO_PI;
-	//	float angle2 = (float)(i + 1) / DIV * DX_TWO_PI;
+	// 聴覚範囲描画
+	const int DIV = 32;
+	for (int i = 0; i < DIV; i++)
+	{
+		float angle1 = (float)i / DIV * DX_TWO_PI;
+		float angle2 = (float)(i + 1) / DIV * DX_TWO_PI;
 
-	//	VECTOR p1 = VAdd(pos_, VGet(cosf(angle1) * HEAR_RANGE, 0.0f, sinf(angle1) * HEAR_RANGE));
-	//	VECTOR p2 = VAdd(pos_, VGet(cosf(angle2) * HEAR_RANGE, 0.0f, sinf(angle2) * HEAR_RANGE));
+		VECTOR p1 = VAdd(pos_, VGet(cosf(angle1) * HEAR_RANGE, 0.0f, sinf(angle1) * HEAR_RANGE));
+		VECTOR p2 = VAdd(pos_, VGet(cosf(angle2) * HEAR_RANGE, 0.0f, sinf(angle2) * HEAR_RANGE));
 
-	//	DrawLine3D(p1, p2, GetColor(255, 255, 0));
-	//}
+		DrawLine3D(p1, p2, GetColor(255, 255, 0));
+	}
 
-	//// 攻撃範囲描画
-	//const int ATA = 32;
-	//for (int i = 0; i < DIV; i++)
-	//{
-	//	float angle1 = (float)i / DIV * DX_TWO_PI;
-	//	float angle2 = (float)(i + 1) / DIV * DX_TWO_PI;
+	// 攻撃範囲描画
+	const int ATA = 32;
+	for (int i = 0; i < DIV; i++)
+	{
+		float angle1 = (float)i / DIV * DX_TWO_PI;
+		float angle2 = (float)(i + 1) / DIV * DX_TWO_PI;
 
-	//	VECTOR p1 = VAdd(pos_, VGet(cosf(angle1) * ATTACK_RANGE, 0.0f, sinf(angle1) * ATTACK_RANGE));
-	//	VECTOR p2 = VAdd(pos_, VGet(cosf(angle2) * ATTACK_RANGE, 0.0f, sinf(angle2) * ATTACK_RANGE));
+		VECTOR p1 = VAdd(pos_, VGet(cosf(angle1) * ATTACK_RANGE, 0.0f, sinf(angle1) * ATTACK_RANGE));
+		VECTOR p2 = VAdd(pos_, VGet(cosf(angle2) * ATTACK_RANGE, 0.0f, sinf(angle2) * ATTACK_RANGE));
 
-	//	DrawLine3D(p1, p2, GetColor(255, 0, 0));
-	//}
+		DrawLine3D(p1, p2, GetColor(255, 0, 0));
+	}
+
+	DrawFormatString(0, 150, 0xffffff, "ヒットポイント: %d", hp_);
 
 }
 
@@ -356,55 +362,71 @@ void Enemy::Search(void)
 		float dot = VDot(forward, toPlayer);
 		// 角度に変換
 		float angle = acosf(dot);
+
+		isNotice_ = true;
+		//return;
+
 	}
 
 	// 攻撃範囲内か
 	if (distance < ATTACK_RANGE)
 	{
 		isHear_ = false;
+		isNotice_ = false;
+		isMove_ = false;
 		isAttack_ = true;
+	}
+	else if(distance < VIEW_RANGE)
+	{
+		isHear_ = false;
+		isMove_ = true;
+		isNotice_ = true;
+		isAttack_ = false;
+	}
+	else if(distance < HEAR_RANGE)
+	{
+		isHear_ = true;
+		isMove_ = false;
+		isNotice_ = false;
+		isAttack_ = false;
+
 	}
 	else
 	{
+		isHear_ = false;
+		isMove_ = false;
+		isNotice_ = false;
 		isAttack_ = false;
+
 	}
 
 	if (isAttack_)
 	{
-		// ダメージ状態か死亡状態なら遷移処理をスキップする
-		if (state_ == STATE::DAMAGE || state_ == STATE::DEAD)
-		{
-			return; 
-		}
-
 		isMove_ = false;
 		cntAttack_++;
 		// 一定間隔で攻撃させる
 		if (cntAttack_ % TERM_ATTACK == 0)
 		{
 			cntAttack_ = 0;
-
 			ChangeState(STATE::ATTACK);
-
 		}
+	}
+	else if (isNotice_)
+	{
+		isMove_ = true;
+		ChangeState(STATE::WALK);  
 	}
 	else if (isHear_)
 	{
-		isMove_ = true;
-		isAttack_ = false;
-		ChangeState(STATE::WALK);
+		isMove_ = false;
+		ChangeState(STATE::IDLE);
 	}
 	else
 	{
 		isMove_ = false;
-		isNotice_ = false;
-		isAttack_ = false;
 		ChangeState(STATE::IDLE);
 	}
-
-
 }
-
 void Enemy::LookPlayer(void)
 {
 	//プレイヤー（相手）の座標を取得

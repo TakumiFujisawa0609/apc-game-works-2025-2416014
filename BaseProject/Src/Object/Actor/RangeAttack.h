@@ -25,8 +25,10 @@ public:
     static constexpr float IMG_SCALE = 280.0f;
 
     // 範囲攻撃判定用半径
-    static constexpr float LIGHTNING_RADIUS = 50.0f;
+    static constexpr float LIGHTNING_RADIUS = 100.0f;
 
+    // 範囲攻撃使用ポイント
+    static constexpr float LIGHTNING_POINT = 50000.0f;
     // コンストラクタ
     RangeAttack(void);
 

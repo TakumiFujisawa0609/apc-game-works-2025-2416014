@@ -5,6 +5,7 @@ class Stage;
 class Player;
 class Enemy;
 class HpManager;
+class RangeAttack;
 
 class GameScene : public SceneBase
 {
@@ -39,6 +40,9 @@ private:
 	// HP
 	HpManager* hpManager_;
 
+	// 範囲攻撃
+	RangeAttack* rangeAttack_;
+
 	// 地面との衝突用線分
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
@@ -54,5 +58,8 @@ private:
 
 	// ステージブロックとプレイヤーの衝突
 	void CollisionStage(void);
+	
+	// 範囲攻撃とエネミーの衝突
+	void CollisionRangeWeapon(void);
 
 };

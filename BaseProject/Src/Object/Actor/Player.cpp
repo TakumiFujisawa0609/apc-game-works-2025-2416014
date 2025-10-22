@@ -4,6 +4,7 @@
 #include "../../Manager/Camera.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
+#include "./Enemy.h"
 #include "./RangeAttack.h"
 #include "./Collision.h"
 #include "../../Utility/AsoUtility.h"
@@ -18,11 +19,19 @@ Player::~Player(void)
 {
 }
 
+void Player::SetEnemy(Enemy* enemy)
+{
+	enemy_ = enemy;
+}
+
 void Player::Update(void)
 {
 	ActorBase::Update();
 
 	rangeAttack_->Update();
+
+	// 索敵
+	AttackSearch();
 
 	//// 重力（加速度を速度に加算していく）
 	//jumpPow_ -= GRAVITY_POW;
@@ -75,8 +84,8 @@ void Player::Update(void)
 	Collision();
 
 	// サイコロモデルのZ軸回転
-	//diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
-	//SyncDice();
+	diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
+	SyncDice();
 }
 
 void Player::Draw(void)
@@ -120,8 +129,8 @@ void Player::Draw(void)
 
 	}
 
-	//// サイコロモデルの描画
-	//MV1DrawModel(diceModelId_);
+	// サイコロモデルの描画
+	MV1DrawModel(diceModelId_);
 
 	//// デバッグ表示
 	//DrawFormatString(
@@ -135,21 +144,21 @@ void Player::Draw(void)
 	// 武器モデルの描画
 	MV1DrawModel(swordModelId_);
 
-	DrawFormatString(
-		0, 50, 0xffffff,
-		"キャラ角度　 ：(% .1f, % .1f, % .1f)",
-		AsoUtility::Rad2DegF(angles_.x),
-		AsoUtility::Rad2DegF(angles_.y),
-		AsoUtility::Rad2DegF(angles_.z)
-	);
+	//DrawFormatString(
+	//	0, 50, 0xffffff,
+	//	"キャラ角度　 ：(% .1f, % .1f, % .1f)",
+	//	AsoUtility::Rad2DegF(angles_.x),
+	//	AsoUtility::Rad2DegF(angles_.y),
+	//	AsoUtility::Rad2DegF(angles_.z)
+	//);
 
-	DrawFormatString(
-		0, 70, 0xffffff,
-		"キャラ座標　 ：(% .1f, % .1f, % .1f)",
-		pos_.x,
-		pos_.y,
-		pos_.z
-	);
+	//DrawFormatString(
+	//	0, 70, 0xffffff,
+	//	"キャラ座標　 ：(% .1f, % .1f, % .1f)",
+	//	pos_.x,
+	//	pos_.y,
+	//	pos_.z
+	//);
 
 	//DrawFormatString(
 	//	0, 140, 0xffffff,
@@ -173,6 +182,8 @@ void Player::Draw(void)
 	if (isAttackAlive_)
 	{
 		DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	
+	
 	}
 
 	// 視野描画
@@ -375,7 +386,7 @@ void Player::InitPost(void)
 	attackCollisionRadius_ = ATTACK_RADIUS;
 
 	// ここに個別の初期化処理を追加できる
-	//InitDice();
+	InitDice();
 	InitSword();
 
 	// 状態初期化
@@ -454,45 +465,45 @@ void Player::ReduceCntAlive(void)
 
 }
 
-//void Player::InitDice(void)
-//{
-//	// サイコロモデル読み込み
-//	diceModelId_ = MV1LoadModel((Application::PATH_MODEL + "Sword.mv1").c_str());
-//
-//	diceLocalPos_ = { 200.0f,100.0f,0.0f };
-//	MV1SetPosition(diceModelId_, diceLocalPos_);
-//
-//	diceAngles_ = { 0.0f, 0.0f, 0.0f };
-//	diceLocalAngles_ = { 0.0f,AsoUtility::Deg2RadF(0.0f), 0.0f };
-//
-//	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
-//
-//	MV1SetRotationMatrix(diceModelId_, diceMat);
-//
-//	diceScales_ = { 0.5f, 0.5f, 0.5f };
-//	MV1SetScale(diceModelId_, diceScales_);
-//
-//}
+void Player::InitDice(void)
+{
+	// サイコロモデル読み込み
+	diceModelId_ = MV1LoadModel((Application::PATH_MODEL + "dice.mv1").c_str());
 
-//void Player::SyncDice(void)
-//{
-//	// サイコロモデルの回転行列
-//	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
-//	// 親の回転行列
-//	MATRIX parentMat = MatrixUtility::GetMatrixRotateXYZ(angles_);
-//	// 親子の回転行列を合成(子:サイコロ, 親:プレイヤーと指定すると親⇒子の順に適用される)
-//	MATRIX mat = MMult(diceMat, parentMat);
-//	// 回転行列をモデルに反映
-//	MV1SetRotationMatrix(diceModelId_, mat);
-//
-//	// サイコロのローカル座標を親の回転行列で回転
-//	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
-//	
-//	// サイコロのワールド座標
-//	dicePos_ = VAdd(localRotPos_, pos_);
-//	MV1SetPosition(diceModelId_, dicePos_);
-//
-//}
+	diceLocalPos_ = { 200.0f,100.0f,0.0f };
+	MV1SetPosition(diceModelId_, diceLocalPos_);
+
+	diceAngles_ = { 0.0f, 0.0f, 0.0f };
+	diceLocalAngles_ = { 0.0f,AsoUtility::Deg2RadF(0.0f), 0.0f };
+
+	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
+
+	MV1SetRotationMatrix(diceModelId_, diceMat);
+
+	diceScales_ = { 0.1f, 0.1f, 0.1f };
+	MV1SetScale(diceModelId_, diceScales_);
+
+}
+
+void Player::SyncDice(void)
+{
+	// サイコロモデルの回転行列
+	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
+	// 親の回転行列
+	MATRIX parentMat = MatrixUtility::GetMatrixRotateXYZ(angles_);
+	// 親子の回転行列を合成(子:サイコロ, 親:プレイヤーと指定すると親⇒子の順に適用される)
+	MATRIX mat = MMult(diceMat, parentMat);
+	// 回転行列をモデルに反映
+	MV1SetRotationMatrix(diceModelId_, mat);
+
+	// サイコロのローカル座標を親の回転行列で回転
+	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
+	
+	// サイコロのワールド座標
+	dicePos_ = VAdd(localRotPos_, pos_);
+	MV1SetPosition(diceModelId_, dicePos_);
+
+}
 
 
 void Player::PlayerJump(void)
@@ -605,15 +616,15 @@ void Player::PlayerCombo(void)
 	auto& ins = InputManager::GetInstance();
 
 	// 攻撃しているか判定
-	bool isCombo;
-	isCombo = false;
+	bool inputCombo;
+	inputCombo = false;
 
 	// ゲームパッドが接続されている数で処理を分ける
 	if (GetJoypadNum() == 0)
 	{
 		// キーボード操作
 		// アタックキー
-		isCombo = ins.IsNew(KEY_INPUT_J);
+		inputCombo = ins.IsNew(KEY_INPUT_J);
 	}
 	else
 	{
@@ -622,20 +633,76 @@ void Player::PlayerCombo(void)
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
-		isCombo = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		inputCombo = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::TOP);
 	}
 
-	if (isCombo)
+	if (inputCombo)
 	{
-		rangeAttack_->SetLightningAlive(true);
-
 		ChangeCombo();
+	}
+}
+
+void Player::AttackSearch(void)
+{
+	// 向き角度から方向を取得
+	MATRIX mat = MGetIdent();
+	// 視野はプレイヤーの向き（angles_）のみを使用
+	// localAngles_はモデル描画用の補正値なので含めない
+	VECTOR totalAngles = angles_;
+
+	mat = MatrixUtility::GetMatrixRotateXYZ(totalAngles);
+
+	// 前方方向
+	VECTOR forward = VTransform(AsoUtility::DIR_F, mat);
+
+	// エネミーーの位置
+	VECTOR enemyPos = enemy_->GetPos();
+	VECTOR toEnemy = VSub(enemyPos, pos_);
+	// プレイヤーまでの距離を求める
+	float distance = VSize(toEnemy);
+
+	// 範囲攻撃可能か
+	bool isAttackable_ = false;
+
+	if (distance < RANGE_ATTACK_REACH)
+	{
+		// 正規化
+		VECTOR toEnemyNorm = VNorm(toEnemy);
+
+		// 前方方向との内積で角度チェック
+		float dot = VDot(forward, toEnemyNorm);
+		float angle = acosf(dot);
+
+		// 範囲攻撃可能
+		if (angle <= AsoUtility::Deg2RadF(VIEW_ANGLE))
+		{
+			isAttackable_ = true;
+		}
+		else
+		{
+			isAttackable_ = false;
+		}
+
+	}	
+	
+	if (isAttackable_)
+	{
+		if (isCombo_)
+		{
+			rangeAttack_->SetLightningAlive(true);
+			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 100, enemyPos.z));
+		}
+		else
+		{
+			rangeAttack_->SetLightningAlive(false);
+		}
 	}
 	else
 	{
 		rangeAttack_->SetLightningAlive(false);
 	}
+
 }
 
 void Player::Collision(void)
@@ -670,6 +737,7 @@ void Player::ChangeIdle(void)
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
 
+	isCombo_ = false;
 	isAttackAlive_ = false;
 }
 
@@ -799,6 +867,8 @@ void Player::UpdateAttack(void)
 
 void Player::UpdateCombo(void)
 {
+	isCombo_ = true;
+
 	if (animationController_->IsEnd())
 	{
 		isAttackAlive_ = false;
@@ -1036,5 +1106,26 @@ void Player::DrawViewRange(void)
 	DrawLine3D(pos0, pos1, 0xffff00);
 	DrawLine3D(pos0, pos2, 0xffff00);
 	DrawLine3D(pos0, pos3, 0xffff00);
+
+
+
+	// 範囲攻撃可能エリア
+	// 正面の位置
+	VECTOR rangePos1 = VAdd(pos0, VScale(forward, RANGE_ATTACK_REACH));
+
+	// 正面から半時計周り
+	VECTOR rangePos2 = VAdd(pos0, VScale(left, RANGE_ATTACK_REACH));
+
+	// 正面から時計回り
+	VECTOR rangePos3 = VAdd(pos0, VScale(right, RANGE_ATTACK_REACH));
+
+	// 範囲攻撃可能エリアの描画
+	pos0.y = rangePos1.y = rangePos2.y = rangePos3.y = 10.0f;	// 地面の少し上
+	DrawTriangle3D(pos0, rangePos2, rangePos1, 0xffff00, true);
+	DrawTriangle3D(pos0, rangePos1, rangePos3, 0xffff00, true);
+	DrawLine3D(pos0, rangePos1, 0xffff00);
+	DrawLine3D(pos0, rangePos2, 0xffff00);
+	DrawLine3D(pos0, rangePos3, 0xffff00);
+
 
 }

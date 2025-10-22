@@ -74,8 +74,11 @@ public:
 	static constexpr int TERM_ATTACK = 40;
 
 	// コンストラクタ
-	Enemy(Player* player);
+	Enemy();
 	~Enemy(void) override;
+
+	// ターゲット
+	void SetTarget(Player* player);
 
 	// 更新・描画・解放
 	void Update() override;
