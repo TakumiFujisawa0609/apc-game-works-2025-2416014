@@ -15,7 +15,7 @@ RangeAttack::~RangeAttack(void)
 void RangeAttack::Init(void)
 {
 
-	// エフェクト画像(横)のロード
+	// エフェクト画像のロード
 	LoadDivGraph(
 		(Application::PATH_IMAGE + "Lightning.png").c_str(),
 		NUM_SPRITE_ALL,
@@ -24,7 +24,7 @@ void RangeAttack::Init(void)
 		imgs_);
 
 	// モデルの位置設定
-	lightningPos_ = VGet(0.0f, 400.0f, 0.0f);
+	lightningPos_ = VGet(0.0f, 450.0f, 0.0f);
 
 	// モデルの角度
 	lightningAngles_ = { 0.0f, 0.0f, 0.0f };

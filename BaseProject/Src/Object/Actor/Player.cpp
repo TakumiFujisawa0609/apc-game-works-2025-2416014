@@ -5,6 +5,7 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/InputManager.h"
 #include "./RangeAttack.h"
+#include "./Collision.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
 #include "Player.h"
@@ -23,10 +24,10 @@ void Player::Update(void)
 
 	rangeAttack_->Update();
 
-	////重力（加速度を速度に加算していく）
+	//// 重力（加速度を速度に加算していく）
 	//jumpPow_ -= GRAVITY_POW;
 
-	////プレイヤーの座標に移動量（速度、ジャンプ力）を加算する
+	//// プレイヤーの座標に移動量を加算
 	//pos_.y += jumpPow_;
 
 	switch (state_)
@@ -64,10 +65,14 @@ void Player::Update(void)
 
 	}
 
+	// ジャンプ
+	PlayerJump();
+
 	// 武器モデルの位置、角度同期
 	SyncSword();
 
-	PlayerJump();
+	// 当たり判定
+	Collision();
 
 	// サイコロモデルのZ軸回転
 	//diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
@@ -497,6 +502,9 @@ void Player::PlayerJump(void)
 	// ジャンプボタン入力判定
 	bool isJumpInput = false;
 
+	//重力（加速度を速度に加算していく）
+	jumpPow_ -= GRAVITY_POW;
+
 	// ゲームパッドが接続されている数で処理を分ける
 	if (GetJoypadNum() == 0)
 	{
@@ -515,24 +523,18 @@ void Player::PlayerJump(void)
 	// ジャンプ開始判定
 	if (isJumpInput && !isJump_)
 	{
+		isJump_ = true;
+		jumpPow_ = JUMP_POW;
+
 		ChangeJump();
-
 	}
 
-	// ジャンプ中のみ重力を適用
-	if (isJump_)
-	{
-		// 重力（加速度を速度に加算していく）
-		jumpPow_ -= GRAVITY_POW;
-
-		// プレイヤーの座標に移動量を加算
-		pos_.y += jumpPow_;
-
-	}
+	pos_.y += jumpPow_;       // Y座標を更新
 
 	// モデルに座標を設定する
 	MV1SetPosition(modelId_, pos_);
 }
+
 void Player::PlayerAttack(void)
 {
 
@@ -636,6 +638,27 @@ void Player::PlayerCombo(void)
 	}
 }
 
+void Player::Collision(void)
+{
+	// ステージとの当たり判定
+	CollisionStageCapsule();
+}
+
+void Player::CollisionStageCapsule(void)
+{
+	// ステージ横の当たり判定(カプセル)
+	VECTOR hitNormal = Collision::GetInstance()->CollCheckStageCapsule
+	(
+		VAdd(pos_, { 0.0f,COLL_CAPSULE_UP_POS,0.0f }),
+		VAdd(pos_, { 0.0f,COLL_CAPSULE_DOWN_POS,0.0f }),
+		COLL_CAPSULE_RADIUS
+	);
+	
+
+	// 当たっていた部分の法線方向に押し流す
+	pos_ = VAdd(pos_, hitNormal);
+}
+
 //void Player::playerDamage(void)
 //{
 //
@@ -667,7 +690,7 @@ void Player::ChangeRun(void)
 void Player::ChangeJump(void)
 {
 	isJump_ = true;
-	jumpPow_ = JUMP_POW;
+	//jumpPow_ = JUMP_POW;
 	// ジャンプアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::JUMP),false);
 }
@@ -728,7 +751,6 @@ void Player::ChangeVictory(void)
 
 void Player::UpdateIdle(void)
 {
-
 }
 
 void Player::UpdateWalk(void)

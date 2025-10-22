@@ -75,6 +75,11 @@ public:
 	// 視野角
 	static constexpr float VIEW_ANGLE = 30.0f;
 
+	// 当たり判定の範囲
+	static constexpr float COLL_CAPSULE_UP_POS = 110.0f;	// カプセルの当たり判定(上)
+	static constexpr float COLL_CAPSULE_DOWN_POS = 30.0f;	// カプセルの当たり判定(下)
+	static constexpr float COLL_CAPSULE_RADIUS = 20.0f;		// カプセルの半径
+
 	// コンストラクタ
 	Player(void);
 	// デストラクタ
@@ -223,6 +228,12 @@ private:
 	void PlayerCombo(void);
 
 	//void playerDamage(void);
+
+	// 当たり判定
+	void Collision(void);
+
+	// ステージとの当たり判定(カプセル)
+	void CollisionStageCapsule(void);
 
 	// 状態遷移
 	void ChangeIdle(void);

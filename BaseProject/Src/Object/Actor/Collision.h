@@ -14,6 +14,9 @@ public:
 	// ステージのポインタを取得する
 	void SetStage(Stage* stage) { stage_ = stage; }
 
+	// ステージとカプセルの当たり判定
+	VECTOR CollCheckStageCapsule(VECTOR upPos, VECTOR downPos, float radius);
+
 private:
 	Collision();
 	~Collision();
