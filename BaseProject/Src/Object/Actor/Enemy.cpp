@@ -158,6 +158,7 @@ void Enemy::Draw(void)
 	}
 
 	DrawFormatString(0, 150, 0xffffff, "ヒットポイント: %d", hp_);
+	DrawFormatString(0, 180, 0xffffff, "攻撃間隔カウンタ: %d", cntAttack_);
 
 }
 
@@ -490,9 +491,6 @@ void Enemy::ChangeWalk(void)
 
 void Enemy::ChangeAttack(void)
 {
-	// 攻撃間隔用のカウンタをリセット
-	cntAttack_ = 0;
-
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK),false);
 }
@@ -526,10 +524,16 @@ void Enemy::UpdateIdle(void)
 
 	//移動
 	Move();
+
 }
 
 void Enemy::UpdateWalk(void)
 {
+	//攻撃アニメーションが終わったら通常状態に戻る
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
 
 }
 
