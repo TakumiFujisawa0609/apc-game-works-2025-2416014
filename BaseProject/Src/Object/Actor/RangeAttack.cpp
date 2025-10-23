@@ -25,7 +25,7 @@ void RangeAttack::Init(void)
 		imgs_);
 
 	// モデルの位置設定
-	lightningPos_ = VGet(0.0f, 450.0f, 0.0f);
+	lightningPos_ = VGet(0.0f, 0.0f, 0.0f);
 
 	// モデルの角度
 	lightningAngles_ = { 0.0f, 0.0f, 0.0f };
@@ -38,9 +38,9 @@ void RangeAttack::Init(void)
 	lightningCollisionRadius_ = LIGHTNING_RADIUS;
 
 	// 範囲攻撃の生存期間
-	cntLightning_ = LIGHTNING_POINT;
+	lightningPoint_ = LIGHTNING_POINT;
 
-	isLightningAlive_ = false;
+	//isLightningAlive_ = false;
 
 }
 
@@ -63,21 +63,19 @@ void RangeAttack::Update(void)
 
 void RangeAttack::Draw(void)
 {
-	if (!isLightningAlive_)
+	if (isLightningAlive_)
 	{
-		return;
+		////デバッグ用の球体描画
+		//DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0xffff00, 0xffff00, true);
+
+		// ビルボード描画
+		int img = imgs_[cntAnimation_];
+		DrawBillboard3D(lightningPos_, 0.5f, 0.5f, IMG_SCALE, 0.0f, img, true);
+
 	}
 
-	// デバッグ用の球体描画
-	DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0xffff00, 0xffff00, true);
-
-	// ビルボード描画
-	int img = imgs_[cntAnimation_];
-	DrawBillboard3D(lightningPos_, 0.5f, 0.5f, IMG_SCALE, 0.0f, img, true);
-
-	DrawFormatString(150, 150, 0xffffff, "雷時間: %d", cntAnimation_);
-	DrawFormatString(150, 170, 0xffffff, "生存中: %s", isLightningAlive_ ? "YES" : "NO");
-	DrawFormatString(150, 190, 0xffffff, "生存カウント: %d", cntLightning_);
+	//DrawFormatString(150, 170, 0xffffff, "生存中: %s", isLightningAlive_ ? "YES" : "NO");
+	DrawFormatString(150, 190, 0xffffff, "MP: %d", lightningPoint_);
 
 }
 
@@ -121,14 +119,24 @@ void RangeAttack::SetLightningAlive(bool isLightningAlive)
 	isLightningAlive_ = isLightningAlive;
 }
 
+int RangeAttack::GetLightningPoint(void) const
+{
+	return lightningPoint_;
+}
+
+void RangeAttack::SetLightningPoint(int lightningPoint)
+{
+	lightningPoint_ = lightningPoint;
+}
+
 void RangeAttack::RangeAttackTime(void)
 {
 	if (isLightningAlive_)
 	{
-		cntLightning_--;
-		if (cntLightning_ <= 0)
+		lightningPoint_--;
+		if (lightningPoint_ <= 0)
 		{
-			isLightningAlive_ = false;
+			//isLightningAlive_ = false;
 		}
 	}
 }

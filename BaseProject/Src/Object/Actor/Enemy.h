@@ -62,7 +62,7 @@ public:
 	static constexpr float ATTACK_RANGE = 300.0f;
 
 	// HP
-	static constexpr int ENEMY_HP = 100;
+	static constexpr int ENEMY_HP = 500;
 
 
 	// ダメージアニメーション用カウンタ

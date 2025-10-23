@@ -188,6 +188,9 @@ void Player::Draw(void)
 
 	// 視野描画
 	DrawViewRange();
+
+	DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
+
 }
 
 void Player::Release(void)
@@ -330,6 +333,7 @@ void Player::InitTransform(void)
 
 	isAttackAlive_ = false;
 	isJump_ = false;
+
 }
 
 void Player::InitAnimation(void)
@@ -384,6 +388,9 @@ void Player::InitPost(void)
 
 	// 攻撃判定用半径
 	attackCollisionRadius_ = ATTACK_RADIUS;
+
+	// ジャンプタイマー初期化
+	jumpTimer_ = 0.0f;
 
 	// ここに個別の初期化処理を追加できる
 	InitDice();
@@ -510,9 +517,6 @@ void Player::PlayerJump(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	// ジャンプボタン入力判定
-	bool isJumpInput = false;
-
 	//重力（加速度を速度に加算していく）
 	jumpPow_ -= GRAVITY_POW;
 
@@ -520,24 +524,30 @@ void Player::PlayerJump(void)
 	if (GetJoypadNum() == 0)
 	{
 		// キーボード操作
-		isJumpInput = ins.IsNew(KEY_INPUT_SPACE);
+		isJumpInput_ = ins.IsNew(KEY_INPUT_SPACE);
 	}
 	else
 	{
 		// ゲームパッド操作
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
-		isJumpInput = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isJumpInput_ = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::RIGHT);
 	}
 
 	// ジャンプ開始判定
-	if (isJumpInput && !isJump_)
+	if (isJumpInput_ && !isJump_)
 	{
 		isJump_ = true;
 		jumpPow_ = JUMP_POW;
 
 		ChangeJump();
+	}
+
+	// ジャンプタイマー
+	if (isJump_)
+	{
+		jumpTimer_++;
 	}
 
 	pos_.y += jumpPow_;       // Y座標を更新
@@ -688,10 +698,10 @@ void Player::AttackSearch(void)
 	
 	if (isAttackable_)
 	{
-		if (isCombo_)
+		if (isCombo_ && rangeAttack_->GetLightningPoint() > 0)
 		{
 			rangeAttack_->SetLightningAlive(true);
-			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 100, enemyPos.z));
+			enemy_->Damage(PLAYER_RANGE_DAMAGE);
 		}
 		else
 		{
@@ -721,7 +731,6 @@ void Player::CollisionStageCapsule(void)
 		COLL_CAPSULE_RADIUS
 	);
 	
-
 	// 当たっていた部分の法線方向に押し流す
 	pos_ = VAdd(pos_, hitNormal);
 }
@@ -739,6 +748,9 @@ void Player::ChangeIdle(void)
 
 	isCombo_ = false;
 	isAttackAlive_ = false;
+	isJump_ = false;
+	jumpTimer_ = 0.0f;
+	CollisionStage(pos_);
 }
 
 void Player::ChangeWalk(void)
@@ -868,13 +880,14 @@ void Player::UpdateAttack(void)
 void Player::UpdateCombo(void)
 {
 	isCombo_ = true;
-
+	rangeAttack_->SetLightningAlive(true);
 	if (animationController_->IsEnd())
 	{
 		isAttackAlive_ = false;
 		ChangeState(STATE::IDLE);
 	}
 }
+
 
 void Player::UpdateDead(void)
 {
@@ -986,6 +999,7 @@ void Player::Move(void)
 	{
 		UpdateJump();
 	}
+
 
 	// カメラの角度を取得
 	VECTOR camAngles =

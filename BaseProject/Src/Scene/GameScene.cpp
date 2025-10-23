@@ -83,6 +83,15 @@ void GameScene::Update(void)
 	// 範囲攻撃更新
 	rangeAttack_->Update();
 
+	//エネミーHP0になったらゲームクリアシーン遷移
+	if (enemy_->GetHp() == 0)
+	{
+		//ゲームオーバーシーンに遷移する
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
+		DxLib_End();
+		exit(0);  // ゲームを完全に終了する
+	}
+
 	// デバッグ
 	// 敵が倒されたらゲームクリアへ遷移する
 	if (!enemy_->IsAlive())
@@ -117,8 +126,8 @@ void GameScene::Draw(void)
 	// Ui描画
 	hpManager_->Draw();
 
-	// 範囲攻撃描画
-	rangeAttack_->Draw();
+	//// 範囲攻撃描画
+	//rangeAttack_->Draw();
 
 }
 
@@ -156,7 +165,6 @@ void GameScene::Collision(void)
 {
 	CollisionEnemy();
 	CollisionWeapon();
-	CollisionRangeWeapon();
 	CollisionStage();
 }
 
@@ -241,7 +249,7 @@ void GameScene::CollisionWeapon(void)
 		VECTOR dir = VNorm(diff);
 
 		//エネミーがダメージを食らう
-		enemy_->Damage(1);
+		enemy_->Damage(PLAYER_ATTACK_DAMAGE);
 
 		player_->SetAttackAlive(false);
 
@@ -281,29 +289,3 @@ void GameScene::CollisionStage(void)
 
 }
 
-void GameScene::CollisionRangeWeapon(void)
-{
-
-	// エネミーと範囲攻撃の衝突判定
-	VECTOR enemyPos = enemy_->GetPos();
-	VECTOR rangePos = rangeAttack_->GetLightningPos();
-
-	//エネミーと範囲攻撃の衝突判定
-	if (AsoUtility::IsHitSpheres(rangePos, rangeAttack_->GetLightningCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()) && rangeAttack_->GetLightningAlive())
-	{
-		//ベクトルを求める
-		VECTOR diff = VSub(rangePos, enemyPos);
-		diff.y = 500.0f;
-
-		//ベクトルを正規化(これで方向を取得する)
-		VECTOR dir = VNorm(diff);
-
-		//エネミーがダメージを食らう
-		enemy_->Damage(1);
-
-		rangeAttack_->SetLightningAlive(false);
-
-		int a = 1;
-	}
-
-}

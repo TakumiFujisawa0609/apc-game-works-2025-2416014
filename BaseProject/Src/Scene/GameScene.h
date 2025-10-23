@@ -12,6 +12,10 @@ class GameScene : public SceneBase
 
 public:
 
+
+	// プレイヤー攻撃ダメージ
+	static constexpr int PLAYER_ATTACK_DAMAGE = 20.0f;
+
 	// コンストラクタ
 	GameScene(void);
 
@@ -58,8 +62,5 @@ private:
 
 	// ステージブロックとプレイヤーの衝突
 	void CollisionStage(void);
-	
-	// 範囲攻撃とエネミーの衝突
-	void CollisionRangeWeapon(void);
 
 };

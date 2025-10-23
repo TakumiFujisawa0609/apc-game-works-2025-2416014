@@ -28,7 +28,7 @@ public:
     static constexpr float LIGHTNING_RADIUS = 100.0f;
 
     // 範囲攻撃使用ポイント
-    static constexpr float LIGHTNING_POINT = 50000.0f;
+    static constexpr float LIGHTNING_POINT = 500.0f;
     // コンストラクタ
     RangeAttack(void);
 
@@ -61,6 +61,10 @@ public:
     const bool GetLightningAlive(void) const;
     void SetLightningAlive(bool isLightningAlive);
 
+    // MPを取得・設定
+    int GetLightningPoint(void) const;
+    void SetLightningPoint(int lightningPoint);
+
     // 範囲攻撃生存時間
     void RangeAttackTime(void);
 
@@ -84,8 +88,8 @@ private:
     // 範囲攻撃判定フラグ
     bool isLightningAlive_;
 
-    // 範囲攻撃判定時間
-    int cntLightning_;
+    // 範囲攻撃MP
+    int lightningPoint_;
 
     // アニメーションカウンタ
     int cntAnimation_;

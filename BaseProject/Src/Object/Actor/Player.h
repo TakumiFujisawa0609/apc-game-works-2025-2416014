@@ -67,6 +67,9 @@ public:
 	// HP
 	static constexpr int PLAYER_HP = 1;
 
+	// 範囲攻撃ダメージ
+	static constexpr int PLAYER_RANGE_DAMAGE = 1.0f;
+
 	// 地面衝突用線分の長さ
 	static constexpr float COLLISION_LEN = 10.0f;
 
@@ -201,6 +204,9 @@ private:
 	VECTOR attackLocalPos_;
 	VECTOR attackLocalAngles_;
 
+	// ジャンプボタン入力判定フラグ
+	bool isJumpInput_;
+
 	// ジャンプ力
 	float jumpPow_;
 
@@ -226,6 +232,9 @@ private:
 	// コンボ攻撃判定フラグ
 	bool isCombo_;
 	
+	// ジャンプしている時間
+	float jumpTimer_;
+
 	// 武器
 	void InitSword(void);
 	void SyncSword(void);

@@ -247,7 +247,7 @@ void Enemy::InitTransform(void)
 	localAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
 
 	// ƒ‚ƒfƒ‹‚ÌˆÊ’uİ’è
-	pos_ = { 200.0f, 0.0f, 150.0f };
+	pos_ = VGet(0.0f, 0.0f, 0.0f);
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³İ’è
 	scales_ = { 1.0f, 1.0f, 1.0f };
