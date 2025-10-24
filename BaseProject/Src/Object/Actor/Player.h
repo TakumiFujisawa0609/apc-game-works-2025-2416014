@@ -133,6 +133,9 @@ public:
 	// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 	void Damage(int damage);
 
+	// ”ÍˆÍUŒ‚æ“¾
+	RangeAttack* GetRangeAttack(void) { return rangeAttack_; }
+
 protected:
 
 	// ƒŠƒ\[ƒXƒ[ƒh
@@ -252,7 +255,7 @@ private:
 	void PlayerAttack(void);
 	void PlayerCombo(void);
 
-	// õ“G
+	// “G‚ğ’T‚µ‚ÄUŒ‚
 	void AttackSearch(void);
 
 	//void playerDamage(void);

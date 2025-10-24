@@ -30,7 +30,7 @@ void Player::Update(void)
 
 	rangeAttack_->Update();
 
-	// õ“G
+	// “G‚ğ’T‚µ‚ÄUŒ‚
 	AttackSearch();
 
 	//// d—Íi‰Á‘¬“x‚ğ‘¬“x‚É‰ÁZ‚µ‚Ä‚¢‚­j
@@ -693,7 +693,6 @@ void Player::AttackSearch(void)
 		{
 			isAttackable_ = false;
 		}
-
 	}	
 	
 	if (isAttackable_)

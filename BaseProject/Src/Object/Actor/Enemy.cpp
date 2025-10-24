@@ -4,7 +4,8 @@
 #include "../../Utility/MatrixUtility.h"
 #include "../../Common/AnimationController.h"
 #include "./Player.h"
-#include "Enemy.h"
+#include "./Enemy.h"
+#include "./EnemyAttack.h"
 
 Enemy::Enemy()
 {
@@ -25,11 +26,15 @@ void Enemy::Update()
 	{
 		ActorBase::Update();
 
+		enemyAttack_->Update();
+
 		LookPlayer();
 		// 索敵
 		Search();
 		// 攻撃
 		Attack();
+		// 敵を探して攻撃
+		AttackSearch();
 
 		switch (state_)
 		{
@@ -57,11 +62,14 @@ void Enemy::Update()
 
 void Enemy::Draw(void)
 {
-	ActorBase::Draw();
 
 	// 生存しているときだけ描画
 	if (isAlive_)
 	{
+		ActorBase::Draw();
+
+		enemyAttack_->Draw();
+
 		switch (state_)
 		{
 		case STATE::IDLE:
@@ -85,27 +93,27 @@ void Enemy::Draw(void)
 		}
 	}
 
-		if (isNotice_)
-		{
-			// 視野範囲内：ディフューズカラーを赤色にする
-			MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-		}
-		else if (isHear_)
-		{
-			// 聴覚範囲内：ディフューズカラーを黄色にする
-			MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
-		}
-		else if (isAttack_)
-		{
-			// 聴覚範囲内：ディフューズカラーを蒼色にする
-			MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 0.5f, 1.0f));
+	if (isNotice_)
+	{
+		// 視野範囲内：ディフューズカラーを赤色にする
+		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else if (isHear_)
+	{
+		// 聴覚範囲内：ディフューズカラーを黄色にする
+		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+	else if (isAttack_)
+	{
+		// 聴覚範囲内：ディフューズカラーを蒼色にする
+		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 0.5f, 1.0f));
 
-		}
-		else
-		{
-			// 視野範囲外：ディフューズカラーを灰色にする
-			MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
-		}
+	}
+	else
+	{
+		// 視野範囲外：ディフューズカラーを灰色にする
+		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
+	}
 
 	//}
 	//
@@ -165,6 +173,7 @@ void Enemy::Draw(void)
 void Enemy::Release(void)
 {
 	ActorBase::Release();
+	enemyAttack_->Release();
 }
 
 void Enemy::ChangeState(STATE state)
@@ -275,6 +284,10 @@ void Enemy::InitAnimation(void)
 void Enemy::InitPost(void)
 {
 	// ここに個別の初期化処理を追加できる
+
+	// エネミー攻撃用
+	enemyAttack_ = new EnemyAttack();
+	enemyAttack_->Init();
 
 	// 衝突判定用半径
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
@@ -408,7 +421,6 @@ void Enemy::Search(void)
 		// 一定間隔で攻撃させる
 		if (cntAttack_ % TERM_ATTACK == 0)
 		{
-			cntAttack_ = 0;
 			ChangeState(STATE::ATTACK);
 		}
 	}
@@ -427,7 +439,60 @@ void Enemy::Search(void)
 		isMove_ = false;
 		ChangeState(STATE::IDLE);
 	}
+
+	if (cntAttack_ == 1)
+	{
+		ChangeState(STATE::IDLE);
+	}
 }
+
+void Enemy::AttackSearch(void)
+{
+	// 向き角度から方向を取得
+	MATRIX mat = MGetIdent();
+	// 視野はプレイヤーの向き（angles_）のみを使用
+	// localAngles_はモデル描画用の補正値なので含めない
+	VECTOR totalAngles = angles_;
+
+	mat = MatrixUtility::GetMatrixRotateXYZ(totalAngles);
+
+	// 前方方向
+	VECTOR forward = VTransform(AsoUtility::DIR_F, mat);
+
+	// プレイヤーの位置
+	VECTOR playerPos = player_->GetPos();
+	VECTOR toPlayer = VSub(playerPos, pos_);
+	// プレイヤーまでの距離を求める
+	float distance = VSize(toPlayer);
+
+	// 攻撃可能か
+	bool isAttackable_ = false;
+
+	if (distance < ATTACK_RANGE)
+	{
+		isAttackable_ = true;
+	}
+	else
+	{
+		isAttackable_ = false;
+	}
+	
+	if (isAttackable_ && state_ == (STATE::ATTACK))
+	{
+		// エネミーの位置から前方にオフセット
+		float offsetDistance = ATTACK_COL_OFFSET;
+		VECTOR attackPos = VAdd(pos_, VScale(forward, offsetDistance));
+
+		enemyAttack_->SetPos(attackPos);
+		enemyAttack_->SetAlive(true);
+	}
+	else
+	{
+		enemyAttack_->SetAlive(false);
+	}
+
+}
+
 void Enemy::LookPlayer(void)
 {
 	//プレイヤー（相手）の座標を取得
@@ -542,6 +607,9 @@ void Enemy::UpdateAttack(void)
 	//攻撃アニメーションが終わったら通常状態に戻る
 	if (animationController_->IsEnd())
 	{
+		// 攻撃カウンタを0にする
+		cntAttack_ = 0;
+
 		ChangeState(STATE::IDLE);
 	}
 }

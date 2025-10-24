@@ -25,7 +25,7 @@ void RangeAttack::Init(void)
 		imgs_);
 
 	// モデルの位置設定
-	lightningPos_ = VGet(0.0f, 0.0f, 0.0f);
+	lightningPos_ = AsoUtility::VECTOR_ZERO;
 
 	// モデルの角度
 	lightningAngles_ = { 0.0f, 0.0f, 0.0f };
@@ -102,11 +102,6 @@ const VECTOR& RangeAttack::GetLightningPos(void) const
 void RangeAttack::SetLightningPos(const VECTOR& lightningPos)
 {
 	lightningPos_ = lightningPos;
-}
-
-const bool RangeAttack::IsLightningAlive(void) const
-{
-	return isLightningAlive_;
 }
 
 const bool RangeAttack::GetLightningAlive(void) const

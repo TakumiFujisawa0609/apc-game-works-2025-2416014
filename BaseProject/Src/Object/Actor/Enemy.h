@@ -2,6 +2,7 @@
 #include "ActorBase.h"
 class MatrixUtility;
 class Player;
+class EnemyAttack;
 
 class Enemy : public ActorBase
 {
@@ -61,6 +62,9 @@ public:
 	// UŒ‚”ÍˆÍ
 	static constexpr float ATTACK_RANGE = 300.0f;
 
+	// UŒ‚”ÍˆÍ•â³’l
+	static constexpr float ATTACK_COL_OFFSET = -200.0f;
+	
 	// HP
 	static constexpr int ENEMY_HP = 500;
 
@@ -126,6 +130,9 @@ private:
 	// matrixUtility§Œä
 	MatrixUtility* matrixUtility_;
 
+	// UŒ‚
+	EnemyAttack* enemyAttack_;
+
 	STATE state_;
 
 	// ˆÚ“®‘¬“x
@@ -159,6 +166,9 @@ private:
 
 	// õ“G
 	void Search(void);
+
+	// “G‚ğ’T‚µ‚ÄUŒ‚
+	void AttackSearch(void);
 
 	// ƒvƒŒƒCƒ„[ŠÄ‹
 	void LookPlayer(void);

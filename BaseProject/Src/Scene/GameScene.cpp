@@ -42,8 +42,7 @@ void GameScene::Init(void)
 	enemy_->Init();
 
 	// ”ÍˆÍUŒ‚‰Šú‰»
-	rangeAttack_ = new RangeAttack();
-	rangeAttack_->Init();
+	rangeAttack_ = player_->GetRangeAttack();
 
 	// ‚¨Œİ‚¢‚ÌQÆ‚ğİ’è
 	enemy_->SetTarget(player_);

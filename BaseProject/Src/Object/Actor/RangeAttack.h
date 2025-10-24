@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <DxLib.h>
 class Enemy;
 
 // 範囲攻撃クラス
@@ -29,6 +30,7 @@ public:
 
     // 範囲攻撃使用ポイント
     static constexpr float LIGHTNING_POINT = 500.0f;
+
     // コンストラクタ
     RangeAttack(void);
 
@@ -53,9 +55,6 @@ public:
     // 座標を取得・設定
     const VECTOR& GetLightningPos(void) const;
     void SetLightningPos(const VECTOR& pos);
-
-    // 生存フラグ
-    const bool IsLightningAlive(void) const;
 
     // 範囲攻撃判定を取得
     const bool GetLightningAlive(void) const;
