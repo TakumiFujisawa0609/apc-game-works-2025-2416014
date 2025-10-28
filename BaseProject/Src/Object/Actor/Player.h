@@ -19,6 +19,7 @@ public:
 		RUN,
 		JUMP,
 		DODGE,
+		GUARD,
 		ATTACK,
 		COMBO,
 		DAMAGE,
@@ -33,6 +34,7 @@ public:
 		RUN,
 		JUMP,
 		DODGE,
+		GUARD,
 		ATTACK,
 		COMBO,
 		DEAD,
@@ -207,6 +209,14 @@ private:
 	VECTOR attackLocalPos_;
 	VECTOR attackLocalAngles_;
 
+	// シールドモデル情報
+	int shieldModelId_;
+	VECTOR shieldPos_;
+	VECTOR shieldAngles_;
+	VECTOR shieldScales_;
+	VECTOR shieldLocalPos_;
+	VECTOR shieldLocalAngles_;
+
 	// ジャンプボタン入力判定フラグ
 	bool isJumpInput_;
 
@@ -242,6 +252,10 @@ private:
 	void InitSword(void);
 	void SyncSword(void);
 
+	// シールド
+	void InitShield(void);
+	void SyncShield(void);
+
 	// 攻撃判定生存期間の減少
 	void ReduceCntAlive(void);
 
@@ -251,7 +265,7 @@ private:
 	// プレイヤー行動制御
 	void PlayerJump(void);
 	void PlayerDodge(void);
-
+	void PlayerGuard(void);
 	void PlayerAttack(void);
 	void PlayerCombo(void);
 
@@ -272,6 +286,7 @@ private:
 	void ChangeRun(void);
 	void ChangeJump(void);
 	void ChangeDodge(void);
+	void ChangeGuard(void);
 	void ChangeAttack(void);
 	void ChangeCombo(void);
 	void ChangeDead(void);
@@ -283,6 +298,7 @@ private:
 	void UpdateRun(void);
 	void UpdateJump(void);
 	void UpdateDodge(void);
+	void UpdateGuard(void);
 	void UpdateAttack(void);
 	void UpdateCombo(void);
 	void UpdateDead(void);
@@ -294,6 +310,7 @@ private:
 	void DrawRun(void);
 	void DrawJump(void);
 	void DrawDodge(void);
+	void DrawGuard(void);
 	void DrawAttack(void);
 	void DrawCombo(void);
 	void DrawDead(void);

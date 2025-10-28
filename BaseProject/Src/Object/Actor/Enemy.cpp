@@ -481,7 +481,7 @@ void Enemy::AttackSearch(void)
 	{
 		// エネミーの位置から前方にオフセット
 		float offsetDistance = ATTACK_COL_OFFSET;
-		VECTOR attackPos = VAdd(pos_, VScale(forward, offsetDistance));
+		VECTOR attackPos = VAdd(VGet(pos_.x+ 50.0f,pos_.y + 150.0f,pos_.z), VScale(forward, offsetDistance));
 
 		enemyAttack_->SetPos(attackPos);
 		enemyAttack_->SetAlive(true);

@@ -9,6 +9,7 @@ class RangeAttack
 {
 public:
 
+    // 範囲攻撃
     // 横8枚
     static constexpr int NUM_SPRITE_X = 8; 
 
@@ -25,11 +26,34 @@ public:
     // 画像の大きさ倍率
     static constexpr float IMG_SCALE = 280.0f;
 
+
+    // 通常攻撃
+    // 横5枚
+    static constexpr int SLASH_NUM_SPRITE_X = 5;
+
+    // 縦2枚  
+    static constexpr int SLASH_NUM_SPRITE_Y = 2;
+
+    // 合計10枚
+    static constexpr int SLASH_NUM_SPRITE_ALL = 10;
+
+    // エフェクト画像の分割された大きさ
+    static constexpr int SLASH_SIZE_SPRITE_X = 128;
+    static constexpr int SLASH_SIZE_SPRITE_Y = 128;
+
+    // 画像の大きさ倍率
+    static constexpr float SLASH_IMG_SCALE = 400.0f;
+
+
+
+
+
     // 範囲攻撃判定用半径
     static constexpr float LIGHTNING_RADIUS = 100.0f;
-
     // 範囲攻撃使用ポイント
     static constexpr float LIGHTNING_POINT = 500.0f;
+
+
 
     // コンストラクタ
     RangeAttack(void);
@@ -67,6 +91,17 @@ public:
     // 範囲攻撃生存時間
     void RangeAttackTime(void);
 
+    // 座標を取得・設定
+    const VECTOR& GetSlashPos(void) const;
+    void SetSlashPos(const VECTOR& slashPos);
+
+    // 通常攻撃判定を取得
+    const bool GetSlashAlive(void) const;
+    void SetSlashAlive(bool isSlashAlive);
+
+    // 通常攻撃生存時間
+    void AttackTime(void);
+
 private:
 
     Enemy* enemy_;
@@ -77,6 +112,15 @@ private:
     VECTOR lightningScales_;
     VECTOR lightningLocalPos_;
     VECTOR lightningLocalAngles_;
+
+    // エフェクト用座標
+    VECTOR slashPos_;
+    // 生存判定フラグ
+    bool isSlashAlive_;
+    // アニメーションカウンタ
+    int cntSlashAnimation_;
+    // エフェクト画像
+    int slashImgs_[SLASH_NUM_SPRITE_ALL];
 
     // 移動方向
     VECTOR moveDir_;

@@ -47,6 +47,9 @@ protected:
 	// ƒWƒƒƒ“ƒv”»’è
 	bool isJump_;
 
+	// ˆÚ“®—Ê
+	float movePow_;
+
 	// ˆÚ“®•ûŒü
 	VECTOR moveDir_;
 

@@ -16,7 +16,7 @@ RangeAttack::~RangeAttack(void)
 void RangeAttack::Init(void)
 {
 
-	// エフェクト画像のロード
+	// 範囲攻撃エフェクト画像のロード
 	LoadDivGraph(
 		(Application::PATH_IMAGE + "Lightning.png").c_str(),
 		NUM_SPRITE_ALL,
@@ -24,8 +24,18 @@ void RangeAttack::Init(void)
 		SIZE_XSPRITE_X, SIZE_XSPRITE_Y,
 		imgs_);
 
+	// 通常攻撃エフェクト画像のロード
+	LoadDivGraph(
+		(Application::PATH_IMAGE + "PlayerSlash.png").c_str(),
+		SLASH_NUM_SPRITE_ALL,
+		SLASH_NUM_SPRITE_X, SLASH_NUM_SPRITE_Y,
+		SLASH_SIZE_SPRITE_X, SLASH_SIZE_SPRITE_X,
+		slashImgs_);
+
 	// モデルの位置設定
 	lightningPos_ = AsoUtility::VECTOR_ZERO;
+
+	slashPos_ = AsoUtility::VECTOR_ZERO;
 
 	// モデルの角度
 	lightningAngles_ = { 0.0f, 0.0f, 0.0f };
@@ -41,6 +51,11 @@ void RangeAttack::Init(void)
 	lightningPoint_ = LIGHTNING_POINT;
 
 	//isLightningAlive_ = false;
+
+	cntAnimation_ = 0;
+	cntSlashAnimation_ = 0;
+
+	isSlashAlive_ = false;
 
 }
 
@@ -58,6 +73,15 @@ void RangeAttack::Update(void)
 		}
 	}
 
+	// アニメーション更新
+	if (isSlashAlive_)
+	{
+		cntSlashAnimation_++;
+		if (cntSlashAnimation_ >= SLASH_NUM_SPRITE_ALL)
+		{
+			cntSlashAnimation_ = 0;
+		}
+	}
 
 }
 
@@ -74,6 +98,12 @@ void RangeAttack::Draw(void)
 
 	}
 
+	if (isSlashAlive_)
+	{
+		int slashImg = slashImgs_[cntSlashAnimation_];
+		DrawBillboard3D(slashPos_, 0.5f, 0.5f, SLASH_IMG_SCALE, 0.0f, slashImg, true);
+	}
+
 	//DrawFormatString(150, 170, 0xffffff, "生存中: %s", isLightningAlive_ ? "YES" : "NO");
 	DrawFormatString(150, 190, 0xffffff, "MP: %d", lightningPoint_);
 
@@ -85,6 +115,12 @@ void RangeAttack::Release(void)
 	for (int i = 0; i < NUM_SPRITE_ALL; i++)
 	{
 		DeleteGraph(imgs_[i]);
+	}
+
+	// エフェクト画像のメモリの解放
+	for (int j = 0; j < SLASH_NUM_SPRITE_ALL; j++)
+	{
+		DeleteGraph(slashImgs_[j]);
 	}
 
 }
@@ -134,4 +170,24 @@ void RangeAttack::RangeAttackTime(void)
 			//isLightningAlive_ = false;
 		}
 	}
+}
+
+const VECTOR& RangeAttack::GetSlashPos(void) const
+{
+	return slashPos_;
+}
+
+void RangeAttack::SetSlashPos(const VECTOR& slashPos)
+{
+	slashPos_ = slashPos;
+}
+
+const bool RangeAttack::GetSlashAlive(void) const
+{
+	return isSlashAlive_;
+}
+
+void RangeAttack::SetSlashAlive(bool isSlashAlive)
+{
+	isSlashAlive_ = isSlashAlive;
 }

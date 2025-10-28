@@ -9,6 +9,7 @@
 #include "../Object/Actor/Enemy.h"
 #include "../Object/Actor/Collision.h"
 #include "../Object/Actor/RangeAttack.h"
+#include "../Object/Actor/EnemyAttack.h"
 #include "../Ui/HpManager.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
@@ -43,6 +44,9 @@ void GameScene::Init(void)
 
 	// 範囲攻撃初期化
 	rangeAttack_ = player_->GetRangeAttack();
+
+	// エネミー攻撃初期化
+	enemyAttack_ = enemy_->GetEnemyAttack();
 
 	// お互いの参照を設定
 	enemy_->SetTarget(player_);
@@ -82,6 +86,9 @@ void GameScene::Update(void)
 	// 範囲攻撃更新
 	rangeAttack_->Update();
 
+	// エネミー攻撃初期化
+	enemyAttack_->Update();
+
 	//エネミーHP0になったらゲームクリアシーン遷移
 	if (enemy_->GetHp() == 0)
 	{
@@ -116,11 +123,11 @@ void GameScene::Draw(void)
 	// ステージ描画
 	stage_->Draw();
 
-	// プレイヤー描画
-	player_->Draw();
-
 	// エネミー描画
 	enemy_->Draw();
+
+	// プレイヤー描画
+	player_->Draw();
 
 	// Ui描画
 	hpManager_->Draw();
@@ -155,6 +162,10 @@ void GameScene::Release(void)
 	// 範囲攻撃解放
 	rangeAttack_->Release();
 	delete rangeAttack_;
+
+	// エネミー攻撃解放
+	enemyAttack_->Release();
+	delete enemyAttack_;
 
 	// 当たり判定の解放
 	Collision::GetInstance()->DeleteInstance();
@@ -246,6 +257,9 @@ void GameScene::CollisionWeapon(void)
 
 		//ベクトルを正規化(これで方向を取得する)
 		VECTOR dir = VNorm(diff);
+
+		rangeAttack_->SetSlashAlive(true);
+		rangeAttack_->SetSlashPos(VGet(enemyPos.x, enemyPos.y + 150.0f,enemyPos.z));
 
 		//エネミーがダメージを食らう
 		enemy_->Damage(PLAYER_ATTACK_DAMAGE);

@@ -80,6 +80,9 @@ void Player::Update(void)
 	// 武器モデルの位置、角度同期
 	SyncSword();
 
+	// 盾モデルの位置、角度同期
+	SyncShield();
+
 	// 当たり判定
 	Collision();
 
@@ -143,6 +146,8 @@ void Player::Draw(void)
 
 	// 武器モデルの描画
 	MV1DrawModel(swordModelId_);
+	// シールドモデルの描画
+	MV1DrawModel(shieldModelId_);
 
 	//DrawFormatString(
 	//	0, 50, 0xffffff,
@@ -202,6 +207,7 @@ void Player::Release(void)
 	//// モデルの解放
 	//MV1DeleteModel(diceModelId_);
 	MV1DeleteModel(swordModelId_);
+	MV1DeleteModel(shieldModelId_);
 
 }
 
@@ -319,7 +325,7 @@ void Player::InitLoad(void)
 void Player::InitTransform(void)
 {
 	// モデルの位置設定
-	pos_ = VGet(0.0f, 10.0f, -950.0f);
+	pos_ = VGet(0.0f, 300.0f, -950.0f);
 
 	// モデルの角度
 	angles_ = { 0.0f, 0.0f, 0.0f };
@@ -351,6 +357,8 @@ void Player::InitAnimation(void)
 		static_cast<int>(ANIM_TYPE::JUMP), 30.0f, Application::PATH_MODEL + "Player/Jump.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::DODGE), 50.0f, Application::PATH_MODEL + "Player/Dodge.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::GUARD), 40.0f, Application::PATH_MODEL + "Player/Guard.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Player/Slash.mv1");
 	animationController_->Add(
@@ -395,7 +403,7 @@ void Player::InitPost(void)
 	// ここに個別の初期化処理を追加できる
 	InitDice();
 	InitSword();
-
+	InitShield();
 	// 状態初期化
 	ChangeState(STATE::IDLE);
 
@@ -439,7 +447,7 @@ void Player::SyncSword(void)
 	// 剣のスケール変換行列
 	MATRIX scaleMat = MGetScale(swordScales_);
 
-	// 手(親)の回転行列
+	// 右手(親)の回転行列
 	// プレイヤーの手の回転行列
 	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 44);
 
@@ -458,6 +466,52 @@ void Player::SyncSword(void)
 
 	// 攻撃座標変換 
 	attackPos_ = VTransform(attackLocalPos_, mat);
+}
+
+void Player::InitShield(void)
+{	
+	// シールドモデル読み込み
+	shieldModelId_ = MV1LoadModel((Application::PATH_MODEL + "Shield.mv1").c_str());
+
+	shieldPos_ = MV1GetFramePosition(modelId_, 20);
+
+	shieldLocalPos_ = VGet(10.0f, -10.0f, 0.0f);
+	MV1SetPosition(shieldModelId_, shieldLocalPos_);
+
+	shieldAngles_ = VGet(0.0f, 0.0f, 0.0f);
+	shieldLocalAngles_ = VGet(0.0f,0.0f,0.0f);
+
+	// 武器の大きさ設定
+	shieldScales_ = { 1.0f, 1.0f, 1.0f };
+
+}
+
+void Player::SyncShield(void)
+{
+	// シールド(子)のローカル回転行列
+	MATRIX shieldMat = MatrixUtility::GetMatrixRotateXYZ(shieldLocalAngles_);
+	// シールドのローカル位置の変換行列
+	MATRIX transMatPos = MGetTranslate(shieldLocalPos_);
+	// シールドのスケール変換行列
+	MATRIX scaleMat = MGetScale(shieldScales_);
+
+	// 左手(親)の回転行列
+	// プレイヤーの手の回転行列
+	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 20);
+
+	// 回転行列の合成
+	// スケールの行列を剣と合成
+	MATRIX localMat = MMult(scaleMat, shieldMat);
+	// 武器のローカル位置の変換行列を合成
+	localMat = MMult(localMat, transMatPos);
+	// 親子の回転行列を合成(子:武器, 親:手と指定すると親⇒子の順に適用される)
+	MATRIX mat = MMult(localMat, handMat);
+
+	//// 回転行列をモデルに反映
+	MV1SetMatrix(shieldModelId_, mat);
+	// 盾の位置を保存（当たり判定用）
+	shieldPos_ = MV1GetPosition(shieldModelId_);
+
 }
 
 void Player::ReduceCntAlive(void)
@@ -621,6 +675,38 @@ void Player::PlayerDodge(void)
 	}
 }
 
+void Player::PlayerGuard(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// 攻撃しているか判定
+	bool inputGuard;
+	inputGuard = false;
+
+	// ゲームパッドが接続されている数で処理を分ける
+	if (GetJoypadNum() == 0)
+	{
+		// キーボード操作
+		// アタックキー
+		inputGuard = ins.IsNew(KEY_INPUT_L);
+	}
+	else
+	{
+		// ゲームパッド操作
+		// 接続されているゲームパッド１の情報を取得
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		inputGuard = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+			InputManager::JOYPAD_BTN::L_BUMPER);
+	}
+
+	if (inputGuard)
+	{
+		ChangeGuard();
+	}
+}
+
 void Player::PlayerCombo(void)
 {
 	auto& ins = InputManager::GetInstance();
@@ -749,6 +835,7 @@ void Player::ChangeIdle(void)
 	isAttackAlive_ = false;
 	isJump_ = false;
 	jumpTimer_ = 0.0f;
+	rangeAttack_->SetSlashAlive(false);
 	CollisionStage(pos_);
 }
 
@@ -794,6 +881,12 @@ void Player::ChangeDodge(void)
 	// 回避のスピードと時間をセット
 	dodgeSpeed_ = DODGE_SPEED;
 	dodgeTimer_ = 0.0f;
+}
+
+void Player::ChangeGuard(void)
+{
+	// ガードアニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::GUARD), true);
 }
 
 void Player::ChangeAttack(void)
@@ -868,6 +961,10 @@ void Player::UpdateDodge(void)
 	}
 }
 
+void Player::UpdateGuard(void)
+{
+}
+
 void Player::UpdateAttack(void)
 {
 	if (animationController_->IsEnd())
@@ -930,6 +1027,11 @@ void Player::DrawDodge(void)
 
 }
 
+void Player::DrawGuard(void)
+{
+	MV1DrawModel(modelId_);
+}
+
 void Player::DrawAttack(void)
 {
 	MV1DrawModel(modelId_);
@@ -974,6 +1076,8 @@ void Player::Move(void)
 	bool isComboing = (currentAnim == static_cast<int>(ANIM_TYPE::COMBO));
 	// ジャンプ中かチェック
 	bool isJumping = (currentAnim == static_cast<int>(ANIM_TYPE::JUMP));
+	// ガード中かチェック
+	bool isGuarding = (currentAnim == static_cast<int>(ANIM_TYPE::GUARD));
 
 	// 攻撃アニメーションが終わったらIDLEに戻す
 	if (isAttacking)
@@ -999,6 +1103,10 @@ void Player::Move(void)
 		UpdateJump();
 	}
 
+	if (isGuarding)
+	{
+		UpdateGuard();
+	}
 
 	// カメラの角度を取得
 	VECTOR camAngles =
@@ -1033,8 +1141,8 @@ void Player::Move(void)
 			InputManager::JOYPAD_BTN::L_TRIGGER);
 	}
 
-	// ダッシュ速度を歩行速度の2倍にする(書き方が違うけどif文と同じ意味)
-	float movePow = isDash_ ? PLAYER_DASH_MOVE : PLAYER_MOVE;
+	// ダッシュ速度を歩行速度の2倍にする
+	movePow_ = isDash_ ? PLAYER_DASH_MOVE : PLAYER_MOVE;
 
 	if (!AsoUtility::EqualsVZero(dir))
 	{
@@ -1049,7 +1157,7 @@ void Player::Move(void)
 		moveDir_ = VTransform(dir, mat);
 
 		// 方向×スピードで移動量を作って、座標に足して移動
-		pos_ = VAdd(pos_, VScale(moveDir_, movePow));
+		pos_ = VAdd(pos_, VScale(moveDir_, movePow_));
 
 		if (!isJumping)
 		{
@@ -1071,6 +1179,7 @@ void Player::Move(void)
 		}
 	}
 
+	PlayerGuard();
 	PlayerAttack();
 	PlayerDodge();
 	PlayerCombo();

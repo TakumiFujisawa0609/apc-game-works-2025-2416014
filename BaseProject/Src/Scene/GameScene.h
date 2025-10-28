@@ -6,6 +6,7 @@ class Player;
 class Enemy;
 class HpManager;
 class RangeAttack;
+class EnemyAttack;
 
 class GameScene : public SceneBase
 {
@@ -46,6 +47,9 @@ private:
 
 	// 範囲攻撃
 	RangeAttack* rangeAttack_;
+
+	// エネミー攻撃
+	EnemyAttack* enemyAttack_;
 
 	// 地面との衝突用線分
 	VECTOR lineTopPos_;

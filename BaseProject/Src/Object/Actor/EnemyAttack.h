@@ -8,6 +8,22 @@ class EnemyAttack
 {
 public:
 
+    // 横5枚
+    static constexpr int NUM_SPRITE_X = 5;
+
+    // 縦1枚  
+    static constexpr int NUM_SPRITE_Y = 1;
+
+    // 合計5枚
+    static constexpr int NUM_SPRITE_ALL = 5;
+
+    // エフェクト画像の分割された大きさ
+    static constexpr int SIZE_SPRITE_X = 64;
+    static constexpr int SIZE_SPRITE_Y = 64;
+
+    // 画像の大きさ倍率
+    static constexpr float IMG_SCALE = 300.0f;
+
     // 攻撃判定用半径
     static constexpr float ENEMY_ATTACK_RADIUS = 40.0f;
 
@@ -38,12 +54,13 @@ public:
 
     // 範囲攻撃判定を取得
     const bool GetAlive(void) const;
-    void SetAlive(bool isAlive);
+    void SetAlive(bool isImpuctAlive);
 
 private:
 
-    // 攻撃判定用座標
+    // 攻撃判定用
     VECTOR pos_;
+    VECTOR angles_;
 
     // 移動方向
     VECTOR moveDir_;
@@ -52,6 +69,15 @@ private:
     float collisionRadius_;
 
     // 攻撃判定フラグ
-    bool isAlive_;
+    bool isImpuctAlive_;
+
+    // 生存時間カウンタ
+    int lifeTime_;
+
+    // アニメーションカウンタ
+    int cntAnimation_;
+
+    // エフェクト画像
+    int imgs_[NUM_SPRITE_ALL];
 
 };
