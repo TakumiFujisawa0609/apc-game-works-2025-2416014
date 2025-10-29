@@ -195,7 +195,6 @@ void Player::Draw(void)
 	DrawViewRange();
 
 	DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
-
 }
 
 void Player::Release(void)
@@ -475,29 +474,37 @@ void Player::InitShield(void)
 
 	shieldPos_ = MV1GetFramePosition(modelId_, 20);
 
-	shieldLocalPos_ = VGet(10.0f, -10.0f, 0.0f);
+	shieldLocalPos_ = VGet(0.0f, 0.0f, 0.0f);
 	MV1SetPosition(shieldModelId_, shieldLocalPos_);
 
-	shieldAngles_ = VGet(0.0f, 0.0f, 0.0f);
-	shieldLocalAngles_ = VGet(0.0f,0.0f,0.0f);
+	shieldAngles_ = VGet(0.0f, AsoUtility::Deg2RadF(180.0f),
+		 0.0f);
+	shieldLocalAngles_ = VGet(
+		AsoUtility::Deg2RadF(0.0f),
+		AsoUtility::Deg2RadF(180.0f), 
+		AsoUtility::Deg2RadF(0.0f)
+	);
 
 	// 武器の大きさ設定
-	shieldScales_ = { 1.0f, 1.0f, 1.0f };
-
+	shieldScales_ = { 0.8f, 0.8f, 0.8f };
+	MV1SetRotationXYZ(shieldModelId_, shieldLocalAngles_);
 }
 
 void Player::SyncShield(void)
 {
-	// シールド(子)のローカル回転行列
+
+	// 盾(子)のローカル回転行列
 	MATRIX shieldMat = MatrixUtility::GetMatrixRotateXYZ(shieldLocalAngles_);
-	// シールドのローカル位置の変換行列
+	// 盾のローカル位置の変換行列
 	MATRIX transMatPos = MGetTranslate(shieldLocalPos_);
-	// シールドのスケール変換行列
+	// 盾のスケール変換行列
 	MATRIX scaleMat = MGetScale(shieldScales_);
+
 
 	// 左手(親)の回転行列
 	// プレイヤーの手の回転行列
-	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 20);
+	MATRIX handMat = MV1GetFrameLocalWorldMatrix(modelId_, 10);
+
 
 	// 回転行列の合成
 	// スケールの行列を剣と合成
@@ -507,9 +514,10 @@ void Player::SyncShield(void)
 	// 親子の回転行列を合成(子:武器, 親:手と指定すると親⇒子の順に適用される)
 	MATRIX mat = MMult(localMat, handMat);
 
+
 	//// 回転行列をモデルに反映
 	MV1SetMatrix(shieldModelId_, mat);
-	// 盾の位置を保存（当たり判定用）
+	// 剣の位置を保存（当たり判定用）
 	shieldPos_ = MV1GetPosition(shieldModelId_);
 
 }
@@ -837,11 +845,11 @@ void Player::ChangeIdle(void)
 	jumpTimer_ = 0.0f;
 	rangeAttack_->SetSlashAlive(false);
 	CollisionStage(pos_);
+
 }
 
 void Player::ChangeWalk(void)
 {
-
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
 

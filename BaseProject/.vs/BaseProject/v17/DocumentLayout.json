@@ -22,7 +22,7 @@
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
-      "VerticalTabListWidth": 134,
+      "VerticalTabListWidth": 100,
       "DocumentGroups": [
         {
           "DockedWidth": 200,
@@ -42,8 +42,7 @@
               "RelativeToolTip": "Src\\Object\\Actor\\ActorBase.h",
               "ViewState": "AgIAACQAAAAAAAAAAAAAADIAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-10-28T06:15:38.972Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T06:15:38.972Z"
             },
             {
               "$type": "Document",
@@ -55,8 +54,7 @@
               "RelativeToolTip": "Src\\Manager\\InputManager.cpp",
               "ViewState": "AgIAABgAAAAAAAAAAAAQwCkAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-28T06:09:28.972Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T06:09:28.972Z"
             },
             {
               "$type": "Document",
@@ -66,7 +64,7 @@
               "RelativeDocumentMoniker": "Src\\Object\\Actor\\Player.cpp",
               "ToolTip": "C:\\Users\\2416014\\Desktop\\BaseProject\\Src\\Object\\Actor\\Player.cpp",
               "RelativeToolTip": "Src\\Object\\Actor\\Player.cpp",
-              "ViewState": "AgIAAP4BAAAAAAAAAAAAAPABAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGYBAAAAAAAAAAAAALYBAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-24T01:19:37.52Z",
               "EditorCaption": ""
@@ -81,8 +79,7 @@
               "RelativeToolTip": "Src\\Object\\Actor\\Player.h",
               "ViewState": "AgIAAJ8AAAAAAAAAAAAAAAsBAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-10-24T01:19:38.166Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-24T01:19:38.166Z"
             }
           ]
         },
