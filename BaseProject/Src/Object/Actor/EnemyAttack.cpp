@@ -53,8 +53,8 @@ void EnemyAttack::Draw(void)
 {
 	if (isImpuctAlive_)
 	{
-		////デバッグ用の球体描画
-		//DrawSphere3D(pos_, collisionRadius_, 50, 0xff00ff, 0xff00ff, true);
+		//デバッグ用の球体描画
+		DrawSphere3D(pos_, collisionRadius_, 50, 0xff00ff, 0xff00ff, true);
 
 		// ビルボード描画
 		int img = imgs_[cntAnimation_];

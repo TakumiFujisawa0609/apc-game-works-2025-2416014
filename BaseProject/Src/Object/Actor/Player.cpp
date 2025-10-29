@@ -62,6 +62,9 @@ void Player::Update(void)
 	case Player::STATE::COMBO:
 		UpdateCombo();
 		break;
+	case Player::STATE::DAMAGE:
+		UpdateDamage();
+		break;
 	case Player::STATE::DEAD:
 		UpdateDead();
 		break;
@@ -85,10 +88,6 @@ void Player::Update(void)
 
 	// 当たり判定
 	Collision();
-
-	// サイコロモデルのZ軸回転
-	diceAngles_.z += AsoUtility::Deg2RadF(0.7f);
-	SyncDice();
 }
 
 void Player::Draw(void)
@@ -120,6 +119,9 @@ void Player::Draw(void)
 	case Player::STATE::COMBO:
 		DrawCombo();
 		break;
+	case Player::STATE::DAMAGE:
+		DrawDamage();
+		break;
 	case Player::STATE::DEAD:
 		DrawDead();
 		break;
@@ -131,18 +133,6 @@ void Player::Draw(void)
 		break;
 
 	}
-
-	// サイコロモデルの描画
-	MV1DrawModel(diceModelId_);
-
-	//// デバッグ表示
-	//DrawFormatString(
-	//	0, 100, 0xffffff,
-	//	"サイコロ角度　 ：(% .1f, % .1f, % .1f)",
-	//	AsoUtility::Rad2DegF(diceAngles_.x),
-	//	AsoUtility::Rad2DegF(diceAngles_.y),
-	//	AsoUtility::Rad2DegF(diceAngles_.z)
-	//	);
 
 	// 武器モデルの描画
 	MV1DrawModel(swordModelId_);
@@ -182,14 +172,16 @@ void Player::Draw(void)
 	//);
 
 
-	//DrawSphere3D(VGet(pos_.x, pos_.y + 100, pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+	DrawSphere3D(pos_, collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
 	if (isAttackAlive_)
 	{
-		DrawSphere3D(VGet(attackPos_.x, attackPos_.y, attackPos_.z), attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+		DrawSphere3D(attackPos_, attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 	
 	
 	}
+
+	DrawSphere3D(shieldPos_, shieldCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 
 	// 視野描画
 	DrawViewRange();
@@ -236,6 +228,9 @@ void Player::ChangeState(STATE state)
 		break;
 	case STATE::COMBO:
 		ChangeCombo();
+		break;
+	case Player::STATE::DAMAGE:
+		ChangeDamage();
 		break;
 	case STATE::DEAD:
 		ChangeDead();
@@ -286,6 +281,43 @@ void Player::SetAttackAlive(bool isAttackAlive)
 	isAttackAlive = isAttackAlive_;
 }
 
+float Player::GetShieldCollisionRadius(void) const
+{
+	return shieldCollisionRadius_;
+}
+
+const VECTOR& Player::GetShieldPos(void) const
+{
+	return shieldPos_;
+}
+
+void Player::SetShieldPos(const VECTOR& shieldPos)
+{
+	shieldPos_ = shieldPos;
+}
+
+const bool Player::IsShieldAlive(void) const
+{
+	return isShieldAlive_;
+}
+
+const bool Player::GetShieldAlive(void) const
+{
+	return isShieldAlive_;
+}
+
+void Player::SetShieldAlive(bool isShieldAlive)
+{
+	isShieldAlive_ = isShieldAlive;
+}
+
+bool Player::IsInvincible(void)
+{
+	return state_ == STATE::DAMAGE
+		|| state_ == STATE::DEAD
+		|| state_ == STATE::END;
+}
+
 void Player::CollisionStage(VECTOR pos)
 {
 	// 衝突判定に指定座標に押し戻す
@@ -301,15 +333,26 @@ const bool Player::GetAttackAlive(void) const
 
 void Player::Damage(int damage)
 {
+	// 無敵状態ならダメージを受けない
+	if (IsInvincible()) return;
+
+	// ダメージタイマーが残っている場合も受けない
+	if (damageTimer_ > 0.0f) return;
+
 	hp_ -= damage;
-	if (hp_ < 0)
-	{
-		hp_ = 0;
-	}
+	if (hp_ < 0) hp_ = 0;
 
 	if (hp_ == 0)
 	{
 		ChangeState(STATE::DEAD);
+	}
+	else
+	{
+		// ダメージタイマーをセット
+		damageTimer_ = DAMAGE_INVINCIBLE_TIME;
+
+		// HPが残っている場合はダメージ状態へ
+		ChangeState(STATE::DAMAGE);
 	}
 
 }
@@ -324,7 +367,7 @@ void Player::InitLoad(void)
 void Player::InitTransform(void)
 {
 	// モデルの位置設定
-	pos_ = VGet(0.0f, 300.0f, -950.0f);
+	pos_ = VGet(0.0f, 0.0f, -950.0f);
 
 	// モデルの角度
 	angles_ = { 0.0f, 0.0f, 0.0f };
@@ -362,12 +405,10 @@ void Player::InitAnimation(void)
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Player/Slash.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::COMBO), 50.0f, Application::PATH_MODEL + "Player/Combo.mv1");
-	// 未追加
-	//animationController_->Add(
-	//	static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Player/Damage.mv1");
-
-	// 初期アニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Player/Damage.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::DEAD), 30.0f, Application::PATH_MODEL + "Player/Dead.mv1");
 
 }
 
@@ -399,10 +440,16 @@ void Player::InitPost(void)
 	// ジャンプタイマー初期化
 	jumpTimer_ = 0.0f;
 
-	// ここに個別の初期化処理を追加できる
-	InitDice();
+	// 盾判定用半径
+	shieldCollisionRadius_ = SHIELD_RADIUS;
+
+	// ダメージタイマー初期化
+	damageTimer_ = 0.0f;
+
+	// 剣・盾モデルの初期化
 	InitSword();
 	InitShield();
+
 	// 状態初期化
 	ChangeState(STATE::IDLE);
 
@@ -517,8 +564,9 @@ void Player::SyncShield(void)
 
 	//// 回転行列をモデルに反映
 	MV1SetMatrix(shieldModelId_, mat);
-	// 剣の位置を保存（当たり判定用）
-	shieldPos_ = MV1GetPosition(shieldModelId_);
+
+	// 当たり判定用に座標を保存
+	shieldPos_ = VTransform(shieldLocalPos_, mat);
 
 }
 
@@ -533,47 +581,6 @@ void Player::ReduceCntAlive(void)
 	}
 
 }
-
-void Player::InitDice(void)
-{
-	// サイコロモデル読み込み
-	diceModelId_ = MV1LoadModel((Application::PATH_MODEL + "dice.mv1").c_str());
-
-	diceLocalPos_ = { 200.0f,100.0f,0.0f };
-	MV1SetPosition(diceModelId_, diceLocalPos_);
-
-	diceAngles_ = { 0.0f, 0.0f, 0.0f };
-	diceLocalAngles_ = { 0.0f,AsoUtility::Deg2RadF(0.0f), 0.0f };
-
-	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
-
-	MV1SetRotationMatrix(diceModelId_, diceMat);
-
-	diceScales_ = { 0.1f, 0.1f, 0.1f };
-	MV1SetScale(diceModelId_, diceScales_);
-
-}
-
-void Player::SyncDice(void)
-{
-	// サイコロモデルの回転行列
-	MATRIX diceMat = MatrixUtility::Multiplication(diceLocalAngles_, diceAngles_);
-	// 親の回転行列
-	MATRIX parentMat = MatrixUtility::GetMatrixRotateXYZ(angles_);
-	// 親子の回転行列を合成(子:サイコロ, 親:プレイヤーと指定すると親⇒子の順に適用される)
-	MATRIX mat = MMult(diceMat, parentMat);
-	// 回転行列をモデルに反映
-	MV1SetRotationMatrix(diceModelId_, mat);
-
-	// サイコロのローカル座標を親の回転行列で回転
-	VECTOR localRotPos_ = VTransform(diceLocalPos_, parentMat);
-	
-	// サイコロのワールド座標
-	dicePos_ = VAdd(localRotPos_, pos_);
-	MV1SetPosition(diceModelId_, dicePos_);
-
-}
-
 
 void Player::PlayerJump(void)
 {
@@ -828,11 +835,6 @@ void Player::CollisionStageCapsule(void)
 	pos_ = VAdd(pos_, hitNormal);
 }
 
-//void Player::playerDamage(void)
-//{
-//
-//}
-
 void Player::ChangeIdle(void)
 {
 
@@ -916,8 +918,17 @@ void Player::ChangeCombo(void)
 	animationController_->Play(static_cast<int>(ANIM_TYPE::COMBO), false);
 }
 
+void Player::ChangeDamage(void)
+{
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE), false);
+
+}
+
 void Player::ChangeDead(void)
 {
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::DEAD), false);
 
 }
 
@@ -931,10 +942,21 @@ void Player::ChangeVictory(void)
 
 void Player::UpdateIdle(void)
 {
+	// ダメージタイマーを減らす
+	if (damageTimer_ > 0.0f)
+	{
+		damageTimer_--;
+	}
 }
 
 void Player::UpdateWalk(void)
 {
+	// ダメージタイマーを減らす
+	if (damageTimer_ > 0.0f)
+	{
+		damageTimer_--;
+	}
+
 	if (animationController_->IsEnd())
 	{
 		isAttackAlive_ = false;
@@ -992,9 +1014,28 @@ void Player::UpdateCombo(void)
 	}
 }
 
+void Player::UpdateDamage(void)
+{
+	// ダメージタイマーを減らす
+	if (damageTimer_ > 0.0f)
+	{
+		damageTimer_--;
+	}
+
+	if (animationController_->IsEnd())
+	{
+		ChangeState(STATE::IDLE);
+	}
+
+}
+
 
 void Player::UpdateDead(void)
 {
+	if (animationController_->IsEnd())
+	{
+	}
+
 }
 
 void Player::UpdateEnd(void)
@@ -1051,6 +1092,11 @@ void Player::DrawCombo(void)
 	MV1DrawModel(modelId_);
 }
 
+void Player::DrawDamage(void)
+{
+	MV1DrawModel(modelId_);
+}
+
 void Player::DrawDead(void)
 {
 	MV1DrawModel(modelId_);
@@ -1086,6 +1132,11 @@ void Player::Move(void)
 	bool isJumping = (currentAnim == static_cast<int>(ANIM_TYPE::JUMP));
 	// ガード中かチェック
 	bool isGuarding = (currentAnim == static_cast<int>(ANIM_TYPE::GUARD));
+	// ダメージ中かチェック
+	bool isDamaging = (currentAnim == static_cast<int>(ANIM_TYPE::DAMAGE));
+	// 死亡中かチェック
+	bool isDeading = (currentAnim == static_cast<int>(ANIM_TYPE::DEAD));
+
 
 	// 攻撃アニメーションが終わったらIDLEに戻す
 	if (isAttacking)
@@ -1114,6 +1165,16 @@ void Player::Move(void)
 	if (isGuarding)
 	{
 		UpdateGuard();
+	}
+
+	if (isDamaging)
+	{
+		UpdateDamage();
+	}
+
+	if (isDeading)
+	{
+		return;
 	}
 
 	// カメラの角度を取得

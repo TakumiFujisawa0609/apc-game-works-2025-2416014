@@ -99,9 +99,6 @@ public:
     const bool GetSlashAlive(void) const;
     void SetSlashAlive(bool isSlashAlive);
 
-    // ’ÊíUŒ‚¶‘¶ŠÔ
-    void AttackTime(void);
-
 private:
 
     Enemy* enemy_;

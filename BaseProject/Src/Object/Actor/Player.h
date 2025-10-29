@@ -5,6 +5,7 @@ class AnimationController;
 class MatrixUtility;
 class Camera;
 class RangeAttack;
+class PlayerGuard;
 class Enemy;
 
 class Player : public ActorBase
@@ -23,6 +24,7 @@ public:
 		ATTACK,
 		COMBO,
 		DAMAGE,
+		DEAD,
 		MAX,
 	};
 
@@ -37,6 +39,7 @@ public:
 		GUARD,
 		ATTACK,
 		COMBO,
+		DAMAGE,
 		DEAD,
 		END,
 		VICTORY,
@@ -67,7 +70,7 @@ public:
 	static constexpr float PLAYER_RADIUS = 40.0f;
 
 	// HP
-	static constexpr int PLAYER_HP = 1;
+	static constexpr int PLAYER_HP = 10;
 
 	// 範囲攻撃ダメージ
 	static constexpr int PLAYER_RANGE_DAMAGE = 1.0f;
@@ -92,6 +95,12 @@ public:
 	// 範囲攻撃のY軸補正値
 	static constexpr float RANGE_Y_OFFSET = 400.0f;
 
+	// 盾判定用半径
+	static constexpr float SHIELD_RADIUS = 30.0f;
+
+	// 無敵時間（フレーム数）
+	static constexpr float DAMAGE_INVINCIBLE_TIME = 60.0f;  
+
 	// コンストラクタ
 	Player(void);
 	// デストラクタ
@@ -115,19 +124,34 @@ public:
 	// HPの取得
 	int GetHp(void) const;
 
+
+	// 攻撃
 	// 攻撃判定用半径
 	float GetAttackCollisionRadius(void) const;
-
 	// 座標を取得・設定
 	const VECTOR& GetAttackPos(void) const;
 	void SetAttackPos(const VECTOR& attackPos);
-
 	// 生存フラグ
 	const bool IsAttackAlive(void) const;
-
 	// 攻撃判定を取得
 	const bool GetAttackAlive(void) const;
 	void SetAttackAlive(bool isAttackAlive);
+
+
+	// 盾
+	// 盾判定用半径
+	float GetShieldCollisionRadius(void) const;
+	// 座標を取得・設定
+	const VECTOR& GetShieldPos(void) const;
+	void SetShieldPos(const VECTOR& shieldPos);
+	// 生存フラグ
+	const bool IsShieldAlive(void) const;
+	// 盾判定を取得
+	const bool GetShieldAlive(void) const;
+	void SetShieldAlive(bool isShieldAlive);
+
+	// 無敵中(ダメージ、ノックバックを受けない)
+	bool IsInvincible(void);
 
 	// 衝突判定
 	void CollisionStage(VECTOR pos);
@@ -172,6 +196,9 @@ private:
 	// 範囲攻撃
 	RangeAttack* rangeAttack_;
 
+	// ガード判定
+	PlayerGuard* playerGuard_;
+
 	// 状態
 	STATE state_;
 
@@ -185,14 +212,6 @@ private:
 
 	// 衝突判定用半径
 	float collisionRadius_;
-
-	// サイコロモデル情報
-	int diceModelId_;
-	VECTOR dicePos_;
-	VECTOR diceAngles_;
-	VECTOR diceScales_;
-	VECTOR diceLocalPos_;
-	VECTOR diceLocalAngles_;
 
 	// 武器モデル情報
 	int swordModelId_;
@@ -219,10 +238,8 @@ private:
 
 	// ジャンプボタン入力判定フラグ
 	bool isJumpInput_;
-
 	// ジャンプ力
 	float jumpPow_;
-
 	// ジャンプ判定
 	bool isJump_;
 
@@ -230,9 +247,13 @@ private:
 	bool isAttackAlive_;
 	// 攻撃判定時間
 	int cntAttackAlive_;
-
 	// 衝突判定用半径
 	float attackCollisionRadius_;
+
+	// 盾判定フラグ
+	bool isShieldAlive_;
+	// 盾判定用半径
+	float shieldCollisionRadius_;
 
 	// コンボ変数
 	// コンボ方向
@@ -248,6 +269,9 @@ private:
 	// ジャンプしている時間
 	float jumpTimer_;
 
+	// ダメージ管理タイマー
+	float damageTimer_;
+
 	// 武器
 	void InitSword(void);
 	void SyncSword(void);
@@ -258,9 +282,6 @@ private:
 
 	// 攻撃判定生存期間の減少
 	void ReduceCntAlive(void);
-
-	void InitDice(void);
-	void SyncDice(void);
 
 	// プレイヤー行動制御
 	void PlayerJump(void);
@@ -289,6 +310,7 @@ private:
 	void ChangeGuard(void);
 	void ChangeAttack(void);
 	void ChangeCombo(void);
+	void ChangeDamage(void);
 	void ChangeDead(void);
 	void ChangeEnd(void);
 	void ChangeVictory(void);
@@ -301,6 +323,7 @@ private:
 	void UpdateGuard(void);
 	void UpdateAttack(void);
 	void UpdateCombo(void);
+	void UpdateDamage(void);
 	void UpdateDead(void);
 	void UpdateEnd(void);
 	void UpdateVictory(void);
@@ -313,6 +336,7 @@ private:
 	void DrawGuard(void);
 	void DrawAttack(void);
 	void DrawCombo(void);
+	void DrawDamage(void);
 	void DrawDead(void);
 	void DrawEnd(void);
 	void DrawVictory(void);

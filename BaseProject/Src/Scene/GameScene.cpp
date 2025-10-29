@@ -176,14 +176,11 @@ void GameScene::Collision(void)
 	CollisionEnemy();
 	CollisionWeapon();
 	CollisionStage();
+	CollisionEnemyAttack();
 }
 
 void GameScene::CollisionEnemy(void)
 {
-	//if (player_->IsInvincible())
-	//{
-	//	return;
-	//}
 
 	// エネミーとプレイヤーの衝突判定
 	VECTOR playerPos = player_->GetPos();
@@ -193,6 +190,7 @@ void GameScene::CollisionEnemy(void)
 	//エネミーとプレイヤーの衝突判定
 	if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyPos, enemy_->GetcollisionRadius()))
 	{
+
 		//ベクトルを求める
 		VECTOR diff = VSub(playerPos, enemyPos);
 		diff.y = 0.0f;
@@ -203,39 +201,10 @@ void GameScene::CollisionEnemy(void)
 		////プレイヤーがノックバックする
 		//player_->KnockBack(dir, 20.0f);
 
-		////プレイヤーがダメージを食らう
-		//player_->Damage(1);
+		//プレイヤーがダメージを食らう
+		player_->Damage(1);
 		//enemy_->SetAlive(false);
 
-		//std::vector<ShotBase*> shots = enemy->GetShots();
-
-
-		//for (ShotBase* shot : shots)
-		//{
-		//	if (player_->IsInvincible())
-		//	{
-		//		return;
-		//	}
-
-		//	VECTOR shotPos = shot->GetPos();
-
-		//	//ベクトルを求める
-		//	VECTOR diff = VSub(playerPos, shotPos);
-		//	diff.y = 0.0f;
-
-		//	//ベクトルを正規化(これで方向を取得する)
-		//	VECTOR dir = VNorm(diff);
-
-		//	//エネミー弾とプレイヤーの当たり判定
-		//	if (AsoUtility::IsHitSpheres(shotPos, shot->GetCollisionRadius(), playerPos, enemy->GetcollisionRadius()))
-		//	{
-		//		//プレイヤーをノックバックさせる
-		//		player_->KnockBack(dir, 20.0f);
-		//		//プレイヤーがダメージを食らう
-		//		player_->Damage(1);
-		//		shot->SetAlive(false);
-		//	}
-		//}
 	}
 
 }
@@ -298,6 +267,33 @@ void GameScene::CollisionStage(void)
 	if (result.HitFlag == 1)
 	{
 		player_->CollisionStage(result.HitPosition);
+	}
+
+}
+
+void GameScene::CollisionEnemyAttack(void)
+{
+	VECTOR playerPos = player_->GetPos();
+
+	VECTOR enemyAttackPos = enemyAttack_->GetPos();
+
+	//エネミーとプレイヤーの衝突判定
+	if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyAttackPos, enemyAttack_->GetCollisionRadius()) && enemyAttack_->GetAlive())
+	{
+		//ベクトルを求める
+		VECTOR diff = VSub(playerPos, enemyAttackPos);
+		diff.y = 0.0f;
+
+		//ベクトルを正規化(これで方向を取得する)
+		VECTOR dir = VNorm(diff);
+
+		////プレイヤーがノックバックする
+		//player_->KnockBack(dir, 20.0f);
+
+		//プレイヤーがダメージを食らう
+		player_->Damage(1);
+		//enemy_->SetAlive(false);
+
 	}
 
 }
