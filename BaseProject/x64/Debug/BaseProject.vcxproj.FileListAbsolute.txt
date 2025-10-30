@@ -3,3 +3,4 @@ C:\Users\2416014\Desktop\AGS\BaseProject\x64\Debug\BaseProject.exe
 C:\Users\2416014\Desktop\AGS - コピー\BaseProject\x64\Debug\BaseProject.exe
 C:\Users\2416014\Desktop\BaseProject\x64\Debug\BaseProject.exe
 C:\Users\2416014\Desktop\BaseProject - コピー\x64\Debug\BaseProject.exe
+D:\ドキュメント\デスクトップ\β版\BaseProject\x64\Debug\BaseProject.exe
