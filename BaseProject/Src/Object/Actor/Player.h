@@ -150,8 +150,13 @@ public:
 	const bool GetShieldAlive(void) const;
 	void SetShieldAlive(bool isShieldAlive);
 
-	// 無敵中(ダメージ、ノックバックを受けない)
-	bool IsInvincible(void);
+
+	// ダメージを受けない
+	bool IsInvincible() const { return invincibleTimer_ > 0; }
+	void UpdateInvincible() { if (invincibleTimer_ > 0) invincibleTimer_--; }
+	void SetInvincible(int time) { invincibleTimer_ = time; }
+	int GetInvincible(void) const;
+
 
 	// 衝突判定
 	void CollisionStage(VECTOR pos);
@@ -269,8 +274,8 @@ private:
 	// ジャンプしている時間
 	float jumpTimer_;
 
-	// ダメージ管理タイマー
-	float damageTimer_;
+	//無敵時間
+	int invincibleTimer_;
 
 	// 武器
 	void InitSword(void);

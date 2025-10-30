@@ -131,10 +131,6 @@ void GameScene::Draw(void)
 
 	// Ui描画
 	hpManager_->Draw();
-
-	//// 範囲攻撃描画
-	//rangeAttack_->Draw();
-
 }
 
 void GameScene::Release(void)
@@ -191,20 +187,18 @@ void GameScene::CollisionEnemy(void)
 	if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyPos, enemy_->GetcollisionRadius()))
 	{
 
-		//ベクトルを求める
+		// 押し戻し処理
 		VECTOR diff = VSub(playerPos, enemyPos);
 		diff.y = 0.0f;
-
-		//ベクトルを正規化(これで方向を取得する)
+		float distance = VSize(diff);
 		VECTOR dir = VNorm(diff);
 
-		////プレイヤーがノックバックする
-		//player_->KnockBack(dir, 20.0f);
+		// 重なっている分だけ押し戻す
+		float overlap = player_->GetcollisionRadius() + enemy_->GetcollisionRadius() - distance;
+		VECTOR pushBack = VScale(dir, overlap);
+		player_->SetPos(VAdd(playerPos, pushBack));
 
-		//プレイヤーがダメージを食らう
 		player_->Damage(1);
-		//enemy_->SetAlive(false);
-
 	}
 
 }
@@ -277,24 +271,28 @@ void GameScene::CollisionEnemyAttack(void)
 
 	VECTOR enemyAttackPos = enemyAttack_->GetPos();
 
-	//エネミーとプレイヤーの衝突判定
-	if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyAttackPos, enemyAttack_->GetCollisionRadius()) && enemyAttack_->GetAlive())
+	if (player_->GetInvincible() == 0)
 	{
-		//ベクトルを求める
-		VECTOR diff = VSub(playerPos, enemyAttackPos);
-		diff.y = 0.0f;
 
-		//ベクトルを正規化(これで方向を取得する)
-		VECTOR dir = VNorm(diff);
+		//エネミーとプレイヤーの衝突判定
+		if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyAttackPos, enemyAttack_->GetCollisionRadius()) && enemyAttack_->GetAlive())
+		{
+			//ベクトルを求める
+			VECTOR diff = VSub(playerPos, enemyAttackPos);
+			diff.y = 0.0f;
 
-		////プレイヤーがノックバックする
-		//player_->KnockBack(dir, 20.0f);
+			//ベクトルを正規化(これで方向を取得する)
+			VECTOR dir = VNorm(diff);
 
-		//プレイヤーがダメージを食らう
-		player_->Damage(1);
-		//enemy_->SetAlive(false);
+			//プレイヤーがダメージを食らう
+			player_->Damage(1);
+			//enemy_->SetAlive(false);
 
+		}
 	}
+}
 
+void GameScene::CollisionShield(void)
+{
 }
 

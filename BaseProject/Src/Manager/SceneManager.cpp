@@ -153,7 +153,7 @@ void SceneManager::Update(void)
 // SceneManager.cpp ‚Ì Draw() ŠÖ”‚ðC³
 void SceneManager::Draw(void)
 {
-	miniCamera_->DrawScreen();
+	//miniCamera_->DrawScreen();
 
 	SetDrawScreen(DX_SCREEN_BACK);
 	ClearDrawScreen();
@@ -175,7 +175,7 @@ void SceneManager::Draw(void)
 	// ƒJƒƒ‰•`‰æ
 	camera_->DrawDebug();
 
-	miniCamera_->Draw();
+	//miniCamera_->Draw();
 	fader_->Draw();
 }
 void SceneManager::Destroy(void)

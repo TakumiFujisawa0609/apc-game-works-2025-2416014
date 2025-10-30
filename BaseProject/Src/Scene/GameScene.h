@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneBase.h"
+#include <DxLib.h>
 class Grid;
 class Stage;
 class Player;
@@ -55,6 +56,9 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
+	// シールド判定
+	bool isShield_;
+
 	// 衝突判定
 	void Collision(void);
 
@@ -69,5 +73,8 @@ private:
 
 	// エネミーの攻撃とプレイヤーの衝突
 	void CollisionEnemyAttack(void);
+
+	// 盾とエネミー（攻撃とエネミーオブジェクト）の衝突判定
+	void CollisionShield(void);
 
 };

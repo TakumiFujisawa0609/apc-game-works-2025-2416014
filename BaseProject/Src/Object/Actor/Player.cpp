@@ -88,6 +88,12 @@ void Player::Update(void)
 
 	// 当たり判定
 	Collision();
+
+	// 無敵時間減少
+	if (invincibleTimer_ > 0) {
+		invincibleTimer_--;
+	}
+
 }
 
 void Player::Draw(void)
@@ -132,6 +138,14 @@ void Player::Draw(void)
 		DrawVictory();
 		break;
 
+	}
+
+	if (IsInvincible()) {
+		// 5フレームごとに表示／非表示切り替え（点滅）
+		if ((invincibleTimer_ / 4) % 2 == 0) {
+			// 点滅中は描画しない
+			return;
+		}
 	}
 
 	// 武器モデルの描画
@@ -311,11 +325,9 @@ void Player::SetShieldAlive(bool isShieldAlive)
 	isShieldAlive_ = isShieldAlive;
 }
 
-bool Player::IsInvincible(void)
+int Player::GetInvincible(void) const
 {
-	return state_ == STATE::DAMAGE
-		|| state_ == STATE::DEAD
-		|| state_ == STATE::END;
+	return invincibleTimer_;
 }
 
 void Player::CollisionStage(VECTOR pos)
@@ -337,7 +349,7 @@ void Player::Damage(int damage)
 	if (IsInvincible()) return;
 
 	// ダメージタイマーが残っている場合も受けない
-	if (damageTimer_ > 0.0f) return;
+	if (invincibleTimer_ > 0.0f) return;
 
 	hp_ -= damage;
 	if (hp_ < 0) hp_ = 0;
@@ -349,7 +361,7 @@ void Player::Damage(int damage)
 	else
 	{
 		// ダメージタイマーをセット
-		damageTimer_ = DAMAGE_INVINCIBLE_TIME;
+		invincibleTimer_ = DAMAGE_INVINCIBLE_TIME;
 
 		// HPが残っている場合はダメージ状態へ
 		ChangeState(STATE::DAMAGE);
@@ -442,9 +454,6 @@ void Player::InitPost(void)
 
 	// 盾判定用半径
 	shieldCollisionRadius_ = SHIELD_RADIUS;
-
-	// ダメージタイマー初期化
-	damageTimer_ = 0.0f;
 
 	// 剣・盾モデルの初期化
 	InitSword();
@@ -942,20 +951,10 @@ void Player::ChangeVictory(void)
 
 void Player::UpdateIdle(void)
 {
-	// ダメージタイマーを減らす
-	if (damageTimer_ > 0.0f)
-	{
-		damageTimer_--;
-	}
 }
 
 void Player::UpdateWalk(void)
 {
-	// ダメージタイマーを減らす
-	if (damageTimer_ > 0.0f)
-	{
-		damageTimer_--;
-	}
 
 	if (animationController_->IsEnd())
 	{
@@ -1016,12 +1015,6 @@ void Player::UpdateCombo(void)
 
 void Player::UpdateDamage(void)
 {
-	// ダメージタイマーを減らす
-	if (damageTimer_ > 0.0f)
-	{
-		damageTimer_--;
-	}
-
 	if (animationController_->IsEnd())
 	{
 		ChangeState(STATE::IDLE);
@@ -1170,6 +1163,7 @@ void Player::Move(void)
 	if (isDamaging)
 	{
 		UpdateDamage();
+		return;
 	}
 
 	if (isDeading)
