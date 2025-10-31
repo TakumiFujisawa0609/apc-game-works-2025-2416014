@@ -855,6 +855,7 @@ void Player::ChangeIdle(void)
 	isJump_ = false;
 	jumpTimer_ = 0.0f;
 	rangeAttack_->SetSlashAlive(false);
+	isShieldAlive_ = false;
 	CollisionStage(pos_);
 
 }
@@ -904,6 +905,7 @@ void Player::ChangeDodge(void)
 
 void Player::ChangeGuard(void)
 {
+	isShieldAlive_ = true;
 	// ガードアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::GUARD), true);
 }

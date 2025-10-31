@@ -1,7 +1,24 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\\u03B2\u7248\\BaseProject\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|solutionrelative:Src\\Scene\\GameScene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|solutionrelative:Src\\Object\\Actor\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|solutionrelative:Src\\Object\\Actor\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}|BaseProject.vcxproj|solutionrelative:Src\\Scene\\GameScene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +26,61 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Player.h",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.h",
+              "RelativeDocumentMoniker": "Src\\Object\\Actor\\Player.h",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.h",
+              "RelativeToolTip": "Src\\Object\\Actor\\Player.h",
+              "ViewState": "AQIAAI0AAAAAAAAAAAAAAJMAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-30T13:30:51.647Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp",
+              "RelativeDocumentMoniker": "Src\\Object\\Actor\\Player.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Object\\Actor\\Player.cpp",
+              "RelativeToolTip": "Src\\Object\\Actor\\Player.cpp",
+              "ViewState": "AQIAAC8BAAAAAAAAAAAowDgBAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-30T13:30:51.218Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GameScene.h",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.h",
+              "RelativeDocumentMoniker": "Src\\Scene\\GameScene.h",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.h",
+              "RelativeToolTip": "Src\\Scene\\GameScene.h",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-30T13:30:33.41Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameScene.cpp",
+              "DocumentMoniker": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.cpp",
+              "RelativeDocumentMoniker": "Src\\Scene\\GameScene.cpp",
+              "ToolTip": "D:\\\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\\\u30C7\u30B9\u30AF\u30C8\u30C3\u30D7\\AGS\\BaseProject\\Src\\Scene\\GameScene.cpp",
+              "RelativeToolTip": "Src\\Scene\\GameScene.cpp",
+              "ViewState": "AQIAAJsAAAAAAAAAAAAAAC8BAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-30T13:30:32.922Z",
+              "EditorCaption": ""
             }
           ]
         }
