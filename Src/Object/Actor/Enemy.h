@@ -243,5 +243,8 @@ private:
 	void ChangeHard(void);
 	void ChangeSoft(void);
 
+	void UpdateNormal(void);
+	void UpdateHard(void);
+	void UpdateSoft(void);
 };
 

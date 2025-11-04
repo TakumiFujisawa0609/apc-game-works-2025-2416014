@@ -203,6 +203,8 @@ void Player::Draw(void)
 	DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
 
 	DrawFormatString(0, 300, 0xFFFFFF, "isShieldAlive_: %s", isShieldAlive_ ? "ON" : "OFF");
+	DrawFormatString(0, 360, 0xFFFFFF, "isRangeAttackActive_: %s", isRangeAttackActive_ ? "true" : "false");
+
 
 }
 
@@ -839,6 +841,7 @@ void Player::AttackSearch(void)
 		if (isCombo_ && rangeAttack_->GetLightningPoint() > 0)
 		{
 			rangeAttack_->SetLightningAlive(true);
+			isRangeAttackActive_ = true;
 			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 350.0f, enemyPos.z));
 			enemy_->Damage(PLAYER_RANGE_DAMAGE);
 		}
@@ -1038,7 +1041,6 @@ void Player::UpdateAttack(void)
 void Player::UpdateCombo(void)
 {
 	isCombo_ = true;
-	isRangeAttackActive_ = true;
 	rangeAttack_->SetLightningAlive(true);
 	if (animationController_->IsEnd())
 	{

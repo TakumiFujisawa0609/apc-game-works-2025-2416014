@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Common/FpsController.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -31,6 +32,10 @@ void Application::Init(void)
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
 	ChangeWindowMode(true);
+
+	//FPS制御初期化
+	fpsController_ = new FpsController(FRAME_RATE);
+
 	//垂直同期を切る
 	SetWaitVSyncFlag(60);
 
@@ -78,14 +83,22 @@ void Application::Run(void)
 
 		sceneManager.Draw();
 
+		// 平均FPS描画
+		fpsController_->Draw();
+
 		ScreenFlip();
 
+		// 理想FPS経過待ち
+		fpsController_->Wait();
 	}
 
 }
 
 void Application::Destroy(void)
 {
+
+	// FPS制御メモリ開放
+	delete fpsController_;
 
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();

@@ -57,6 +57,19 @@ void Enemy::Update()
 			UpdateEnd();
 			break;
 		}
+
+		switch (armorState_)
+		{
+		case Enemy::ARMORSTATE::NORMAL:
+			UpdateNormal();
+			break;
+		case Enemy::ARMORSTATE::HARD:
+			UpdateHard();
+			break;
+		case Enemy::ARMORSTATE::SOFT:
+			UpdateSoft();
+			break;
+		}
 	}
 
 
@@ -324,6 +337,7 @@ void Enemy::InitPost(void)
 
 	// 初期状態
 	ChangeState(STATE::IDLE);
+	ChangeArmorState(ARMORSTATE::HARD);
 
 }
 
@@ -699,9 +713,34 @@ void Enemy::DrawEnd(void)
 
 void Enemy::ChangeNormal(void)
 {
+	softTimer_ = 0;
+	hardTimer_ = 0;
+}
+
+void Enemy::ChangeHard(void)
+{
+	normalTimer_ = 0;
+	softTimer_ = 0;
+}
+
+void Enemy::ChangeSoft(void)
+{
+	// 弱点露出タイマー初期化
+	normalTimer_ = 0;
+	hardTimer_ = 0;
+}
+
+void Enemy::UpdateNormal(void)
+{
+
 	if (normalTimer_ < NORMAL_TIMER)
 	{
 		normalTimer_++;
+
+		if (player_->GetRangeAttackActive())
+		{
+			ChangeArmorState(ARMORSTATE::SOFT);
+		}
 	}
 	else
 	{
@@ -712,29 +751,26 @@ void Enemy::ChangeNormal(void)
 	}
 }
 
-void Enemy::ChangeHard(void)
+void Enemy::UpdateHard(void)
 {
+
 	if (hardTimer_ < HARD_TIMER)
 	{
 		hardTimer_++;
+
 	}
 	else
 	{
+		// 弱点露出状態に遷移
+		ChangeArmorState(ARMORSTATE::NORMAL);
 		// 硬化タイマーを初期化
 		hardTimer_ = 0;
-		if (player_->GetRangeAttackActive())
-		{
-			ChangeArmorState(ARMORSTATE::SOFT);
-		}
-		else
-		{
-			ChangeArmorState(ARMORSTATE::NORMAL);
-		}
 	}
 }
 
-void Enemy::ChangeSoft(void)
+void Enemy::UpdateSoft(void)
 {
+
 	if (softTimer_ < SOFT_TIMER)
 	{
 		softTimer_++;

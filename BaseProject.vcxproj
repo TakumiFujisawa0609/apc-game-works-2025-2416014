@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\FpsController.cpp" />
     <ClCompile Include="Src\Object\Actor\EnemyAttack.cpp" />
     <ClCompile Include="Src\Object\Actor\Collision.cpp" />
     <ClCompile Include="Src\Object\Actor\RangeAttack.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Src\Scene\Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\FpsController.h" />
     <ClInclude Include="Src\Object\Actor\EnemyAttack.h" />
     <ClInclude Include="Src\Object\Actor\Collision.h" />
     <ClInclude Include="Src\Object\Actor\RangeAttack.h" />
