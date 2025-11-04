@@ -169,8 +169,11 @@ void GameScene::Release(void)
 
 void GameScene::Collision(void)
 {
-	CollisionEnemy();
-	CollisionWeapon();
+	if (!isShield_)
+	{
+		CollisionEnemy();
+		CollisionWeapon();
+	}
 	CollisionStage();
 	CollisionEnemyAttack();
 }
@@ -294,5 +297,42 @@ void GameScene::CollisionEnemyAttack(void)
 
 void GameScene::CollisionShield(void)
 {
+	VECTOR enemyAttackPos = enemyAttack_->GetPos();
+	VECTOR enemyPos = enemy_->GetPos();
+	VECTOR shieldPos = player_->GetShieldPos();
+
+	if (player_->GetInvincible() == 0)
+	{
+		//エネミーと盾の衝突判定
+		if (AsoUtility::IsHitSpheres(enemyPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && enemyAttack_->GetAlive())
+		{
+			//ベクトルを求める
+			VECTOR diff = VSub(enemyPos, shieldPos);
+			diff.y = 0.0f;
+
+			//ベクトルを正規化(これで方向を取得する)
+			VECTOR dir = VNorm(diff);
+
+			// ガード判定trueにする
+			isShield_ = true;
+		}
+	}
+
+	if (player_->GetInvincible() == 0)
+	{
+		//エネミーと盾の衝突判定
+		if (AsoUtility::IsHitSpheres(enemyAttackPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()))
+		{
+			//ベクトルを求める
+			VECTOR diff = VSub(enemyAttackPos, shieldPos);
+			diff.y = 0.0f;
+
+			//ベクトルを正規化(これで方向を取得する)
+			VECTOR dir = VNorm(diff);
+
+			// ガード判定trueにする
+			isShield_ = true;
+		}
+	}
 }
 
