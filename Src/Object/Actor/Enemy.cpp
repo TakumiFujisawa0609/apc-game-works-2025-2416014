@@ -280,6 +280,36 @@ void Enemy::Damage(int damage)
 
 }
 
+const bool Enemy::GetNormal(void) const
+{
+	return isNormal_;
+}
+
+void Enemy::SetNormal(bool isNormal)
+{
+	isNormal_ = isNormal;
+}
+
+const bool Enemy::GetHard(void) const
+{
+	return isHard_;
+}
+
+void Enemy::SetHard(bool isHard)
+{
+	isHard_ = isHard;
+}
+
+const bool Enemy::GetSoft(void) const
+{
+	return isSoft_;
+}
+
+void Enemy::SetSoft(bool isSoft)
+{
+	isSoft_ = isSoft;
+}
+
 void Enemy::InitLoad(void)
 {
 	// モデル読み込み
@@ -713,18 +743,27 @@ void Enemy::DrawEnd(void)
 
 void Enemy::ChangeNormal(void)
 {
+	isNormal_ = true;
+	isHard_ = false;
+	isSoft_ = false;
 	softTimer_ = 0;
 	hardTimer_ = 0;
 }
 
 void Enemy::ChangeHard(void)
 {
+	isNormal_ = false;
+	isHard_ = true;
+	isSoft_ = false;
 	normalTimer_ = 0;
 	softTimer_ = 0;
 }
 
 void Enemy::ChangeSoft(void)
 {
+	isNormal_ = false;
+	isHard_ = false;
+	isSoft_ = true;
 	// 弱点露出タイマー初期化
 	normalTimer_ = 0;
 	hardTimer_ = 0;

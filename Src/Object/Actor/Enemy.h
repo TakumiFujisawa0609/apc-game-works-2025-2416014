@@ -89,9 +89,9 @@ public:
 	// Normalタイマー
 	static constexpr int NORMAL_TIMER = 500;
 	// Hardタイマー
-	static constexpr int HARD_TIMER = 1000;
+	static constexpr int HARD_TIMER = 500;
 	// Softタイマー
-	static constexpr int SOFT_TIMER = 250;
+	static constexpr int SOFT_TIMER = 500;
 
 	// コンストラクタ
 	Enemy();
@@ -122,6 +122,15 @@ public:
 
 	// ダメージを与える
 	void Damage(int damage);
+
+
+	// それぞれの防御力判定
+	const bool GetNormal(void) const;
+	void SetNormal(bool isNormal);
+	const bool GetHard(void) const;
+	void SetHard(bool isHard);
+	const bool GetSoft(void) const;
+	void SetSoft(bool isSoft);
 
 	// 範囲攻撃取得
 	EnemyAttack* GetEnemyAttack(void) { return enemyAttack_; }
@@ -198,6 +207,11 @@ private:
 
 	// Softタイマー
 	int softTimer_;
+
+	// 防御力判定
+	bool isNormal_;
+	bool isHard_;
+	bool isSoft_;
 
 	// 索敵
 	void Search(void);

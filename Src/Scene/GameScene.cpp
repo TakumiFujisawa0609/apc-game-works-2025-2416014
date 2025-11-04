@@ -222,7 +222,8 @@ void GameScene::CollisionEnemy(void)
 		VECTOR pushBack = VScale(dir, overlap);
 		player_->SetPos(VAdd(playerPos, pushBack));
 
-		player_->Damage(1);
+		player_->Damage(Player::PLAYER_NORMAL_DAMAGE);
+
 	}
 
 }
@@ -248,8 +249,20 @@ void GameScene::CollisionWeapon(void)
 		rangeAttack_->SetSlashAlive(true);
 		rangeAttack_->SetSlashPos(VGet(enemyPos.x, enemyPos.y + 150.0f,enemyPos.z));
 
-		//エネミーがダメージを食らう
-		enemy_->Damage(PLAYER_ATTACK_DAMAGE);
+		if (enemy_->GetNormal())
+		{
+			enemy_->Damage(Player::PLAYER_NORMAL_DAMAGE);
+		}
+
+		if (enemy_->GetHard())
+		{
+			enemy_->Damage(Player::PLAYER_HARD_DAMAGE);
+		}
+
+		if (enemy_->GetSoft())
+		{
+			enemy_->Damage(Player::PLAYER_SOFT_DAMAGE);
+		}
 
 		player_->SetAttackAlive(false);
 
