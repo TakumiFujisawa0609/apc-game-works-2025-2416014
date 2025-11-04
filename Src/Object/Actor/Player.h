@@ -96,7 +96,7 @@ public:
 	static constexpr float RANGE_Y_OFFSET = 400.0f;
 
 	// 盾判定用半径
-	static constexpr float SHIELD_RADIUS = 30.0f;
+	static constexpr float SHIELD_RADIUS = 100.0f;
 
 	// 無敵時間（フレーム数）
 	static constexpr float DAMAGE_INVINCIBLE_TIME = 60.0f;  
@@ -136,7 +136,9 @@ public:
 	// 攻撃判定を取得
 	const bool GetAttackAlive(void) const;
 	void SetAttackAlive(bool isAttackAlive);
-
+	// 範囲攻撃判定を取得
+	const bool GetRangeAttackActive(void) const;
+	void SetRangeAttackActive(bool isRangeAttackActive);
 
 	// 盾
 	// 盾判定用半径
@@ -150,6 +152,10 @@ public:
 	const bool GetShieldAlive(void) const;
 	void SetShieldAlive(bool isShieldAlive);
 
+	// 生存フラグ
+	const bool IsGuard(void) const;
+	const bool GetGuard(void) const;
+	void SetGuard(bool isGuard);
 
 	// ダメージを受けない
 	bool IsInvincible() const { return invincibleTimer_ > 0; }
@@ -254,11 +260,15 @@ private:
 	int cntAttackAlive_;
 	// 衝突判定用半径
 	float attackCollisionRadius_;
+	// 範囲攻撃しているか
+	bool isRangeAttackActive_;
 
 	// 盾判定フラグ
 	bool isShieldAlive_;
 	// 盾判定用半径
 	float shieldCollisionRadius_;
+	// ガードしたか判定
+	bool isGuard_;
 
 	// コンボ変数
 	// コンボ方向

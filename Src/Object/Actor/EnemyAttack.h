@@ -25,7 +25,7 @@ public:
     static constexpr float IMG_SCALE = 300.0f;
 
     // 攻撃判定用半径
-    static constexpr float ENEMY_ATTACK_RADIUS = 40.0f;
+    static constexpr float ENEMY_ATTACK_RADIUS = 300.0f;
 
     // コンストラクタ
     EnemyAttack(void);

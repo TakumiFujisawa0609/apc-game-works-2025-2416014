@@ -58,6 +58,8 @@ void Enemy::Update()
 			break;
 		}
 	}
+
+
 }
 
 void Enemy::Draw(void)
@@ -133,8 +135,8 @@ void Enemy::Draw(void)
 	//	pos_.z
 	//);
 
-	//当たり判定デバッグ表示
-	DrawSphere3D(VGet(pos_.x,pos_.y,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+	////当たり判定デバッグ表示
+	//DrawSphere3D(VGet(pos_.x,pos_.y,pos_.z), collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
 	// 視野描画
 	DrawViewRange();
@@ -168,6 +170,11 @@ void Enemy::Draw(void)
 	DrawFormatString(0, 150, 0xffffff, "ヒットポイント: %d", hp_);
 	DrawFormatString(0, 180, 0xffffff, "攻撃間隔カウンタ: %d", cntAttack_);
 
+
+	DrawFormatString(0, 400, 0xffffff, "Normalカウンタ: %d", normalTimer_);
+	DrawFormatString(0, 420, 0xffffff, "hardカウンタ: %d", hardTimer_);
+	DrawFormatString(0, 440, 0xffffff, "Softカウンタ: %d", softTimer_);
+
 }
 
 void Enemy::Release(void)
@@ -198,6 +205,23 @@ void Enemy::ChangeState(STATE state)
 		break;
 	case STATE::END:
 		ChangeEnd();
+		break;
+	}
+}
+
+void Enemy::ChangeArmorState(ARMORSTATE armorState)
+{
+	armorState_ = armorState;
+	switch (armorState_)
+	{
+	case Enemy::ARMORSTATE::NORMAL:
+		ChangeNormal();
+		break;
+	case Enemy::ARMORSTATE::HARD:
+		ChangeHard();
+		break;
+	case Enemy::ARMORSTATE::SOFT:
+		ChangeSoft();
 		break;
 	}
 }
@@ -300,6 +324,7 @@ void Enemy::InitPost(void)
 
 	// 初期状態
 	ChangeState(STATE::IDLE);
+
 }
 
 void Enemy::DrawViewRange(void)
@@ -590,6 +615,7 @@ void Enemy::UpdateIdle(void)
 	//移動
 	Move();
 
+
 }
 
 void Enemy::UpdateWalk(void)
@@ -669,5 +695,56 @@ void Enemy::DrawDead(void)
 void Enemy::DrawEnd(void)
 {
 	MV1DrawModel(modelId_);
+}
+
+void Enemy::ChangeNormal(void)
+{
+	if (normalTimer_ < NORMAL_TIMER)
+	{
+		normalTimer_++;
+	}
+	else
+	{
+		// 硬化状態に遷移
+		ChangeArmorState(ARMORSTATE::HARD);
+		// 弱点露出タイマーを初期化
+		normalTimer_ = 0;
+	}
+}
+
+void Enemy::ChangeHard(void)
+{
+	if (hardTimer_ < HARD_TIMER)
+	{
+		hardTimer_++;
+	}
+	else
+	{
+		// 硬化タイマーを初期化
+		hardTimer_ = 0;
+		if (player_->GetRangeAttackActive())
+		{
+			ChangeArmorState(ARMORSTATE::SOFT);
+		}
+		else
+		{
+			ChangeArmorState(ARMORSTATE::NORMAL);
+		}
+	}
+}
+
+void Enemy::ChangeSoft(void)
+{
+	if (softTimer_ < SOFT_TIMER)
+	{
+		softTimer_++;
+	}
+	else
+	{
+		// 硬化状態に遷移
+		ChangeArmorState(ARMORSTATE::HARD);
+		// 軟化タイマーを初期化
+		softTimer_ = 0;
+	}
 }
 

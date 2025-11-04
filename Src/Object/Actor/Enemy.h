@@ -22,6 +22,7 @@ public:
 		MAX,
 	};
 
+	// 状態変化パターン
 	enum class STATE
 	{
 		IDLE,
@@ -30,6 +31,14 @@ public:
 		DAMAGE,
 		DEAD,
 		END,
+	};
+
+	// エネミー防御力変化
+	enum class ARMORSTATE
+	{
+		NORMAL,	//弱点露出
+		HARD,	//硬化状態
+		SOFT,	//軟化状態
 	};
 
 	// モデルの大きさ
@@ -77,6 +86,13 @@ public:
 	// 攻撃間隔用
 	static constexpr int TERM_ATTACK = 200;
 
+	// Normalタイマー
+	static constexpr int NORMAL_TIMER = 500;
+	// Hardタイマー
+	static constexpr int HARD_TIMER = 1000;
+	// Softタイマー
+	static constexpr int SOFT_TIMER = 250;
+
 	// コンストラクタ
 	Enemy();
 	~Enemy(void) override;
@@ -91,6 +107,8 @@ public:
 
 	// 状態遷移
 	void ChangeState(STATE state);
+	// 防御力遷移
+	void ChangeArmorState(ARMORSTATE armorState);
 
 	//衝突用半径
 	float GetcollisionRadius(void);
@@ -136,7 +154,11 @@ private:
 	// 攻撃
 	EnemyAttack* enemyAttack_;
 
+	// 状態変化ステート
 	STATE state_;
+
+	// 防御力ステート
+	ARMORSTATE armorState_;
 
 	// 移動速度
 	float speed_;
@@ -166,6 +188,16 @@ private:
 
 	// 被ダメージ間隔用カウンタ
 	int cntDamaged_;
+
+
+	// Normalタイマー
+	int normalTimer_;
+
+	// Hardタイマー
+	int hardTimer_;
+
+	// Softタイマー
+	int softTimer_;
 
 	// 索敵
 	void Search(void);
@@ -203,6 +235,13 @@ private:
 	void DrawDamage(void);
 	void DrawDead(void);
 	void DrawEnd(void);
+
+
+
+	// 防御力遷移
+	void ChangeNormal(void);
+	void ChangeHard(void);
+	void ChangeSoft(void);
 
 };
 

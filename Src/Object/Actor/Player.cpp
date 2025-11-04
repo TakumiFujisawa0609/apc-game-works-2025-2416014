@@ -186,21 +186,24 @@ void Player::Draw(void)
 	//);
 
 
-	DrawSphere3D(pos_, collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
+	//DrawSphere3D(pos_, collisionRadius_, 50, 0x0000ff, 0x0000ff, true);
 
-	if (isAttackAlive_)
-	{
-		DrawSphere3D(attackPos_, attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
-	
-	
-	}
+	//if (isAttackAlive_)
+	//{
+	//	DrawSphere3D(attackPos_, attackCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	//
+	//
+	//}
 
-	DrawSphere3D(shieldPos_, shieldCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
+	//DrawSphere3D(shieldPos_, shieldCollisionRadius_, 50, 0x00ff00, 0x00ff00, true);
 
 	// 視野描画
 	DrawViewRange();
 
 	DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
+
+	DrawFormatString(0, 300, 0xFFFFFF, "isShieldAlive_: %s", isShieldAlive_ ? "ON" : "OFF");
+
 }
 
 void Player::Release(void)
@@ -295,6 +298,16 @@ void Player::SetAttackAlive(bool isAttackAlive)
 	isAttackAlive = isAttackAlive_;
 }
 
+const bool Player::GetRangeAttackActive(void) const
+{
+	return isRangeAttackActive_;
+}
+
+void Player::SetRangeAttackActive(bool isRangeAttackActive)
+{
+	isRangeAttackActive_ = isRangeAttackActive;
+}
+
 float Player::GetShieldCollisionRadius(void) const
 {
 	return shieldCollisionRadius_;
@@ -323,6 +336,21 @@ const bool Player::GetShieldAlive(void) const
 void Player::SetShieldAlive(bool isShieldAlive)
 {
 	isShieldAlive_ = isShieldAlive;
+}
+
+const bool Player::IsGuard(void) const
+{
+	return isGuard_;
+}
+
+const bool Player::GetGuard(void) const
+{
+	return isGuard_;
+}
+
+void Player::SetGuard(bool isGuard)
+{
+	isGuard_ = isGuard;
 }
 
 int Player::GetInvincible(void) const
@@ -392,6 +420,7 @@ void Player::InitTransform(void)
 	moveDir_ = { sinf(angles_.y), 0.0f, cosf(angles_.y) };
 
 	isAttackAlive_ = false;
+	isRangeAttackActive_ = false;
 	isJump_ = false;
 
 }
@@ -810,6 +839,7 @@ void Player::AttackSearch(void)
 		if (isCombo_ && rangeAttack_->GetLightningPoint() > 0)
 		{
 			rangeAttack_->SetLightningAlive(true);
+			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 350.0f, enemyPos.z));
 			enemy_->Damage(PLAYER_RANGE_DAMAGE);
 		}
 		else
@@ -852,6 +882,7 @@ void Player::ChangeIdle(void)
 
 	isCombo_ = false;
 	isAttackAlive_ = false;
+	isRangeAttackActive_ = false;
 	isJump_ = false;
 	jumpTimer_ = 0.0f;
 	rangeAttack_->SetSlashAlive(false);
@@ -1007,6 +1038,7 @@ void Player::UpdateAttack(void)
 void Player::UpdateCombo(void)
 {
 	isCombo_ = true;
+	isRangeAttackActive_ = true;
 	rangeAttack_->SetLightningAlive(true);
 	if (animationController_->IsEnd())
 	{

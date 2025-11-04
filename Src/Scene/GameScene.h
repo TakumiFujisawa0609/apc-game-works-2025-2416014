@@ -56,9 +56,6 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
-	// シールド判定
-	bool isShield_;
-
 	// 衝突判定
 	void Collision(void);
 
@@ -75,6 +72,6 @@ private:
 	void CollisionEnemyAttack(void);
 
 	// 盾とエネミー（攻撃とエネミーオブジェクト）の衝突判定
-	void CollisionShield(void);
+	bool CollisionShield(void);
 
 };

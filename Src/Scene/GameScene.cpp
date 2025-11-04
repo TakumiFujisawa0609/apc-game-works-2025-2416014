@@ -131,6 +131,13 @@ void GameScene::Draw(void)
 
 	// Ui描画
 	hpManager_->Draw();
+
+	if (player_->GetGuard())
+	{
+		// デバッグ表示
+		DrawFormatString(10, 330, 0x00FF00, "Shield Blocked Attack!");
+
+	}
 }
 
 void GameScene::Release(void)
@@ -169,13 +176,27 @@ void GameScene::Release(void)
 
 void GameScene::Collision(void)
 {
-	if (!isShield_)
+
+	bool isShieldBlocking = CollisionShield();
+
+	if (player_->GetShieldAlive())
 	{
-		CollisionEnemy();
-		CollisionWeapon();
+		// 盾でブロックしていなければエネミー攻撃のダメージ判定
+		if (!isShieldBlocking)
+		{
+			CollisionEnemy();
+			CollisionEnemyAttack();
+		}
 	}
+	else
+	{
+		// 盾がない場合は通常通りダメージ判定
+		CollisionEnemy();
+		CollisionEnemyAttack();
+	}
+
+	CollisionWeapon();
 	CollisionStage();
-	CollisionEnemyAttack();
 }
 
 void GameScene::CollisionEnemy(void)
@@ -295,44 +316,54 @@ void GameScene::CollisionEnemyAttack(void)
 	}
 }
 
-void GameScene::CollisionShield(void)
+bool GameScene::CollisionShield(void)
 {
 	VECTOR enemyAttackPos = enemyAttack_->GetPos();
 	VECTOR enemyPos = enemy_->GetPos();
 	VECTOR shieldPos = player_->GetShieldPos();
 
-	if (player_->GetInvincible() == 0)
-	{
-		//エネミーと盾の衝突判定
-		if (AsoUtility::IsHitSpheres(enemyPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && enemyAttack_->GetAlive())
-		{
-			//ベクトルを求める
-			VECTOR diff = VSub(enemyPos, shieldPos);
-			diff.y = 0.0f;
-
-			//ベクトルを正規化(これで方向を取得する)
-			VECTOR dir = VNorm(diff);
-
-			// ガード判定trueにする
-			isShield_ = true;
-		}
-	}
+	player_->SetGuard(false);
 
 	if (player_->GetInvincible() == 0)
 	{
-		//エネミーと盾の衝突判定
-		if (AsoUtility::IsHitSpheres(enemyAttackPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()))
+		// エネミー本体と盾の衝突判定
+		if (AsoUtility::IsHitSpheres(enemyPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && player_->GetShieldAlive())
 		{
-			//ベクトルを求める
-			VECTOR diff = VSub(enemyAttackPos, shieldPos);
-			diff.y = 0.0f;
+			{
+				//ベクトルを求める
+				VECTOR diff = VSub(enemyPos, shieldPos);
+				diff.y = 0.0f;
 
-			//ベクトルを正規化(これで方向を取得する)
-			VECTOR dir = VNorm(diff);
+				//ベクトルを正規化(これで方向を取得する)
+				VECTOR dir = VNorm(diff);
 
-			// ガード判定trueにする
-			isShield_ = true;
+				// シールドで防いだ
+				player_->SetGuard(true);
+			}
 		}
+
+		if (player_->GetInvincible() == 0)
+		{
+			// エネミー攻撃と盾の衝突判定
+			if (AsoUtility::IsHitSpheres(enemyAttackPos, enemyAttack_->GetCollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && enemyAttack_->GetAlive() && player_->GetShieldAlive())
+			{
+
+				//ベクトルを求める
+				VECTOR diff = VSub(enemyAttackPos, shieldPos);
+				diff.y = 0.0f;
+
+				//ベクトルを正規化(これで方向を取得する)
+				VECTOR dir = VNorm(diff);
+
+				// 攻撃を無効化
+				enemyAttack_->SetAlive(false);
+
+				// シールドで防いだ
+				player_->SetGuard(true);
+
+			}
+		}
+
+		return player_->IsGuard();
 	}
 }
-
