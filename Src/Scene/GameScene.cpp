@@ -222,7 +222,7 @@ void GameScene::CollisionEnemy(void)
 		VECTOR pushBack = VScale(dir, overlap);
 		player_->SetPos(VAdd(playerPos, pushBack));
 
-		player_->Damage(Player::PLAYER_NORMAL_DAMAGE);
+		player_->Damage(Enemy::ENEMY_DAMAGE);
 
 	}
 

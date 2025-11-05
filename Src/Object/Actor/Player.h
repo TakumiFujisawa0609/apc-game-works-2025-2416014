@@ -102,11 +102,11 @@ public:
 	static constexpr float DAMAGE_INVINCIBLE_TIME = 60.0f;  
 
 	// プレイヤーNORMALダメージ
-	static constexpr int PLAYER_NORMAL_DAMAGE = 2.0f;
+	static constexpr int PLAYER_NORMAL_DAMAGE = 20.0f;
 	// プレイヤーHARDダメージ
-	static constexpr int PLAYER_HARD_DAMAGE = 1.0f;
+	static constexpr int PLAYER_HARD_DAMAGE = 10.0f;
 	// プレイヤーSOFTダメージ
-	static constexpr int PLAYER_SOFT_DAMAGE = 3.0f;
+	static constexpr int PLAYER_SOFT_DAMAGE = 30.0f;
 
 	// コンストラクタ
 	Player(void);

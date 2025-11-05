@@ -68,6 +68,9 @@ public:
 	// 聞こえる範囲
 	static constexpr float HEAR_RANGE = 700.0f;
 
+	// エネミー与ダメージ
+	static constexpr int ENEMY_DAMAGE = 1.0f;
+
 	// 攻撃範囲
 	static constexpr float ATTACK_RANGE = 300.0f;
 
