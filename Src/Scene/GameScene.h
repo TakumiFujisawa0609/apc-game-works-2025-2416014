@@ -8,6 +8,8 @@ class Enemy;
 class HpManager;
 class RangeAttack;
 class EnemyAttack;
+class EnemyIcon;
+class CountIcon;
 
 class GameScene : public SceneBase
 {
@@ -51,6 +53,10 @@ private:
 
 	// エネミー攻撃
 	EnemyAttack* enemyAttack_;
+
+	// エネミーアイコン
+	EnemyIcon* enemyIcon_;
+	CountIcon* countIcon_;
 
 	// 地面との衝突用線分
 	VECTOR lineTopPos_;

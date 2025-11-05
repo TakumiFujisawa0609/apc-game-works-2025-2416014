@@ -105,7 +105,7 @@ void RangeAttack::Draw(void)
 	}
 
 	//DrawFormatString(150, 170, 0xffffff, "ê∂ë∂íÜ: %s", isLightningAlive_ ? "YES" : "NO");
-	DrawFormatString(150, 190, 0xffffff, "MP: %d", lightningPoint_);
+	DrawFormatString(0, 70, 0xffffff, "MP: %d", lightningPoint_);
 
 }
 

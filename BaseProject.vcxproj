@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Ui\CountIcon.cpp" />
+    <ClCompile Include="Src\Ui\EnemyIcon.cpp" />
     <ClCompile Include="Src\Common\FpsController.cpp" />
     <ClCompile Include="Src\Object\Actor\EnemyAttack.cpp" />
     <ClCompile Include="Src\Object\Actor\Collision.cpp" />
@@ -47,8 +49,11 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
     <ClCompile Include="Src\Scene\Tutorial.cpp" />
+    <ClCompile Include="Src\Ui\UiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Ui\CountIcon.h" />
+    <ClInclude Include="Src\Ui\EnemyIcon.h" />
     <ClInclude Include="Src\Common\FpsController.h" />
     <ClInclude Include="Src\Object\Actor\EnemyAttack.h" />
     <ClInclude Include="Src\Object\Actor\Collision.h" />
@@ -77,6 +82,7 @@
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Object\Stage\Stage.h" />
     <ClInclude Include="Src\Scene\Tutorial.h" />
+    <ClInclude Include="Src\Ui\UiManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

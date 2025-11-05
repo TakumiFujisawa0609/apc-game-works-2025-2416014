@@ -1,3 +1,5 @@
+C:\Users\2416014\Desktop\AGS\Src\Ui\CountIcon.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\CountIcon.obj
+C:\Users\2416014\Desktop\AGS\Src\Ui\EnemyIcon.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\EnemyIcon.obj
 C:\Users\2416014\Desktop\AGS\Src\Common\FpsController.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\FpsController.obj
 C:\Users\2416014\Desktop\AGS\Src\Object\Actor\EnemyAttack.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\EnemyAttack.obj
 C:\Users\2416014\Desktop\AGS\Src\Object\Actor\Collision.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\Collision.obj
@@ -26,3 +28,4 @@ C:\Users\2416014\Desktop\AGS\Src\Scene\TitleScene.cpp;C:\Users\2416014\Desktop\A
 C:\Users\2416014\Desktop\AGS\Src\Utility\AsoUtility.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\AsoUtility.obj
 C:\Users\2416014\Desktop\AGS\Src\Object\Stage\Stage.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\Stage.obj
 C:\Users\2416014\Desktop\AGS\Src\Scene\Tutorial.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\Tutorial.obj
+C:\Users\2416014\Desktop\AGS\Src\Ui\UiManager.cpp;C:\Users\2416014\Desktop\AGS\x64\Debug\UiManager.obj

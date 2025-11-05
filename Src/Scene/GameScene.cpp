@@ -11,6 +11,8 @@
 #include "../Object/Actor/RangeAttack.h"
 #include "../Object/Actor/EnemyAttack.h"
 #include "../Ui/HpManager.h"
+#include "../Ui/EnemyIcon.h"
+#include "../Ui/CountIcon.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
 
@@ -52,9 +54,16 @@ void GameScene::Init(void)
 	enemy_->SetTarget(player_);
 	player_->SetEnemy(enemy_);
 
-	// Ui初期化
-	hpManager_ = new HpManager(player_);
-	hpManager_->Init();
+	//// Ui初期化
+	//hpManager_ = new HpManager(player_);
+	//hpManager_->Init();
+
+	// エネミーアイコン
+	enemyIcon_ = new EnemyIcon(enemy_);
+	enemyIcon_->Init();
+	// 数字アイコン
+	countIcon_ = new CountIcon(enemy_);
+	countIcon_->Init();
 
 	// カメラモード変更
 	Camera* camera = SceneManager::GetInstance().GetCamera();
@@ -80,8 +89,13 @@ void GameScene::Update(void)
 	// エネミー更新
 	enemy_->Update();
 
-	// Ui更新
-	hpManager_->Update();
+	//// Ui更新
+	//hpManager_->Update();
+
+	// エネミーアイコン
+	enemyIcon_->Update();
+	// 数字アイコン
+	countIcon_->Update();
 
 	// 範囲攻撃更新
 	rangeAttack_->Update();
@@ -129,8 +143,13 @@ void GameScene::Draw(void)
 	// プレイヤー描画
 	player_->Draw();
 
-	// Ui描画
-	hpManager_->Draw();
+	//// Ui描画
+	//hpManager_->Draw();
+
+	// エネミーアイコン描画
+	enemyIcon_->Draw();
+	// 数字アイコン描画
+	countIcon_->Draw();
 
 	if (player_->GetGuard())
 	{
@@ -158,10 +177,17 @@ void GameScene::Release(void)
 	enemy_->Release();
 	delete enemy_;
 
-	// Ui解放
-	hpManager_->Release();
-	delete hpManager_;
+	//// Ui解放
+	//hpManager_->Release();
+	//delete hpManager_;
 
+	// エネミーアイコン
+	enemyIcon_->Release();
+	delete enemyIcon_;
+	// 数字アイコン
+	countIcon_->Release();
+	delete countIcon_;
+	
 	// 範囲攻撃解放
 	rangeAttack_->Release();
 	delete rangeAttack_;
