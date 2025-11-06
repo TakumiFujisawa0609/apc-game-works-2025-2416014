@@ -6,13 +6,6 @@ class CountIcon : public UiManager
 {
 public:
 
-	enum class STATE
-	{
-		NORMAL,   // 通常
-		HARD,    // 怒り
-		SOFT,    // 疲労
-	};
-
 	// 数字アイコンの数
 	static constexpr int COUNT_ICON_NUM = 10;
 
@@ -32,8 +25,6 @@ public:
 	const VECTOR& GetPos(void) const;
 	void SetPos(const VECTOR& pos);
 
-	void SetState(STATE state) { countState_ = state; }
-
 protected:
 
 	// リソースロード
@@ -50,17 +41,9 @@ private:
 	// 標的のエネミー
 	Enemy* targetEnemy_;
 
-	STATE countState_;
-
 	// 画像ハンドル配列
 	int countIcons_[COUNT_ICON_NUM];
 
-	// アニメーションカウンタ
-	int cntAnimation_;
-
-	// 攻撃カウンタ
 	int currentCount_;
 
-	// 外部からカウントを設定
-	void SetCount(int count);
 };

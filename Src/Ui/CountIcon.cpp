@@ -14,25 +14,11 @@ CountIcon::~CountIcon(void)
 
 void CountIcon::Update()
 {
-    if (targetEnemy_ == nullptr)
-    {
-        isAlive_ = false;
-        return;
-    }
-
-    // 状態更新
-    if (targetEnemy_->GetNormal())
-    {
-        SetState(STATE::NORMAL);
-    }
-    else if (targetEnemy_->GetHard())
-    {
-        SetState(STATE::HARD);
-    }
-    else
-    {
-        SetState(STATE::SOFT);
-    }
+    //if (targetEnemy_ == nullptr)
+    //{
+    //    isAlive_ = false;
+    //    return;
+    //}
 
     if (isAlive_)
     {
@@ -43,28 +29,16 @@ void CountIcon::Update()
 
 void CountIcon::Draw(void)
 {
-    if (isAlive_)
-    {
-        // 状態に応じて色を設定
-        switch (countState_)
-        {
-        case STATE::NORMAL:
-            SetDrawBright(255, 255, 255);  // 白（元の色）
-            break;
-        case STATE::HARD:
-            SetDrawBright(255, 100, 100);  // 赤っぽく
-            break;
-        case STATE::SOFT:
-            SetDrawBright(100, 100, 255);  // 青っぽく
-            break;
-        }
 
-        int img = countIcons_[currentCount_];
-        DrawBillboard3D(pos_, 0.5f, 0.5f, IMG_SCALE, 0.0f, img, true);
+    int img = countIcons_[currentCount_];
+    DrawBillboard3D(pos_, 0.5f, 0.5f, IMG_SCALE, 0.0f, img, true);
 
-        // 色設定を戻す
-        SetDrawBright(255, 255, 255);
-    }
+    // 色設定を戻す
+    SetDrawBright(255, 255, 255);
+
+    DrawFormatString(0, 380, 0xffffff, "ダメージカウンタ %.1f", img);
+
+
 
 }
 
@@ -85,19 +59,6 @@ const VECTOR& CountIcon::GetPos(void) const
 void CountIcon::SetPos(const VECTOR& pos)
 {
     pos_ = pos;
-}
-
-void CountIcon::SetCount(int count)
-{
-    if (count >= 0 && count <= 9)
-    {
-        currentCount_ = count;
-        isAlive_ = true;  // カウント設定されたら表示
-    }
-    else
-    {
-        isAlive_ = false;  // 範囲外なら非表示
-    }
 }
 
 void CountIcon::InitLoad(void)
@@ -135,5 +96,4 @@ void CountIcon::InitPost(void)
     currentCount_ = 0;
     isAlive_ = false;
 
-    SetState(STATE::SOFT);
 }
