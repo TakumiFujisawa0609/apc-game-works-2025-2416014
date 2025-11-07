@@ -14,11 +14,22 @@ CountIcon::~CountIcon(void)
 
 void CountIcon::Update()
 {
-    //if (targetEnemy_ == nullptr)
-    //{
-    //    isAlive_ = false;
-    //    return;
-    //}
+
+    if (targetEnemy_ == nullptr)
+    {
+        isAlive_ = false;
+        return;
+    }
+
+    // 敵の攻撃カウントを取得
+    cntAttack_ = targetEnemy_->GetCount() / 20;
+
+    // 10から減らす（20フレームごとに1減る）
+    currentCount_ = 10 - cntAttack_;
+
+    // 範囲制限（0未満にならないように）
+    if (currentCount_ < 0) currentCount_ = 0;
+    if (currentCount_ > 10) currentCount_ = 10;
 
     if (isAlive_)
     {
@@ -36,9 +47,11 @@ void CountIcon::Draw(void)
     // 色設定を戻す
     SetDrawBright(255, 255, 255);
 
-    DrawFormatString(0, 380, 0xffffff, "ダメージカウンタ %.1f", img);
-
-
+    //// デバッグ表示を追加
+    //DrawFormatString(0, 560, 0xffffff, "currentCount: %d", currentCount_);
+    //DrawFormatString(0, 580, 0xffffff, "cntAttack: %d", cntAttack_);
+    //DrawFormatString(0, 500, 0xffffff, "isAlive: %d", isAlive_);
+    //DrawFormatString(0, 520, 0xffffff, "img handle: %d", countIcons_[currentCount_]);
 
 }
 
@@ -93,7 +106,7 @@ void CountIcon::InitTransform(void)
 
 void CountIcon::InitPost(void)
 {
-    currentCount_ = 0;
-    isAlive_ = false;
-
+    currentCount_ = 9;
+    cntAttack_ = 0;
+    isAlive_ = true;
 }

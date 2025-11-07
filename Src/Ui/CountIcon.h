@@ -44,6 +44,9 @@ private:
 	// 画像ハンドル配列
 	int countIcons_[COUNT_ICON_NUM];
 
+	// カウンタ
 	int currentCount_;
 
+	// アタックカウンタ
+	int cntAttack_;
 };

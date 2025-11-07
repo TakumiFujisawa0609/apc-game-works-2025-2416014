@@ -310,6 +310,11 @@ void Enemy::SetSoft(bool isSoft)
 	isSoft_ = isSoft;
 }
 
+const int Enemy::GetCount(void) const
+{
+	return cntAttack_;
+}
+
 void Enemy::InitLoad(void)
 {
 	// ƒ‚ƒfƒ‹“Ç‚İ‚İ

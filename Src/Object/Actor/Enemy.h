@@ -135,6 +135,9 @@ public:
 	const bool GetSoft(void) const;
 	void SetSoft(bool isSoft);
 
+	// 攻撃カウンタゲッター
+	const int GetCount(void) const;
+
 	// 範囲攻撃取得
 	EnemyAttack* GetEnemyAttack(void) { return enemyAttack_; }
 
@@ -186,8 +189,6 @@ private:
 
 	//攻撃間隔用のカウンタ
 	int cntAttack_;
-
-	int cntAttackTimer_;
 
 	// 衝突判定用半径
 	float collisionRadius_;
