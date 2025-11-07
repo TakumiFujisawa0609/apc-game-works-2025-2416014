@@ -54,9 +54,9 @@ void GameScene::Init(void)
 	enemy_->SetTarget(player_);
 	player_->SetEnemy(enemy_);
 
-	//// Ui初期化
-	//hpManager_ = new HpManager(player_);
-	//hpManager_->Init();
+	// Ui初期化
+	hpManager_ = new HpManager(player_);
+	hpManager_->Init();
 
 	// エネミーアイコン
 	enemyIcon_ = new EnemyIcon(enemy_);
@@ -75,8 +75,9 @@ void GameScene::Init(void)
 	Collision::GetInstance()->SetStage(stage_);
 }
 
-void GameScene::Update(void)
+void GameScene::Update()
 {
+
 	// グリッド更新
 	grid_->Update();
 
@@ -89,8 +90,8 @@ void GameScene::Update(void)
 	// エネミー更新
 	enemy_->Update();
 
-	//// Ui更新
-	//hpManager_->Update();
+	// Ui更新
+	hpManager_->Update();
 
 	// エネミーアイコン
 	enemyIcon_->Update();
@@ -143,8 +144,8 @@ void GameScene::Draw(void)
 	// プレイヤー描画
 	player_->Draw();
 
-	//// Ui描画
-	//hpManager_->Draw();
+	// Ui描画
+	hpManager_->Draw();
 
 	// エネミーアイコン描画
 	enemyIcon_->Draw();

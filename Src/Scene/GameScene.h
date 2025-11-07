@@ -16,7 +16,6 @@ class GameScene : public SceneBase
 
 public:
 
-
 	// プレイヤー攻撃ダメージ
 	static constexpr int PLAYER_ATTACK_DAMAGE = 20.0f;
 
@@ -27,7 +26,7 @@ public:
 	~GameScene(void) override;
 
 	void Init(void) override;
-	void Update(void) override;
+	void Update() override;
 	void Draw(void) override;
 	void Release(void) override;
 
