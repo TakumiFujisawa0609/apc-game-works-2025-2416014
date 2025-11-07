@@ -36,4 +36,9 @@ private:
 
 	//Hp‚Ìó‘Ô
 	HP_STATE state_;
+
+	int imgHp_;
+	int imgBerCover_;
+	int imgBerFrame_;
+
 };
