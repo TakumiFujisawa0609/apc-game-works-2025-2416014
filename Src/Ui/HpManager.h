@@ -41,4 +41,12 @@ private:
 	int imgBerCover_;
 	int imgBerFrame_;
 
+	// HPƒŒ[ƒg
+	float hpRate_;
+
+	float currentHp_;
+
+	// HP‰æ‘œ•
+	int imgWidth_, imgHeight_;
+	int drawWidth_;
 };
