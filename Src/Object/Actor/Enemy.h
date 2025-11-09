@@ -3,6 +3,7 @@
 class MatrixUtility;
 class Player;
 class EnemyAttack;
+class EnemyMagicAttack;
 
 class Enemy : public ActorBase
 {
@@ -17,7 +18,7 @@ public:
 		DAMAGE,
 		IDLE,
 		JUMP,
-		RUN,
+		MAGIC,
 		WALK,
 		MAX,
 	};
@@ -28,6 +29,7 @@ public:
 		IDLE,
 		WALK,
 		ATTACK,
+		MAGIC,
 		DAMAGE,
 		DEAD,
 		END,
@@ -54,7 +56,7 @@ public:
 	static constexpr COLOR_F COLOR_EMI_DEFAULT = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	// 移動スピード
-	static constexpr float SPEED_MOVE = 2.0f;
+	static constexpr float SPEED_MOVE = 3.0f;
 
 	// 衝突判定用半径
 	static constexpr float ENEMY_DEMON_RADIUS = 80.0f;
@@ -88,6 +90,9 @@ public:
 
 	// 攻撃間隔用
 	static constexpr int TERM_ATTACK = 200;
+
+	// 魔法攻撃用
+	static constexpr int MAGIC_TERM_ATTACK = 3;
 
 	// Normalタイマー
 	static constexpr int NORMAL_TIMER = 500;
@@ -140,6 +145,7 @@ public:
 
 	// 範囲攻撃取得
 	EnemyAttack* GetEnemyAttack(void) { return enemyAttack_; }
+	EnemyMagicAttack* GetEnemyMagicAttack(void) { return enemyMagicAttack_; }
 
 protected:
 
@@ -169,6 +175,9 @@ private:
 	// 攻撃
 	EnemyAttack* enemyAttack_;
 
+	// 魔法攻撃
+	EnemyMagicAttack* enemyMagicAttack_;
+
 	// 状態変化ステート
 	STATE state_;
 
@@ -189,6 +198,9 @@ private:
 
 	//攻撃間隔用のカウンタ
 	int cntAttack_;
+
+	// 魔法攻撃用のカウンタ
+	int magicCount_;
 
 	// 衝突判定用半径
 	float collisionRadius_;
@@ -229,13 +241,14 @@ private:
 	// 移動
 	void Move(void);
 
-	// 攻撃
-	void Attack(void);
+	// ロール攻撃
+	void RollAttack(void);
 
 	// 状態遷移
 	void ChangeIdle(void);
 	void ChangeWalk(void);
 	void ChangeAttack(void);
+	void ChangeMagic(void);
 	void ChangeDamage(void);
 	void ChangeDead(void);
 	void ChangeEnd(void);
@@ -243,6 +256,7 @@ private:
 	void UpdateIdle(void);
 	void UpdateWalk(void);
 	void UpdateAttack(void);
+	void UpdateMagic(void);
 	void UpdateDamage(void);
 	void UpdateDead(void);
 	void UpdateEnd(void);
@@ -250,6 +264,7 @@ private:
 	void DrawIdle(void);
 	void DrawWalk(void);
 	void DrawAttack(void);
+	void DrawMagic(void);
 	void DrawDamage(void);
 	void DrawDead(void);
 	void DrawEnd(void);

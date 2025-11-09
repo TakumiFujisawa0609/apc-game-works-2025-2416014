@@ -49,4 +49,7 @@ private:
 	// HP‰æ‘œ•
 	int imgWidth_, imgHeight_;
 	int drawWidth_;
+
+	int maxHp_;
+
 };

@@ -10,6 +10,7 @@
 #include "../Object/Actor/Collision.h"
 #include "../Object/Actor/RangeAttack.h"
 #include "../Object/Actor/EnemyAttack.h"
+#include "../Object/Actor/EnemyMagicAttack.h"
 #include "../Ui/HpManager.h"
 #include "../Ui/EnemyIcon.h"
 #include "../Ui/CountIcon.h"
@@ -49,6 +50,8 @@ void GameScene::Init(void)
 
 	// エネミー攻撃初期化
 	enemyAttack_ = enemy_->GetEnemyAttack();
+	// エネミー魔法攻撃初期化
+	enemyMagicAttack_ = enemy_->GetEnemyMagicAttack();
 
 	// お互いの参照を設定
 	enemy_->SetTarget(player_);
@@ -101,8 +104,11 @@ void GameScene::Update()
 	// 範囲攻撃更新
 	rangeAttack_->Update();
 
-	// エネミー攻撃初期化
+	// エネミー攻撃
 	enemyAttack_->Update();
+	
+	// エネミー魔法攻撃
+	enemyMagicAttack_->Update();
 
 	//エネミーHP0になったらゲームクリアシーン遷移
 	if (enemy_->GetHp() == 0)
@@ -193,9 +199,13 @@ void GameScene::Release(void)
 	rangeAttack_->Release();
 	delete rangeAttack_;
 
-	// エネミー攻撃解放
-	enemyAttack_->Release();
-	delete enemyAttack_;
+	//// エネミー攻撃解放
+	//enemyAttack_->Release();
+	//delete enemyAttack_;
+
+	//// エネミー魔法攻撃開放
+	//enemyMagicAttack_->Release();
+	//delete enemyMagicAttack_;
 
 	// 当たり判定の解放
 	Collision::GetInstance()->DeleteInstance();
@@ -213,6 +223,8 @@ void GameScene::Collision(void)
 		{
 			CollisionEnemy();
 			CollisionEnemyAttack();
+			CollisionEnemyMagic();
+
 		}
 	}
 	else
@@ -220,6 +232,7 @@ void GameScene::Collision(void)
 		// 盾がない場合は通常通りダメージ判定
 		CollisionEnemy();
 		CollisionEnemyAttack();
+		CollisionEnemyMagic();
 	}
 
 	CollisionWeapon();
@@ -356,9 +369,37 @@ void GameScene::CollisionEnemyAttack(void)
 	}
 }
 
+void GameScene::CollisionEnemyMagic(void)
+{
+	VECTOR playerPos = player_->GetPos();
+
+	VECTOR enemyMagicPos = enemyMagicAttack_->GetPos();
+
+	if (player_->GetInvincible() == 0)
+	{
+
+		//エネミー魔法攻撃とプレイヤーの衝突判定
+		if (AsoUtility::IsHitSpheres(playerPos, player_->GetcollisionRadius(), enemyMagicPos, enemyMagicAttack_->GetCollisionRadius()) && enemyMagicAttack_->GetAlive())
+		{
+			//ベクトルを求める
+			VECTOR diff = VSub(playerPos, enemyMagicPos);
+			diff.y = 0.0f;
+
+			//ベクトルを正規化(これで方向を取得する)
+			VECTOR dir = VNorm(diff);
+
+			//プレイヤーがダメージを食らう
+			player_->Damage(2);
+
+		}
+	}
+
+}
+
 bool GameScene::CollisionShield(void)
 {
 	VECTOR enemyAttackPos = enemyAttack_->GetPos();
+	VECTOR enemyMagicPos = enemyMagicAttack_->GetPos();
 	VECTOR enemyPos = enemy_->GetPos();
 	VECTOR shieldPos = player_->GetShieldPos();
 
@@ -367,6 +408,22 @@ bool GameScene::CollisionShield(void)
 	if (player_->GetInvincible() == 0)
 	{
 		// エネミー本体と盾の衝突判定
+		if (AsoUtility::IsHitSpheres(enemyMagicPos, enemyMagicAttack_->GetCollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && player_->GetShieldAlive())
+		{
+			{
+				//ベクトルを求める
+				VECTOR diff = VSub(enemyMagicPos, shieldPos);
+				diff.y = 0.0f;
+
+				//ベクトルを正規化(これで方向を取得する)
+				VECTOR dir = VNorm(diff);
+
+				// シールドで防いだ
+				player_->SetGuard(true);
+			}
+		}
+
+		// エネミー魔法攻撃と盾の衝突判定
 		if (AsoUtility::IsHitSpheres(enemyPos, enemy_->GetcollisionRadius(), shieldPos, player_->GetShieldCollisionRadius()) && player_->GetShieldAlive())
 		{
 			{

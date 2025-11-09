@@ -8,6 +8,7 @@ class Enemy;
 class HpManager;
 class RangeAttack;
 class EnemyAttack;
+class EnemyMagicAttack;
 class EnemyIcon;
 class CountIcon;
 
@@ -53,6 +54,9 @@ private:
 	// エネミー攻撃
 	EnemyAttack* enemyAttack_;
 
+	// エネミー魔法攻撃
+	EnemyMagicAttack* enemyMagicAttack_;
+
 	// エネミーアイコン
 	EnemyIcon* enemyIcon_;
 	CountIcon* countIcon_;
@@ -75,6 +79,8 @@ private:
 
 	// エネミーの攻撃とプレイヤーの衝突
 	void CollisionEnemyAttack(void);
+
+	void CollisionEnemyMagic(void);
 
 	// 盾とエネミー（攻撃とエネミーオブジェクト）の衝突判定
 	bool CollisionShield(void);

@@ -6,6 +6,7 @@
 #include "./Player.h"
 #include "./Enemy.h"
 #include "./EnemyAttack.h"
+#include "./EnemyMagicAttack.h"
 
 Enemy::Enemy()
 {
@@ -27,12 +28,13 @@ void Enemy::Update()
 		ActorBase::Update();
 
 		enemyAttack_->Update();
+		enemyMagicAttack_->Update();
 
 		LookPlayer();
 		// 索敵
 		Search();
-		// 攻撃
-		Attack();
+		// 回転攻撃
+		RollAttack();
 		// 敵を探して攻撃
 		AttackSearch();
 
@@ -46,6 +48,9 @@ void Enemy::Update()
 			break;
 		case STATE::ATTACK:
 			UpdateAttack();
+			break;
+		case STATE::MAGIC:
+			UpdateMagic();
 			break;
 		case STATE::DAMAGE:
 			UpdateDamage();
@@ -84,6 +89,7 @@ void Enemy::Draw(void)
 		ActorBase::Draw();
 
 		enemyAttack_->Draw();
+		enemyMagicAttack_->Draw();
 
 		switch (state_)
 		{
@@ -95,6 +101,9 @@ void Enemy::Draw(void)
 			break;
 		case STATE::ATTACK:
 			DrawAttack();
+			break;
+		case STATE::MAGIC:
+			DrawMagic();
 			break;
 		case STATE::DAMAGE:
 			DrawDamage();
@@ -194,6 +203,7 @@ void Enemy::Release(void)
 {
 	ActorBase::Release();
 	enemyAttack_->Release();
+	enemyMagicAttack_->Release();
 }
 
 void Enemy::ChangeState(STATE state)
@@ -209,6 +219,9 @@ void Enemy::ChangeState(STATE state)
 		break;
 	case STATE::ATTACK:
 		ChangeAttack();
+		break;
+	case STATE::MAGIC:
+		ChangeMagic();
 		break;
 	case STATE::DAMAGE:
 		ChangeDamage();
@@ -318,7 +331,7 @@ const int Enemy::GetCount(void) const
 void Enemy::InitLoad(void)
 {
 	// モデル読み込み
-	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Demon.mv1").c_str());
+	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Enemy.mv1").c_str());
 
 }
 
@@ -327,12 +340,10 @@ void Enemy::InitTransform(void)
 	// モデルの初期角度
 	angles_ = { 0.0f, 0.0f, 0.0f };
 	localAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
-
 	// モデルの位置設定
 	pos_ = VGet(0.0f, 0.0f, 0.0f);
-
 	// モデルの大きさ設定
-	scales_ = { 1.0f, 1.0f, 1.0f };
+	scales_ = { 2.0f, 2.0f, 2.0f };
 
 	// モデルの初期速度
 	speed_ = SPEED_MOVE;
@@ -345,12 +356,21 @@ void Enemy::InitTransform(void)
 
 void Enemy::InitAnimation(void)
 {
-	//モデルアニメーション制御の初期化
+	// モデルアニメーション制御の初期化
 	animationController_ = new AnimationController(modelId_);
-	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
-	{
-		animationController_->AddInFbx(i, 30.0f, i);
-	}
+
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::IDLE), 30.0f, Application::PATH_MODEL + "Enemy/Idle.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::WALK), 30.0f, Application::PATH_MODEL + "Enemy/Walk.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::MAGIC), 30.0f, Application::PATH_MODEL + "Enemy/Magic.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Enemy/Attack.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Enemy/Damage.mv1");
+	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::DEAD), 30.0f, Application::PATH_MODEL + "Enemy/Dead.mv1");
 }
 
 void Enemy::InitPost(void)
@@ -360,6 +380,9 @@ void Enemy::InitPost(void)
 	// エネミー攻撃用
 	enemyAttack_ = new EnemyAttack();
 	enemyAttack_->Init();
+	// エネミー魔法攻撃用
+	enemyMagicAttack_ = new EnemyMagicAttack();
+	enemyMagicAttack_->Init();
 
 	// 衝突判定用半径
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
@@ -490,12 +513,21 @@ void Enemy::Search(void)
 
 	if (isAttack_)
 	{
-		isMove_ = false;
+		isMove_ = false;	
 		cntAttack_++;
+
 		// 一定間隔で攻撃させる
 		if (cntAttack_ % TERM_ATTACK == 0)
 		{
-			ChangeState(STATE::ATTACK);
+			magicCount_++;
+			if (magicCount_ % MAGIC_TERM_ATTACK == 0)
+			{
+				ChangeState(STATE::MAGIC);
+			}
+			else
+			{
+				ChangeState(STATE::ATTACK);
+			}
 		}
 	}
 	else if (isNotice_)
@@ -560,9 +592,19 @@ void Enemy::AttackSearch(void)
 		enemyAttack_->SetPos(attackPos);
 		enemyAttack_->SetAlive(true);
 	}
+	else if (isAttackable_ && state_ == (STATE::MAGIC))
+	{	
+		// エネミーの位置から前方にオフセット
+		float offsetDistance = ATTACK_COL_OFFSET;
+		VECTOR magicPos = VAdd(VGet(pos_.x, pos_.y + 100, pos_.z), VScale(forward, offsetDistance));
+
+		enemyMagicAttack_->SetPos(magicPos);
+		enemyMagicAttack_->SetAlive(true);
+	}
 	else
 	{
 		enemyAttack_->SetAlive(false);
+		enemyMagicAttack_->SetAlive(false);
 	}
 
 }
@@ -609,7 +651,7 @@ void Enemy::Move(void)
 
 }
 
-void Enemy::Attack(void)
+void Enemy::RollAttack(void)
 {
 }
 
@@ -632,6 +674,12 @@ void Enemy::ChangeAttack(void)
 {
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK),false);
+}
+
+void Enemy::ChangeMagic(void)
+{	
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::MAGIC), false);
 }
 
 void Enemy::ChangeDamage(void)
@@ -689,6 +737,18 @@ void Enemy::UpdateAttack(void)
 	}
 }
 
+void Enemy::UpdateMagic(void)
+{
+	//攻撃アニメーションが終わったら通常状態に戻る
+	if (animationController_->IsEnd())
+	{
+		// 攻撃カウンタを0にする
+		magicCount_ = 0;
+
+		ChangeState(STATE::IDLE);
+	}
+}
+
 void Enemy::UpdateDamage(void)
 {
 	cntDamaged_--;
@@ -727,6 +787,11 @@ void Enemy::DrawWalk(void)
 }
 
 void Enemy::DrawAttack(void)
+{
+	MV1DrawModel(modelId_);
+}
+
+void Enemy::DrawMagic(void)
 {
 	MV1DrawModel(modelId_);
 }

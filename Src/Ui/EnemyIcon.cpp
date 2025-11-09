@@ -31,7 +31,7 @@ void EnemyIcon::Update()
     {
         // エネミーの座標を取得して、頭上に配置
         VECTOR enemyPos = targetEnemy_->GetPos();
-        pos_ = VAdd(enemyPos, VGet(0.0f, 330.0f, 0.0f));  // 頭上100上
+        pos_ = VAdd(enemyPos, VGet(0.0f, 530.0f, 0.0f));  // 頭上100上
 
         // アニメーション更新
         cntAnimation_++;
