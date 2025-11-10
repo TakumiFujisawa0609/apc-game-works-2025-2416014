@@ -65,6 +65,9 @@ private:
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
 
+	// ヒットストップ
+	int hitStopCnt_;
+
 	// 衝突判定
 	void Collision(void);
 
@@ -73,6 +76,9 @@ private:
 
 	// 武器とエネミーの衝突
 	void CollisionWeapon(void);
+	
+	// 魔法攻撃とエネミーの衝突
+	void CollisionPlayerMagic(void);
 
 	// ステージブロックとプレイヤーの衝突
 	void CollisionStage(void);

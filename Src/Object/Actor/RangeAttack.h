@@ -49,7 +49,8 @@ public:
 
 
     // 範囲攻撃判定用半径
-    static constexpr float LIGHTNING_RADIUS = 100.0f;
+    static constexpr float LIGHTNING_RADIUS = 2000.0f;
+
     // 範囲攻撃使用ポイント
     static constexpr float LIGHTNING_POINT = 500.0f;
 

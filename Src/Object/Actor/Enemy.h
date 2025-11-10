@@ -147,6 +147,12 @@ public:
 	EnemyAttack* GetEnemyAttack(void) { return enemyAttack_; }
 	EnemyMagicAttack* GetEnemyMagicAttack(void) { return enemyMagicAttack_; }
 
+	// ダメージを受けない
+	bool IsInvincible() const { return invincibleTimer_ > 0; }
+	void UpdateInvincible() { if (invincibleTimer_ > 0) invincibleTimer_--; }
+	void SetInvincible(int time) { isInvincible_ = true;  invincibleTimer_ = time; }
+	int GetInvincible(void) const;
+
 protected:
 
 	// リソースロード
@@ -228,6 +234,10 @@ private:
 	bool isNormal_;
 	bool isHard_;
 	bool isSoft_;
+
+	//無敵時間
+	int invincibleTimer_;
+	bool isInvincible_;
 
 	// 索敵
 	void Search(void);

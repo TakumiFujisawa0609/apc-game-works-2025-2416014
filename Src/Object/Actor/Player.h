@@ -101,12 +101,21 @@ public:
 	// 無敵時間（フレーム数）
 	static constexpr float DAMAGE_INVINCIBLE_TIME = 60.0f;  
 
+	// 通常攻撃
 	// プレイヤーNORMALダメージ
 	static constexpr int PLAYER_NORMAL_DAMAGE = 20.0f;
 	// プレイヤーHARDダメージ
 	static constexpr int PLAYER_HARD_DAMAGE = 10.0f;
 	// プレイヤーSOFTダメージ
 	static constexpr int PLAYER_SOFT_DAMAGE = 30.0f;
+
+	// 魔法攻撃
+	// プレイヤーNORMALダメージ
+	static constexpr int PLAYER_NORMAL_MAGIC = 2.0f;
+	// プレイヤーHARDダメージ
+	static constexpr int PLAYER_HARD_MAGIC = 1.0f;
+	// プレイヤーSOFTダメージ
+	static constexpr int PLAYER_SOFT_MAGIC = 3.0f;
 
 	// コンストラクタ
 	Player(void);
