@@ -89,8 +89,8 @@ void RangeAttack::Draw(void)
 {
 	if (isLightningAlive_)
 	{
-		////デバッグ用の球体描画
-		//DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0xffff00, 0xffff00, true);
+		//デバッグ用の球体描画
+		DrawSphere3D(lightningPos_, lightningCollisionRadius_, 50, 0xffff00, 0xffff00, true);
 
 		// ビルボード描画
 		int img = imgs_[cntAnimation_];

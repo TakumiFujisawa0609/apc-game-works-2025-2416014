@@ -297,7 +297,7 @@ const bool Player::IsAttackAlive(void) const
 
 void Player::SetAttackAlive(bool isAttackAlive)
 {
-	isAttackAlive = isAttackAlive_;
+	isAttackAlive_ = isAttackAlive;
 }
 
 const bool Player::GetRangeAttackActive(void) const
@@ -843,7 +843,7 @@ void Player::AttackSearch(void)
 			rangeAttack_->SetLightningAlive(true);
 			isRangeAttackActive_ = true;
 			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 350.0f, enemyPos.z));
-			enemy_->Damage(PLAYER_RANGE_DAMAGE);
+			//enemy_->Damage(PLAYER_RANGE_DAMAGE);
 		}
 		else
 		{

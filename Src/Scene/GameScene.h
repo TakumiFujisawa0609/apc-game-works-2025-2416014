@@ -88,6 +88,9 @@ private:
 
 	// 武器とエネミーの衝突
 	void CollisionWeapon(void);
+	
+	// 魔法攻撃とエネミーの衝突
+	void CollisionPlayerMagic(void);
 
 	// ステージブロックとプレイヤーの衝突
 	void CollisionStage(void);

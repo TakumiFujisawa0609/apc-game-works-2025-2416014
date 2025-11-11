@@ -86,6 +86,13 @@ void GameScene::Update()
 		return;
 	}
 
+	// ヒットストップで処理を中断
+	if (hitStopCnt_ > 0)
+	{
+		hitStopCnt_--;
+		return;
+	}
+
 	// グリッド更新
 	grid_->Update();
 
@@ -240,14 +247,16 @@ void GameScene::Collision(void)
 		CollisionEnemyMagic();
 	}
 
+	CollisionPlayerMagic();
 	CollisionWeapon();
 	CollisionStage();
 }
 
 void GameScene::CollisionEnemy(void)
 {
-	// ヒットストップ時や無敵時間の時は処理をスキップ
-	if (hitStopCnt_ > 0 || player_->IsInvincible()) {
+	// ヒットストップ中や無敵時間中は衝突判定をスキップ
+	if (hitStopCnt_ > 0 || player_->IsInvincible()) 
+	{
 		return;
 	}
 
@@ -273,8 +282,6 @@ void GameScene::CollisionEnemy(void)
 
 		player_->Damage(Enemy::ENEMY_DAMAGE);
 
-		hitStopCnt_ = HIT_STOP_CNT_ENEMY;
-
 		// プレイヤーに無敵時間を付与
 		player_->SetInvincible(30);  // 例: 60フレーム無敵
 	}
@@ -283,8 +290,9 @@ void GameScene::CollisionEnemy(void)
 
 void GameScene::CollisionWeapon(void)
 {
-	// ヒットストップ時や無敵時間の時は処理をスキップ
-	if (hitStopCnt_ > 0 || player_->IsInvincible()) {
+	// ヒットストップ中や無敵時間中は衝突判定をスキップ
+	if (hitStopCnt_ > 0 || enemy_->IsInvincible())
+	{
 		return;
 	}
 
@@ -310,13 +318,11 @@ void GameScene::CollisionWeapon(void)
 		{
 			enemy_->Damage(Player::PLAYER_NORMAL_DAMAGE);
 		}
-
-		if (enemy_->GetHard())
+		else if (enemy_->GetHard())
 		{
 			enemy_->Damage(Player::PLAYER_HARD_DAMAGE);
 		}
-
-		if (enemy_->GetSoft())
+		else if (enemy_->GetSoft())
 		{
 			enemy_->Damage(Player::PLAYER_SOFT_DAMAGE);
 		}
@@ -327,8 +333,57 @@ void GameScene::CollisionWeapon(void)
 
 		// プレイヤーに無敵時間を付与
 		player_->SetInvincible(120);
+
+	}
+}
+
+void GameScene::CollisionPlayerMagic(void)
+{
+	// ヒットストップ中や無敵時間中は衝突判定をスキップ
+	if (hitStopCnt_ > 0 || enemy_->IsInvincible())
+	{
+		return;
 	}
 
+	// エネミーと攻撃座標の衝突判定
+	VECTOR rangePos = rangeAttack_->GetLightningPos();
+
+	VECTOR enemyPos = enemy_->GetPos();
+
+	//エネミーと武器の衝突判定
+	if (AsoUtility::IsHitSpheres(rangePos, rangeAttack_->GetLightningCollisionRadius(), enemyPos, enemy_->GetcollisionRadius()) && rangeAttack_->GetLightningAlive())
+	{
+		//ベクトルを求める
+		VECTOR diff = VSub(rangePos, enemyPos);
+		diff.y = 0.0f;
+
+		//ベクトルを正規化(これで方向を取得する)
+		VECTOR dir = VNorm(diff);
+
+		rangeAttack_->SetLightningAlive(true);
+		rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 150.0f, enemyPos.z));
+
+		if (enemy_->GetNormal())
+		{
+			enemy_->Damage(Player::PLAYER_NORMAL_MAGIC);
+		}
+		else if (enemy_->GetHard())
+		{
+			enemy_->Damage(Player::PLAYER_HARD_MAGIC);
+		}
+		else if (enemy_->GetSoft())
+		{
+			enemy_->Damage(Player::PLAYER_SOFT_MAGIC);
+		}
+
+		//rangeAttack_->SetLightningAlive(false);
+
+		hitStopCnt_ = 5;
+
+		// エネミー無敵時間を付与
+		enemy_->SetInvincible(90);
+
+	}
 
 }
 
@@ -364,7 +419,7 @@ void GameScene::CollisionStage(void)
 
 void GameScene::CollisionEnemyAttack(void)
 {
-	// ヒットストップ時や無敵時間の時は処理を無視
+	// ヒットストップ中や無敵時間中は衝突判定をスキップ
 	if (hitStopCnt_ > 0 || player_->IsInvincible())
 	{
 		return;
@@ -392,7 +447,6 @@ void GameScene::CollisionEnemyAttack(void)
 			//enemy_->SetAlive(false);
 
 			hitStopCnt_ = HIT_STOP_CNT_DAMAGE;
-
 			// プレイヤーに無敵時間を付与
 			player_->SetInvincible(60);
 		}
@@ -401,8 +455,8 @@ void GameScene::CollisionEnemyAttack(void)
 
 void GameScene::CollisionEnemyMagic(void)
 {
-	// ヒットストップ時や無敵時間の時は処理を無視
-	if (hitStopCnt_ > 0 || player_->IsInvincible()) 
+	// ヒットストップ中や無敵時間中は衝突判定をスキップ
+	if (hitStopCnt_ > 0 || player_->IsInvincible())
 	{
 		return;
 	}
@@ -440,7 +494,7 @@ void GameScene::CollisionEnemyMagic(void)
 bool GameScene::CollisionShield(void)
 {
 	// ヒットストップ時や無敵時間の時は処理を無視
-	if (hitStopCnt_ > 0 || player_->IsInvincible()) 
+	if (hitStopCnt_ > 0 || player_->IsInvincible())
 	{
 		return false;
 	}
@@ -464,7 +518,7 @@ bool GameScene::CollisionShield(void)
 
 				//ベクトルを正規化(これで方向を取得する)
 				VECTOR dir = VNorm(diff);
-
+					
 				// シールドで防いだ
 				player_->SetGuard(true);
 

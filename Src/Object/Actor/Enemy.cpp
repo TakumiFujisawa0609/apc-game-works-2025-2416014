@@ -77,7 +77,11 @@ void Enemy::Update()
 		}
 	}
 
-
+	// 無敵時間のカウントダウン
+	if (invincibleTimer_ > 0)
+	{
+		invincibleTimer_--;
+	}
 }
 
 void Enemy::Draw(void)
@@ -328,6 +332,11 @@ const int Enemy::GetCount(void) const
 	return cntAttack_;
 }
 
+int Enemy::GetInvincible(void) const
+{
+	return invincibleTimer_;
+}
+
 void Enemy::InitLoad(void)
 {
 	// モデル読み込み
@@ -348,10 +357,12 @@ void Enemy::InitTransform(void)
 	// モデルの初期速度
 	speed_ = SPEED_MOVE;
 
+
 	// 移動・攻撃判定用フラグ
 	isMove_ = false;
 	isAlive_ = true;
 	isAttack_ = false;
+
 }
 
 void Enemy::InitAnimation(void)
@@ -389,6 +400,8 @@ void Enemy::InitPost(void)
 	
 	// 持ちHP
 	hp_ = ENEMY_HP;
+
+	invincibleTimer_ = 0;
 
 	// 初期アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
