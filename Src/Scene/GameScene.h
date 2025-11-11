@@ -18,7 +18,13 @@ class GameScene : public SceneBase
 public:
 
 	// プレイヤー攻撃ダメージ
-	static constexpr int PLAYER_ATTACK_DAMAGE = 20.0f;
+	static constexpr int PLAYER_ATTACK_DAMAGE = 20;
+
+	// ヒットストップカウンタ
+	static constexpr int HIT_STOP_CNT_ENEMY = 1;
+	static constexpr int HIT_STOP_CNT_SHIELD = 2;
+	static constexpr int HIT_STOP_CNT_ATTACK = 2;
+	static constexpr int HIT_STOP_CNT_DAMAGE = 1;
 
 	// コンストラクタ
 	GameScene(void);
@@ -30,6 +36,9 @@ public:
 	void Update() override;
 	void Draw(void) override;
 	void Release(void) override;
+
+	bool IsInvincible() const { return invincibleCnt_ > 0; }
+	void SetInvincible(int frames) { invincibleCnt_ = frames; }
 
 private:
 
@@ -64,6 +73,12 @@ private:
 	// 地面との衝突用線分
 	VECTOR lineTopPos_;
 	VECTOR lineDownPos_;
+
+	// ヒットストップカウンタ
+	int hitStopCnt_;
+
+	// 無敵カウンタ
+	int invincibleCnt_;
 
 	// 衝突判定
 	void Collision(void);

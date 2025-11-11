@@ -35,16 +35,20 @@ void HpManager::Update(void)
 	drawWidth_ = (int)(imgWidth_ * hpRate_);
 
 	// HP状態の更新
-	if (playerHp <= 0) {
+	if (playerHp <= 0)
+	{
 		ChangeHpState(HP_STATE::LOW);
 	}
-	else if (playerHp <= 3) {
+	else if (playerHp <= 3)
+	{
 		ChangeHpState(HP_STATE::LOW);
 	}
-	else if (playerHp <= 6) {
+	else if (playerHp <= 6)
+	{
 		ChangeHpState(HP_STATE::MEDIUM);
 	}
-	else {
+	else 
+	{
 		ChangeHpState(HP_STATE::HIGH);
 	}
 }
@@ -90,7 +94,6 @@ void HpManager::Release(void)
 	DeleteGraph(imgHp_);	
 	DeleteGraph(imgBerCover_);
 	DeleteGraph(imgBerFrame_);
-
 }
 
 void HpManager::ChangeHpState(HP_STATE state)

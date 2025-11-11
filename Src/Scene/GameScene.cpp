@@ -80,6 +80,11 @@ void GameScene::Init(void)
 
 void GameScene::Update()
 {
+	if (hitStopCnt_ > 0)
+	{
+		hitStopCnt_--;
+		return;
+	}
 
 	// グリッド更新
 	grid_->Update();
@@ -241,6 +246,10 @@ void GameScene::Collision(void)
 
 void GameScene::CollisionEnemy(void)
 {
+	// ヒットストップ時や無敵時間の時は処理をスキップ
+	if (hitStopCnt_ > 0 || player_->IsInvincible()) {
+		return;
+	}
 
 	// エネミーとプレイヤーの衝突判定
 	VECTOR playerPos = player_->GetPos();
@@ -264,12 +273,20 @@ void GameScene::CollisionEnemy(void)
 
 		player_->Damage(Enemy::ENEMY_DAMAGE);
 
+		hitStopCnt_ = HIT_STOP_CNT_ENEMY;
+
+		// プレイヤーに無敵時間を付与
+		player_->SetInvincible(30);  // 例: 60フレーム無敵
 	}
 
 }
 
 void GameScene::CollisionWeapon(void)
 {
+	// ヒットストップ時や無敵時間の時は処理をスキップ
+	if (hitStopCnt_ > 0 || player_->IsInvincible()) {
+		return;
+	}
 
 	// エネミーと攻撃座標の衝突判定
 	VECTOR attackPos = player_->GetAttackPos();
@@ -306,7 +323,10 @@ void GameScene::CollisionWeapon(void)
 
 		player_->SetAttackAlive(false);
 
-		int a = 1;
+		hitStopCnt_ = HIT_STOP_CNT_ATTACK;
+
+		// プレイヤーに無敵時間を付与
+		player_->SetInvincible(120);
 	}
 
 
@@ -344,6 +364,12 @@ void GameScene::CollisionStage(void)
 
 void GameScene::CollisionEnemyAttack(void)
 {
+	// ヒットストップ時や無敵時間の時は処理を無視
+	if (hitStopCnt_ > 0 || player_->IsInvincible())
+	{
+		return;
+	}
+
 	VECTOR playerPos = player_->GetPos();
 
 	VECTOR enemyAttackPos = enemyAttack_->GetPos();
@@ -365,12 +391,22 @@ void GameScene::CollisionEnemyAttack(void)
 			player_->Damage(1);
 			//enemy_->SetAlive(false);
 
+			hitStopCnt_ = HIT_STOP_CNT_DAMAGE;
+
+			// プレイヤーに無敵時間を付与
+			player_->SetInvincible(60);
 		}
 	}
 }
 
 void GameScene::CollisionEnemyMagic(void)
 {
+	// ヒットストップ時や無敵時間の時は処理を無視
+	if (hitStopCnt_ > 0 || player_->IsInvincible()) 
+	{
+		return;
+	}
+
 	VECTOR playerPos = player_->GetPos();
 
 	VECTOR enemyMagicPos = enemyMagicAttack_->GetPos();
@@ -391,6 +427,11 @@ void GameScene::CollisionEnemyMagic(void)
 			//プレイヤーがダメージを食らう
 			player_->Damage(2);
 
+			hitStopCnt_ = HIT_STOP_CNT_ATTACK;
+
+			// プレイヤーに無敵時間を付与
+			player_->SetInvincible(120);
+
 		}
 	}
 
@@ -398,6 +439,12 @@ void GameScene::CollisionEnemyMagic(void)
 
 bool GameScene::CollisionShield(void)
 {
+	// ヒットストップ時や無敵時間の時は処理を無視
+	if (hitStopCnt_ > 0 || player_->IsInvincible()) 
+	{
+		return false;
+	}
+
 	VECTOR enemyAttackPos = enemyAttack_->GetPos();
 	VECTOR enemyMagicPos = enemyMagicAttack_->GetPos();
 	VECTOR enemyPos = enemy_->GetPos();
@@ -420,6 +467,12 @@ bool GameScene::CollisionShield(void)
 
 				// シールドで防いだ
 				player_->SetGuard(true);
+
+				//hitStopCnt_ = HIT_STOP_CNT_SHIELD;
+
+				//// プレイヤーに無敵時間を付与
+				//player_->SetInvincible(90);
+
 			}
 		}
 
@@ -435,7 +488,13 @@ bool GameScene::CollisionShield(void)
 				VECTOR dir = VNorm(diff);
 
 				// シールドで防いだ
-				player_->SetGuard(true);
+				player_->SetGuard(true);	
+				
+				//hitStopCnt_ = HIT_STOP_CNT_SHIELD;
+
+				//// プレイヤーに無敵時間を付与
+				//player_->SetInvincible(90);
+
 			}
 		}
 
@@ -457,6 +516,11 @@ bool GameScene::CollisionShield(void)
 
 				// シールドで防いだ
 				player_->SetGuard(true);
+
+				//hitStopCnt_ = HIT_STOP_CNT_SHIELD;
+
+				//// プレイヤーに無敵時間を付与
+				//player_->SetInvincible(90);
 
 			}
 		}
