@@ -484,7 +484,7 @@ void GameScene::CollisionEnemyMagic(void)
 			hitStopCnt_ = HIT_STOP_CNT_ATTACK;
 
 			// ƒvƒŒƒCƒ„[‚É–³“GŽžŠÔ‚ð•t—^
-			player_->SetInvincible(120);
+			Enemy_->SetInvincible(120);
 
 		}
 	}

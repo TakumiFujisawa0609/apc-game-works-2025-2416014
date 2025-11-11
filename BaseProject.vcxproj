@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\Object\Actor\EnemyMagicAttack.cpp" />
     <ClCompile Include="Src\Ui\CountIcon.cpp" />
     <ClCompile Include="Src\Ui\EnemyIcon.cpp" />
@@ -53,6 +54,7 @@
     <ClCompile Include="Src\Ui\UiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Sound\SoundManager.h" />
     <ClInclude Include="Src\Object\Actor\EnemyMagicAttack.h" />
     <ClInclude Include="Src\Ui\CountIcon.h" />
     <ClInclude Include="Src\Ui\EnemyIcon.h" />
