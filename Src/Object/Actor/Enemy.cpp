@@ -121,27 +121,27 @@ void Enemy::Draw(void)
 		}
 	}
 
-	if (isNotice_)
-	{
-		// 視野範囲内：ディフューズカラーを赤色にする
-		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-	}
-	else if (isHear_)
-	{
-		// 聴覚範囲内：ディフューズカラーを黄色にする
-		MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
-	}
-	else if (isAttack_)
-	{
-		// 聴覚範囲内：ディフューズカラーを蒼色にする
-		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 0.5f, 1.0f));
+	//if (isNotice_)
+	//{
+	//	// 視野範囲内：ディフューズカラーを赤色にする
+	//	MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+	//}
+	//else if (isHear_)
+	//{
+	//	// 聴覚範囲内：ディフューズカラーを黄色にする
+	//	MV1SetMaterialDifColor(modelId_, 0, GetColorF(1.0f, 1.0f, 0.0f, 1.0f));
+	//}
+	//else if (isAttack_)
+	//{
+	//	// 聴覚範囲内：ディフューズカラーを蒼色にする
+	//	MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.0f, 0.0f, 0.5f, 1.0f));
 
-	}
-	else
-	{
-		// 視野範囲外：ディフューズカラーを灰色にする
-		MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
-	}
+	//}
+	//else
+	//{
+	//	// 視野範囲外：ディフューズカラーを灰色にする
+	//	MV1SetMaterialDifColor(modelId_, 0, GetColorF(0.5f, 0.5f, 0.5f, 1.0f));
+	//}
 
 	//}
 	//

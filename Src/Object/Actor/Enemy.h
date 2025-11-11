@@ -80,7 +80,7 @@ public:
 	static constexpr float ATTACK_COL_OFFSET = -200.0f;
 	
 	// HP
-	static constexpr int ENEMY_HP = 1000;
+	static constexpr int ENEMY_HP = 500;
 
 	// ダメージアニメーション用カウンタ
 	static constexpr int CNT_HIT_REACT = 40;

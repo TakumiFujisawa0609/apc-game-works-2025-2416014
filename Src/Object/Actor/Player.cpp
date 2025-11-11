@@ -200,10 +200,10 @@ void Player::Draw(void)
 	// 視野描画
 	DrawViewRange();
 
-	DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
+	//DrawFormatString(0, 210, 0xffffff, "ジャンプタイマー: %.1f", jumpTimer_);
 
-	DrawFormatString(0, 300, 0xFFFFFF, "isShieldAlive_: %s", isShieldAlive_ ? "ON" : "OFF");
-	DrawFormatString(0, 360, 0xFFFFFF, "isRangeAttackActive_: %s", isRangeAttackActive_ ? "true" : "false");
+	//DrawFormatString(0, 300, 0xFFFFFF, "isShieldAlive_: %s", isShieldAlive_ ? "ON" : "OFF");
+	//DrawFormatString(0, 360, 0xFFFFFF, "isRangeAttackActive_: %s", isRangeAttackActive_ ? "true" : "false");
 
 
 }

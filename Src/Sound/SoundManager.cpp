@@ -10,6 +10,11 @@ SoundManager::~SoundManager(void)
 
 void SoundManager::Init(void)
 {
+	// リソースロード
+	InitLoad();
+	// 初期化後の個別処理
+	InitPost();
+
 }
 
 void SoundManager::Update(void)
@@ -26,18 +31,11 @@ void SoundManager::Release(void)
 
 const bool SoundManager::GetAlive(void) const
 {
-    return false;
+    return isAlive_;
 }
 
 void SoundManager::Setlive(bool isAlive)
 {
+	isAlive_ = isAlive;
 }
 
-void SoundManager::InitLoad(void)
-{
-
-}
-
-void SoundManager::InitPost(void)
-{
-}

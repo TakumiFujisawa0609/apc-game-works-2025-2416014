@@ -14,6 +14,7 @@
 #include "../Ui/HpManager.h"
 #include "../Ui/EnemyIcon.h"
 #include "../Ui/CountIcon.h"
+#include "../Sound/PlayerSound.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
 
@@ -68,6 +69,10 @@ void GameScene::Init(void)
 	countIcon_ = new CountIcon(enemy_);
 	countIcon_->Init();
 
+	// プレイヤーサウンド
+	playerSound_ = new PlayerSound(player_);
+	playerSound_->Init();
+
 	// カメラモード変更
 	Camera* camera = SceneManager::GetInstance().GetCamera();
 	camera->SetFollow(player_);
@@ -112,6 +117,9 @@ void GameScene::Update()
 	enemyIcon_->Update();
 	// 数字アイコン
 	countIcon_->Update();
+
+	// プレイヤーサウンド
+	playerSound_->Update();
 
 	// 範囲攻撃更新
 	rangeAttack_->Update();
@@ -162,13 +170,13 @@ void GameScene::Draw(void)
 	// プレイヤー描画
 	player_->Draw();
 
-	// Ui描画
-	hpManager_->Draw();
-
 	// エネミーアイコン描画
 	enemyIcon_->Draw();
 	// 数字アイコン描画
 	countIcon_->Draw();
+
+	// Ui描画
+	hpManager_->Draw();
 
 	if (player_->GetGuard())
 	{
@@ -207,6 +215,9 @@ void GameScene::Release(void)
 	countIcon_->Release();
 	delete countIcon_;
 	
+	// プレイヤーサウンド
+	playerSound_->Release();
+
 	// 範囲攻撃解放
 	rangeAttack_->Release();
 	delete rangeAttack_;
@@ -334,6 +345,7 @@ void GameScene::CollisionWeapon(void)
 		// プレイヤーに無敵時間を付与
 		player_->SetInvincible(120);
 
+		playerSound_->PlayAttack();
 	}
 }
 
@@ -383,6 +395,7 @@ void GameScene::CollisionPlayerMagic(void)
 		// エネミー無敵時間を付与
 		enemy_->SetInvincible(90);
 
+		playerSound_->PlayLightning();
 	}
 
 }
@@ -484,7 +497,7 @@ void GameScene::CollisionEnemyMagic(void)
 			hitStopCnt_ = HIT_STOP_CNT_ATTACK;
 
 			// プレイヤーに無敵時間を付与
-			Enemy_->SetInvincible(120);
+			enemy_->SetInvincible(120);
 
 		}
 	}

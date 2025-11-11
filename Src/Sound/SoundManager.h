@@ -24,8 +24,8 @@ public:
 
 protected:
 
-	// 情報
-	int img_;		
+	// サウンドハンドル
+	int soundHandle_;
 
 	// 生存判定フラグ
 	bool isAlive_;
