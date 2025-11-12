@@ -629,20 +629,22 @@ void Player::PlayerJump(void)
 	//重力（加速度を速度に加算していく）
 	jumpPow_ -= GRAVITY_POW;
 
+	// キーボードとゲームパッド両方をチェック
+	bool isJumpInputKeyboard = ins.IsNew(KEY_INPUT_SPACE);
+	bool isJumpInputPad = false;
+
 	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
-	{
-		// キーボード操作
-		isJumpInput_ = ins.IsNew(KEY_INPUT_SPACE);
-	}
-	else
+	if (GetJoypadNum() > 0)
 	{
 		// ゲームパッド操作
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
-		isJumpInput_ = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isJumpInputPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::RIGHT);
 	}
+
+	// どちらかの入力があればジャンプ入力とする
+	isJumpInput_ = isJumpInputKeyboard || isJumpInputPad;
 
 	// ジャンプ開始判定
 	if (isJumpInput_ && !isJump_)
@@ -674,23 +676,24 @@ void Player::PlayerAttack(void)
 	bool isAttack;
 	isAttack = false;
 
+	// キーボードとゲームパッド両方をチェック
+	bool isAttackInputKeyboard = ins.IsNew(KEY_INPUT_K);
+	bool isAttackInputPad = false;
+
 	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
-	{
-		// キーボード操作
-		// アタックキー
-		isAttack = ins.IsNew(KEY_INPUT_K);
-	}
-	else
+	if (GetJoypadNum() > 0)
 	{
 		// ゲームパッド操作
 		// 接続されているゲームパッド１の情報を取得
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
-		isAttack = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isAttackInputPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::DOWN);
 	}
+
+	// どちらかの入力があればジャンプ入力とする
+	isAttack = isAttackInputKeyboard || isAttackInputPad;
 
 	if (isAttack)
 	{
@@ -706,23 +709,23 @@ void Player::PlayerDodge(void)
 	bool isDodge;
 	isDodge = false;
 
+	// キーボードとゲームパッド両方をチェック
+	bool isDodgeInputKeyboard = ins.IsNew(KEY_INPUT_Q);
+	bool isDodgeInputPad = false;
+
 	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
-	{
-		// キーボード操作
-		// 回避キー
-		isDodge = ins.IsNew(KEY_INPUT_Q);
-	}
-	else
+	if (GetJoypadNum() > 0)
 	{
 		// ゲームパッド操作
 		// 接続されているゲームパッド１の情報を取得
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
-		isDodge = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isDodgeInputPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::R_BUMPER);
 	}
+
+	isDodge = isDodgeInputKeyboard || isDodgeInputPad;
 
 	if (isDodge)
 	{
@@ -738,23 +741,23 @@ void Player::PlayerGuard(void)
 	bool inputGuard;
 	inputGuard = false;
 
+	// キーボードとゲームパッド両方をチェック
+	bool isGuardInputKeyboard = ins.IsNew(KEY_INPUT_L);
+	bool isGuardInputPad = false;
+
 	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
-	{
-		// キーボード操作
-		// アタックキー
-		inputGuard = ins.IsNew(KEY_INPUT_L);
-	}
-	else
+	if (GetJoypadNum() > 0)
 	{
 		// ゲームパッド操作
 		// 接続されているゲームパッド１の情報を取得
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
-		inputGuard = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isGuardInputPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::L_BUMPER);
 	}
+
+	inputGuard = isGuardInputKeyboard || isGuardInputPad;
 
 	if (inputGuard)
 	{
@@ -770,23 +773,22 @@ void Player::PlayerCombo(void)
 	bool inputCombo;
 	inputCombo = false;
 
+	// キーボードとゲームパッド両方をチェック
+	bool isComboInputKeyboard = ins.IsNew(KEY_INPUT_J);
+	bool isComboInputPad = false;
+
 	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
+	if (GetJoypadNum() > 0)
 	{
-		// キーボード操作
-		// アタックキー
-		inputCombo = ins.IsNew(KEY_INPUT_J);
-	}
-	else
-	{
-		// ゲームパッド操作
 		// 接続されているゲームパッド１の情報を取得
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 
-		inputCombo = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		isComboInputPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::TOP);
 	}
+
+	inputCombo = isComboInputKeyboard || isComboInputPad;
 
 	if (inputCombo)
 	{
@@ -1212,33 +1214,45 @@ void Player::Move(void)
 		SceneManager::GetInstance().GetCamera()->GetAngles();
 
 	VECTOR dir = AsoUtility::VECTOR_ZERO;
-	// ダッシュ判定
-	bool isDash_ = false;
 
-	// ゲームパッドが接続されている数で処理を分ける
-	if (GetJoypadNum() == 0)
-	{
-		// キーボード操作
-		if (ins.IsNew(KEY_INPUT_W)) { dir = AsoUtility::DIR_F; }
-		if (ins.IsNew(KEY_INPUT_A)) { dir = AsoUtility::DIR_L; }
-		if (ins.IsNew(KEY_INPUT_S)) { dir = AsoUtility::DIR_B; }
-		if (ins.IsNew(KEY_INPUT_D)) { dir = AsoUtility::DIR_R; }
+	// キーボード入力をチェック
+	VECTOR dirKeyboard = AsoUtility::VECTOR_ZERO;
+	bool isDashKeyboard = false;
 
-		// ダッシュキー
-		isDash_ = ins.IsNew(KEY_INPUT_LSHIFT);
-	}
-	else
+	if (ins.IsNew(KEY_INPUT_W)) { dirKeyboard = AsoUtility::DIR_F; }
+	if (ins.IsNew(KEY_INPUT_A)) { dirKeyboard = AsoUtility::DIR_L; }
+	if (ins.IsNew(KEY_INPUT_S)) { dirKeyboard = AsoUtility::DIR_B; }
+	if (ins.IsNew(KEY_INPUT_D)) { dirKeyboard = AsoUtility::DIR_R; }
+	isDashKeyboard = ins.IsNew(KEY_INPUT_LSHIFT);
+
+	// ゲームパッド入力をチェック
+	VECTOR dirPad = AsoUtility::VECTOR_ZERO;
+	bool isDashPad = false;
+
+	if (GetJoypadNum() > 0)
 	{
-		// ゲームパッド操作
 		// 接続されているゲームパッド１の情報を取得
 		InputManager::JOYPAD_IN_STATE padState =
 			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
 		// アナログキーの入力値から方向を取得
-		dir = ins.GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
-
-		isDash_ = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+		dirPad = ins.GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
+		isDashPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::L_TRIGGER);
 	}
+
+	// キーボードとゲームパッドの入力を統合
+		// 方向はどちらか優先（ゲームパッドを優先する例）
+	if (!AsoUtility::EqualsVZero(dirPad))
+	{
+		dir = dirPad;
+	}
+	else if (!AsoUtility::EqualsVZero(dirKeyboard))
+	{
+		dir = dirKeyboard;
+	}
+
+	// ダッシュはどちらかが押されていればOK
+	bool isDash_ = isDashKeyboard || isDashPad;
 
 	// ダッシュ速度を歩行速度の2倍にする
 	movePow_ = isDash_ ? PLAYER_DASH_MOVE : PLAYER_MOVE;
@@ -1251,13 +1265,10 @@ void Player::Move(void)
 		//mat = MMult(mat, MGetRotX(camAngles.x));
 		mat = MMult(mat, MGetRotY(camAngles.y));
 		//mat = MMult(mat, MGetRotZ(camAngles.z));
-
 		// 回転行列を使用して、ベクトルを回転させる
 		moveDir_ = VTransform(dir, mat);
-
 		// 方向×スピードで移動量を作って、座標に足して移動
 		pos_ = VAdd(pos_, VScale(moveDir_, movePow_));
-
 		if (!isJumping)
 		{
 			if (isDash_)
