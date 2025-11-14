@@ -7,6 +7,7 @@ class Camera;
 class RangeAttack;
 class PlayerGuard;
 class Enemy;
+class PlayerSound;
 
 class Player : public ActorBase
 {
@@ -125,6 +126,9 @@ public:
 	// ターゲット
 	void SetEnemy(Enemy* enemy);
 
+	// サウンド
+	void SetSound(PlayerSound* playerSound);
+
 	// 更新
 	void Update(void) override;
 	// 描画
@@ -225,6 +229,9 @@ private:
 
 	// ガード判定
 	PlayerGuard* playerGuard_;
+
+	// プレイヤーサウンド
+	PlayerSound* playerSound_;
 
 	// 状態
 	STATE state_;

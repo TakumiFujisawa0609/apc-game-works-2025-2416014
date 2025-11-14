@@ -7,6 +7,8 @@
 #include "./Enemy.h"
 #include "./RangeAttack.h"
 #include "./Collision.h"
+#include "../../Sound/SoundManager.h"
+#include "../../Sound/PlayerSound.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Utility/MatrixUtility.h"
 #include "Player.h"
@@ -22,6 +24,11 @@ Player::~Player(void)
 void Player::SetEnemy(Enemy* enemy)
 {
 	enemy_ = enemy;
+}
+
+void Player::SetSound(PlayerSound* playerSound)
+{
+	playerSound_ = playerSound;
 }
 
 void Player::Update(void)
@@ -460,6 +467,9 @@ void Player::InitPost(void)
 	// 範囲攻撃初期化
 	rangeAttack_ = new RangeAttack();
 	rangeAttack_->Init();
+
+	playerSound_ = new PlayerSound();
+	playerSound_->Init();
 
 	//ジャンプ力の初期化
 	jumpPow_ = 0.0f;
@@ -911,6 +921,8 @@ void Player::ChangeRun(void)
 
 void Player::ChangeJump(void)
 {
+	playerSound_->PlayJump();
+
 	isJump_ = true;
 	//jumpPow_ = JUMP_POW;
 	// ジャンプアニメーション再生
@@ -919,6 +931,8 @@ void Player::ChangeJump(void)
 
 void Player::ChangeDodge(void)
 {
+	playerSound_->PlayDodge();
+
 	// 回避アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DODGE), false);
 
@@ -951,12 +965,15 @@ void Player::ChangeAttack(void)
 	// 攻撃判定生存カウンタ時間の減少
 	ReduceCntAlive();
 
+	playerSound_->PlayAttack();
+
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
 }
 
 void Player::ChangeCombo(void)
 {
+	playerSound_->PlayLightning();
 
 	// 攻撃判定生存カウンタ時間の減少
 	ReduceCntAlive();
@@ -967,6 +984,8 @@ void Player::ChangeCombo(void)
 
 void Player::ChangeDamage(void)
 {
+	playerSound_->PlayDamage();
+
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::DAMAGE), false);
 
@@ -1011,6 +1030,7 @@ void Player::UpdateRun(void)
 
 void Player::UpdateJump(void)
 {
+
 	if (animationController_->IsEnd())
 	{
 		ChangeState(STATE::IDLE);

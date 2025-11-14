@@ -11,7 +11,6 @@ class EnemyAttack;
 class EnemyMagicAttack;
 class EnemyIcon;
 class CountIcon;
-class PlayerSound;
 
 class GameScene : public SceneBase
 {
@@ -70,10 +69,6 @@ private:
 	// エネミーアイコン
 	EnemyIcon* enemyIcon_;
 	CountIcon* countIcon_;
-
-	// サウンド
-	PlayerSound* playerSound_;
-
 
 	// 地面との衝突用線分
 	VECTOR lineTopPos_;

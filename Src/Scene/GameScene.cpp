@@ -14,7 +14,6 @@
 #include "../Ui/HpManager.h"
 #include "../Ui/EnemyIcon.h"
 #include "../Ui/CountIcon.h"
-#include "../Sound/PlayerSound.h"
 #include "../Utility/AsoUtility.h"
 #include "GameScene.h"
 
@@ -69,10 +68,6 @@ void GameScene::Init(void)
 	countIcon_ = new CountIcon(enemy_);
 	countIcon_->Init();
 
-	// プレイヤーサウンド
-	playerSound_ = new PlayerSound(player_);
-	playerSound_->Init();
-
 	// カメラモード変更
 	Camera* camera = SceneManager::GetInstance().GetCamera();
 	camera->SetFollow(player_);
@@ -117,9 +112,6 @@ void GameScene::Update()
 	enemyIcon_->Update();
 	// 数字アイコン
 	countIcon_->Update();
-
-	// プレイヤーサウンド
-	playerSound_->Update();
 
 	// 範囲攻撃更新
 	rangeAttack_->Update();
@@ -214,9 +206,6 @@ void GameScene::Release(void)
 	// 数字アイコン
 	countIcon_->Release();
 	delete countIcon_;
-	
-	// プレイヤーサウンド
-	playerSound_->Release();
 
 	// 範囲攻撃解放
 	rangeAttack_->Release();
@@ -345,7 +334,6 @@ void GameScene::CollisionWeapon(void)
 		// プレイヤーに無敵時間を付与
 		player_->SetInvincible(120);
 
-		playerSound_->PlayAttack();
 	}
 }
 
@@ -395,7 +383,6 @@ void GameScene::CollisionPlayerMagic(void)
 		// エネミー無敵時間を付与
 		enemy_->SetInvincible(90);
 
-		playerSound_->PlayLightning();
 	}
 
 }

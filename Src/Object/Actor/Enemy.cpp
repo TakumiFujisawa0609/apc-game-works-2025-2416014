@@ -391,6 +391,7 @@ void Enemy::InitPost(void)
 	// エネミー攻撃用
 	enemyAttack_ = new EnemyAttack();
 	enemyAttack_->Init();
+
 	// エネミー魔法攻撃用
 	enemyMagicAttack_ = new EnemyMagicAttack();
 	enemyMagicAttack_->Init();
