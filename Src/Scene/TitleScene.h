@@ -15,6 +15,14 @@ public:
 	void Release(void) override;
 
 private:
-	// ゲームオーバー画像
+
+	// タイトル画像
 	int imgTitle_;
+
+	// モデル
+	int modelId_;
+	VECTOR pos_;
+	VECTOR rot_;
+	VECTOR scl_;
+
 };

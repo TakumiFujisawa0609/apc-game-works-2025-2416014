@@ -856,6 +856,7 @@ void Player::AttackSearch(void)
 			isRangeAttackActive_ = true;
 			rangeAttack_->SetLightningPos(VGet(enemyPos.x, enemyPos.y + 350.0f, enemyPos.z));
 			//enemy_->Damage(PLAYER_RANGE_DAMAGE);
+
 		}
 		else
 		{
@@ -962,10 +963,11 @@ void Player::ChangeGuard(void)
 
 void Player::ChangeAttack(void)
 {
-	// 攻撃判定生存カウンタ時間の減少
-	ReduceCntAlive();
 
 	playerSound_->PlayAttack();
+
+	// 攻撃判定生存カウンタ時間の減少
+	ReduceCntAlive();
 
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ATTACK), false);
