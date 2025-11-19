@@ -34,7 +34,7 @@ void CountIcon::Update()
     if (isAlive_)
     {
         VECTOR enemyPos = targetEnemy_->GetPos();
-        pos_ = VAdd(enemyPos, VGet(70.0f, 510.0f, 0.0f));
+        pos_ = VAdd(enemyPos, VGet(70.0f, 460.0f, 0.0f));
     }
 }
 

@@ -15,6 +15,7 @@ GameOver::~GameOver(void)
 void GameOver::Init(void)
 {
 	imgGameOver_ = LoadGraph((Application::PATH_IMAGE + "Gameover.png").c_str());
+
 }
 
 void GameOver::Update(void)

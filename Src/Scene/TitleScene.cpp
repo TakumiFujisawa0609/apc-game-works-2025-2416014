@@ -31,7 +31,7 @@ void TitleScene::Init(void)
 	// モデルの位置設定
 	pos_ = VGet(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 6,0.0f);
 	rot_ = VGet(0.0f,AsoUtility::Deg2RadF(0.0f),0.0f);
-	scl_ = { 1.5f,1.5f,1.5f };
+	scl_ = { 2.5f,2.5f,2.5f };
 
 	MV1SetPosition(modelId_, pos_);
 	MV1SetRotationXYZ(modelId_, rot_);
@@ -46,6 +46,8 @@ void TitleScene::Init(void)
 
 void TitleScene::Update(void)
 {
+	rot_.y += AsoUtility::Deg2RadF(0.5f);
+	MV1SetRotationXYZ(modelId_, rot_);
 
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
@@ -55,11 +57,13 @@ void TitleScene::Update(void)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TUTORIAL);
 	}
+
+	animationController_->Update();
 }
 
 void TitleScene::Draw(void)
 {
-	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.5f, 0.0f, imgBack_, true);
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0f, 0.0f, imgBack_, true);
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 - 150, 1.5f, 0.0f, imgTitle_, true);
 
 	MV1DrawModel(modelId_);

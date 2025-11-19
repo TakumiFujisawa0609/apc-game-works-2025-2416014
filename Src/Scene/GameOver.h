@@ -15,6 +15,9 @@ public:
 	void Release(void) override;
 
 private:
+
 	// ゲームオーバー画像
 	int imgGameOver_;
+
+
 };

@@ -127,8 +127,8 @@ void GameScene::Update()
 	{
 		//ゲームオーバーシーンに遷移する
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
-		DxLib_End();
-		exit(0);  // ゲームを完全に終了する
+		//DxLib_End();
+		//exit(0);  // ゲームを完全に終了する
 	}
 
 	// デバッグ
