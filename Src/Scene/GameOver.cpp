@@ -14,7 +14,7 @@ GameOver::~GameOver(void)
 
 void GameOver::Init(void)
 {
-	imgGameOver_ = LoadGraph((Application::PATH_IMAGE + "GameOver.png").c_str());
+	imgGameOver_ = LoadGraph((Application::PATH_IMAGE + "Gameover.png").c_str());
 }
 
 void GameOver::Update(void)
@@ -28,7 +28,7 @@ void GameOver::Update(void)
 
 void GameOver::Draw(void)
 {
-	DrawGraph(0, 0, imgGameOver_, true);
+	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2,1.0f,0.0f, imgGameOver_, true);
 }
 
 void GameOver::Release(void)
