@@ -25,7 +25,7 @@ void CountIcon::Update()
     cntAttack_ = targetEnemy_->GetCount() / 20;
 
     // 10から減らす（20フレームごとに1減る）
-    currentCount_ = 10 - cntAttack_;
+    currentCount_ = 10 - (cntAttack_ % 10);
 
     // 範囲制限（0未満にならないように）
     if (currentCount_ < 0) currentCount_ = 0;

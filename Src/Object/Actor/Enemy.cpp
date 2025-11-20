@@ -7,6 +7,7 @@
 #include "./Enemy.h"
 #include "./EnemyAttack.h"
 #include "./EnemyMagicAttack.h"
+#include "./EnemyRockAttack.h"
 
 Enemy::Enemy()
 {
@@ -29,6 +30,9 @@ void Enemy::Update()
 
 		enemyAttack_->Update();
 		enemyMagicAttack_->Update();
+		enemyRockAttack_->Update();
+
+		cntAttack_++;
 
 		LookPlayer();
 		// 索敵
@@ -51,6 +55,9 @@ void Enemy::Update()
 			break;
 		case STATE::MAGIC:
 			UpdateMagic();
+			break;
+		case STATE::ROCK:
+			UpdateRock();
 			break;
 		case STATE::DAMAGE:
 			UpdateDamage();
@@ -94,6 +101,7 @@ void Enemy::Draw(void)
 
 		enemyAttack_->Draw();
 		enemyMagicAttack_->Draw();
+		enemyRockAttack_->Draw();
 
 		switch (state_)
 		{
@@ -108,6 +116,9 @@ void Enemy::Draw(void)
 			break;
 		case STATE::MAGIC:
 			DrawMagic();
+			break;
+		case STATE::ROCK:
+			DrawRock();
 			break;
 		case STATE::DAMAGE:
 			DrawDamage();
@@ -208,6 +219,7 @@ void Enemy::Release(void)
 	ActorBase::Release();
 	enemyAttack_->Release();
 	enemyMagicAttack_->Release();
+	enemyRockAttack_->Release();
 }
 
 void Enemy::ChangeState(STATE state)
@@ -226,6 +238,9 @@ void Enemy::ChangeState(STATE state)
 		break;
 	case STATE::MAGIC:
 		ChangeMagic();
+		break;
+	case STATE::ROCK:
+		ChangeRock();
 		break;
 	case STATE::DAMAGE:
 		ChangeDamage();
@@ -377,6 +392,8 @@ void Enemy::InitAnimation(void)
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::MAGIC), 30.0f, Application::PATH_MODEL + "Enemy/Magic.mv1");
 	animationController_->Add(
+		static_cast<int>(ANIM_TYPE::ROCK), 10.0f, Application::PATH_MODEL + "Enemy/RockAttack.mv1");
+	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Enemy/Attack.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::DAMAGE), 30.0f, Application::PATH_MODEL + "Enemy/Damage.mv1");
@@ -395,6 +412,10 @@ void Enemy::InitPost(void)
 	// エネミー魔法攻撃用
 	enemyMagicAttack_ = new EnemyMagicAttack();
 	enemyMagicAttack_->Init();
+
+	// エネミー岩攻撃用
+	enemyRockAttack_ = new EnemyRockAttack();
+	enemyRockAttack_->Init();
 
 	// 衝突判定用半径
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
@@ -528,18 +549,27 @@ void Enemy::Search(void)
 	if (isAttack_)
 	{
 		isMove_ = false;	
-		cntAttack_++;
 
 		// 一定間隔で攻撃させる
 		if (cntAttack_ % TERM_ATTACK == 0)
 		{
-			magicCount_++;
-			if (magicCount_ % MAGIC_TERM_ATTACK == 0)
+			if (magicCount_ > MAGIC_TERM_ATTACK)
 			{
-				ChangeState(STATE::MAGIC);
+				if (rockCount_ > ROCK_TERM_ATTACK && hp_ < ENEMY_HP / 2)
+				{
+					ChangeState(STATE::ROCK);
+				}
+				else
+				{
+					hp_ = 450;
+
+					ChangeState(STATE::MAGIC);
+				}
 			}
 			else
 			{
+				magicCount_++;
+				rockCount_++;
 				ChangeState(STATE::ATTACK);
 			}
 		}
@@ -696,6 +726,12 @@ void Enemy::ChangeMagic(void)
 	animationController_->Play(static_cast<int>(ANIM_TYPE::MAGIC), false);
 }
 
+void Enemy::ChangeRock(void)
+{
+	// 攻撃アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::ROCK), false);
+}
+
 void Enemy::ChangeDamage(void)
 {
 	isAttack_ = false;
@@ -753,11 +789,25 @@ void Enemy::UpdateAttack(void)
 
 void Enemy::UpdateMagic(void)
 {
+	// 攻撃カウンタを0にする
+	magicCount_ = 0;
+
 	//攻撃アニメーションが終わったら通常状態に戻る
 	if (animationController_->IsEnd())
 	{
-		// 攻撃カウンタを0にする
-		magicCount_ = 0;
+		ChangeState(STATE::IDLE);
+	}
+}
+
+void Enemy::UpdateRock(void)
+{	
+	// 攻撃カウンタを0にする
+	rockCount_ = 0;
+
+	//攻撃アニメーションが終わったら通常状態に戻る
+	if (animationController_->IsEnd())
+	{
+		rockCount_ = 0;
 
 		ChangeState(STATE::IDLE);
 	}
@@ -806,6 +856,11 @@ void Enemy::DrawAttack(void)
 }
 
 void Enemy::DrawMagic(void)
+{
+	MV1DrawModel(modelId_);
+}
+
+void Enemy::DrawRock(void)
 {
 	MV1DrawModel(modelId_);
 }

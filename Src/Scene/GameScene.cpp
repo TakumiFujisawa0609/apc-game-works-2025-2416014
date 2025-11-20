@@ -11,6 +11,7 @@
 #include "../Object/Actor/RangeAttack.h"
 #include "../Object/Actor/EnemyAttack.h"
 #include "../Object/Actor/EnemyMagicAttack.h"
+#include "../Object/Actor/EnemyAttackBase.h"
 #include "../Ui/HpManager.h"
 #include "../Ui/EnemyIcon.h"
 #include "../Ui/CountIcon.h"
@@ -51,7 +52,7 @@ void GameScene::Init(void)
 	// エネミー攻撃初期化
 	enemyAttack_ = enemy_->GetEnemyAttack();
 	// エネミー魔法攻撃初期化
-	enemyMagicAttack_ = enemy_->GetEnemyMagicAttack();
+	enemyMagicAttack_ = enemy_->GetEnemyMagicAttack();	
 
 	// お互いの参照を設定
 	enemy_->SetTarget(player_);

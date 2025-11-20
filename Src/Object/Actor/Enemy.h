@@ -4,6 +4,7 @@ class MatrixUtility;
 class Player;
 class EnemyAttack;
 class EnemyMagicAttack;
+class EnemyRockAttack;
 
 class Enemy : public ActorBase
 {
@@ -19,6 +20,7 @@ public:
 		IDLE,
 		JUMP,
 		MAGIC,
+		ROCK,
 		WALK,
 		MAX,
 	};
@@ -30,6 +32,7 @@ public:
 		WALK,
 		ATTACK,
 		MAGIC,
+		ROCK,
 		DAMAGE,
 		DEAD,
 		END,
@@ -80,7 +83,7 @@ public:
 	static constexpr float ATTACK_COL_OFFSET = -200.0f;
 	
 	// HP
-	static constexpr int ENEMY_HP = 500;
+	static constexpr int ENEMY_HP = 1000;
 
 	// ダメージアニメーション用カウンタ
 	static constexpr int CNT_HIT_REACT = 40;
@@ -92,7 +95,10 @@ public:
 	static constexpr int TERM_ATTACK = 200;
 
 	// 魔法攻撃用
-	static constexpr int MAGIC_TERM_ATTACK = 3;
+	static constexpr int MAGIC_TERM_ATTACK = 1;
+
+	// 魔法攻撃用
+	static constexpr int ROCK_TERM_ATTACK = 1;
 
 	// Normalタイマー
 	static constexpr int NORMAL_TIMER = 500;
@@ -146,6 +152,7 @@ public:
 	// 範囲攻撃取得
 	EnemyAttack* GetEnemyAttack(void) { return enemyAttack_; }
 	EnemyMagicAttack* GetEnemyMagicAttack(void) { return enemyMagicAttack_; }
+	EnemyRockAttack* GetEnemyRockAttack(void) { return enemyRockAttack_; }
 
 	// ダメージを受けない
 	bool IsInvincible() const { return invincibleTimer_ > 0; }
@@ -184,6 +191,9 @@ private:
 	// 魔法攻撃
 	EnemyMagicAttack* enemyMagicAttack_;
 
+	// 岩攻撃
+	EnemyRockAttack* enemyRockAttack_;
+
 	// 状態変化ステート
 	STATE state_;
 
@@ -207,6 +217,9 @@ private:
 
 	// 魔法攻撃用のカウンタ
 	int magicCount_;
+
+	// 岩攻撃用のカウンタ
+	int rockCount_;
 
 	// 衝突判定用半径
 	float collisionRadius_;
@@ -259,6 +272,7 @@ private:
 	void ChangeWalk(void);
 	void ChangeAttack(void);
 	void ChangeMagic(void);
+	void ChangeRock(void);
 	void ChangeDamage(void);
 	void ChangeDead(void);
 	void ChangeEnd(void);
@@ -267,6 +281,7 @@ private:
 	void UpdateWalk(void);
 	void UpdateAttack(void);
 	void UpdateMagic(void);
+	void UpdateRock(void);
 	void UpdateDamage(void);
 	void UpdateDead(void);
 	void UpdateEnd(void);
@@ -275,6 +290,7 @@ private:
 	void DrawWalk(void);
 	void DrawAttack(void);
 	void DrawMagic(void);
+	void DrawRock(void);
 	void DrawDamage(void);
 	void DrawDead(void);
 	void DrawEnd(void);

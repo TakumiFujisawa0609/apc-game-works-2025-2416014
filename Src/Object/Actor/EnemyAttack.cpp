@@ -1,5 +1,4 @@
 #include <DxLib.h>
-#include "../../Manager/InputManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Application.h"
 #include "EnemyAttack.h"
@@ -12,33 +11,10 @@ EnemyAttack::~EnemyAttack(void)
 {
 }
 
-void EnemyAttack::Init(void)
-{
-	// エフェクト画像のロード
-	LoadDivGraph(
-		(Application::PATH_IMAGE + "Impuct.png").c_str(),
-		NUM_SPRITE_ALL,
-		NUM_SPRITE_X, NUM_SPRITE_Y,
-		SIZE_SPRITE_X, SIZE_SPRITE_Y,
-		imgs_);
-
-	// モデルの位置設定
-	pos_ = AsoUtility::VECTOR_ZERO;
-	angles_ = { 0.0f, 0.0f, 0.0f };
-
-	// 衝突判定用半径
-	collisionRadius_ = ENEMY_ATTACK_RADIUS;
-
-	isImpuctAlive_ = false;
-
-	cntAnimation_ = 0;
-
-}
-
 void EnemyAttack::Update(void)
 {
 	// アニメーション更新
-	if (isImpuctAlive_)
+	if (isAlive_)
 	{
 		cntAnimation_++;
 		if (cntAnimation_ >= NUM_SPRITE_ALL)
@@ -50,7 +26,7 @@ void EnemyAttack::Update(void)
 
 void EnemyAttack::Draw(void)
 {
-	if (isImpuctAlive_)
+	if (isAlive_)
 	{
 		////デバッグ用の球体描画
 		//DrawSphere3D(pos_, collisionRadius_, 50, 0xff00ff, 0xff00ff, true);
@@ -60,7 +36,6 @@ void EnemyAttack::Draw(void)
 		DrawBillboard3D(pos_, 0.5f, 0.5f, IMG_SCALE, 0.0f, img, true);
 
 	}
-
 }
 
 void EnemyAttack::Release(void)
@@ -70,29 +45,32 @@ void EnemyAttack::Release(void)
 	{
 		DeleteGraph(imgs_[i]);
 	}
+
 }
 
-float EnemyAttack::GetCollisionRadius(void) const
+void EnemyAttack::InitLoad(void)
 {
-	return collisionRadius_;
+	// エフェクト画像のロード
+	LoadDivGraph(
+		(Application::PATH_IMAGE + "Impuct.png").c_str(),
+		NUM_SPRITE_ALL,
+		NUM_SPRITE_X, NUM_SPRITE_Y,
+		SIZE_SPRITE_X, SIZE_SPRITE_Y,
+		imgs_);
+
 }
 
-const VECTOR& EnemyAttack::GetPos(void) const
+void EnemyAttack::InitPost(void)
 {
-	return pos_;
-}
+	// モデルの位置設定
+	pos_ = AsoUtility::VECTOR_ZERO;
+	angles_ = { 0.0f, 0.0f, 0.0f };
 
-void EnemyAttack::SetPos(const VECTOR& pos)
-{
-	pos_ = pos;
-}
+	// 衝突判定用半径
+	collisionRadius_ = ENEMY_ATTACK_RADIUS;
 
-const bool EnemyAttack::GetAlive(void) const
-{
-	return isImpuctAlive_;
-}
+	isAlive_ = false;
 
-void EnemyAttack::SetAlive(bool isImpuctAlive)
-{
-	isImpuctAlive_ = isImpuctAlive;
+	cntAnimation_ = 0;
+
 }

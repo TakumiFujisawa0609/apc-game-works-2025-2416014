@@ -1,10 +1,8 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include <DxLib.h>
+#include "./EnemyAttackBase.h"
 
-// 範囲攻撃クラス
-class EnemyMagicAttack
+class EnemyMagicAttack : public EnemyAttackBase
 {
 public:
 
@@ -20,7 +18,7 @@ public:
     // エフェクト画像の分割された大きさ
     static constexpr int SIZE_SPRITE_X = 256;
     static constexpr int SIZE_SPRITE_Y = 256;
-    
+
     // 画像の大きさ倍率
     static constexpr float IMG_SCALE = 500.0f;
 
@@ -32,55 +30,27 @@ public:
 
     // コンストラクタ
     EnemyMagicAttack(void);
-
     // デストラクタ
     ~EnemyMagicAttack(void);
 
-    // 初期化
-    void Init(void);
-
     // 更新
-    void Update(void);
-
+    void Update(void) override;
     // 描画
-    void Draw(void);
-
+    void Draw(void) override;
     // 解放
-    void Release(void);
+    void Release(void) override;
 
-    // エネミー攻撃判定用半径
-    float GetCollisionRadius(void) const;
+protected:
 
-    // 座標を取得・設定
-    const VECTOR& GetPos(void) const;
-    void SetPos(const VECTOR& pos);
-
-    // 範囲攻撃判定を取得
-    const bool GetAlive(void) const;
-    void SetAlive(bool isRollAlive);
+    // リソースロード
+    void InitLoad(void) override;
+    // 初期化後の個別処理
+    void InitPost(void) override;
 
 private:
 
-    // 攻撃判定用
-    VECTOR pos_;
-    VECTOR angles_;
-
-    // 移動方向
-    VECTOR moveDir_;
-
-    // 衝突判定用半径
-    float collisionRadius_;
-
-    // 攻撃判定フラグ
-    bool isRollAlive_;
-
-    // 生存時間カウンタ
-    int lifeTime_;
-
-    // アニメーションカウンタ
-    int cntAnimation_;
-
-    // エフェクト画像
     int imgs_[NUM_SPRITE_ALL];
 
+
 };
+
