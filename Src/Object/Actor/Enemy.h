@@ -265,7 +265,7 @@ private:
 	void Move(void);
 
 	// ƒ[ƒ‹UŒ‚
-	void RollAttack(void);
+	void RockAttack(void);
 
 	// ó‘Ô‘JˆÚ
 	void ChangeIdle(void);

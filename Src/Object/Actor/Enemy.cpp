@@ -38,7 +38,7 @@ void Enemy::Update()
 		// õ“G
 		Search();
 		// ‰ñ“]UŒ‚
-		RollAttack();
+		RockAttack();
 		// “G‚ð’T‚µ‚ÄUŒ‚
 		AttackSearch();
 
@@ -561,8 +561,6 @@ void Enemy::Search(void)
 				}
 				else
 				{
-					hp_ = 450;
-
 					ChangeState(STATE::MAGIC);
 				}
 			}
@@ -570,7 +568,7 @@ void Enemy::Search(void)
 			{
 				magicCount_++;
 				rockCount_++;
-				ChangeState(STATE::ROCK);
+				ChangeState(STATE::ATTACK);
 			}
 		}
 	}
@@ -645,6 +643,16 @@ void Enemy::AttackSearch(void)
 		enemyMagicAttack_->SetPos(magicPos);
 		enemyMagicAttack_->SetAlive(true);
 	}
+	else if (isAttackable_ && state_ == (STATE::ROCK))
+	{
+		// ƒGƒlƒ~[‚ÌˆÊ’u‚©‚ç‘O•û‚ÉƒIƒtƒZƒbƒg
+		float offsetDistance = ATTACK_COL_OFFSET;
+		VECTOR magicPos = VAdd(VGet(pos_.x, pos_.y + 100, pos_.z), VScale(forward, offsetDistance));
+
+		enemyMagicAttack_->SetPos(magicPos);
+		enemyMagicAttack_->SetAlive(true);
+	}
+
 	else
 	{
 		enemyAttack_->SetAlive(false);
@@ -695,7 +703,7 @@ void Enemy::Move(void)
 
 }
 
-void Enemy::RollAttack(void)
+void Enemy::RockAttack(void)
 {
 }
 
