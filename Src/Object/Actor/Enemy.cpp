@@ -392,7 +392,7 @@ void Enemy::InitAnimation(void)
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::MAGIC), 30.0f, Application::PATH_MODEL + "Enemy/Magic.mv1");
 	animationController_->Add(
-		static_cast<int>(ANIM_TYPE::ROCK), 10.0f, Application::PATH_MODEL + "Enemy/RockAttack.mv1");
+		static_cast<int>(ANIM_TYPE::ROCK), 30.0f, Application::PATH_MODEL + "Enemy/RockAttack.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Enemy/Attack.mv1");
 	animationController_->Add(
@@ -570,7 +570,7 @@ void Enemy::Search(void)
 			{
 				magicCount_++;
 				rockCount_++;
-				ChangeState(STATE::ATTACK);
+				ChangeState(STATE::ROCK);
 			}
 		}
 	}
