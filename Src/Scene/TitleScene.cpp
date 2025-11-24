@@ -52,10 +52,31 @@ void TitleScene::Update(void)
 	// 歩くアニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK), true);
 
-	// スペースキーが押下されたら、チュートリアルシーンへ遷移する
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE))
+	auto& ins = InputManager::GetInstance();
+
+	// シーン遷移の入力判定
+	bool isSceneChangeInput = false;
+
+	// キーボード操作
+	bool isSceneChangeKeyboard = ins.IsTrgDown(KEY_INPUT_SPACE);
+
+	// ゲームパッド操作
+	bool isSceneChangePad = false;
+	if (GetJoypadNum() > 0)
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TUTORIAL);
+		// 接続されているゲームパッド１の情報を取得
+		InputManager::JOYPAD_IN_STATE padState =
+			ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+
+		// どのボタンでシーン遷移するか選んで（例：STARTボタン）		
+		isSceneChangePad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
+			InputManager::JOYPAD_BTN::DOWN);  // Aボタン（DOWN）
+	}
+
+	// どちらかが押されたらシーン遷移
+	if (isSceneChangeKeyboard || isSceneChangePad)
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 	}
 
 	animationController_->Update();

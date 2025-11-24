@@ -1260,6 +1260,7 @@ void Player::Move(void)
 		dirPad = ins.GetDirectionXZAKey(padState.AKeyLX, padState.AKeyLY);
 		isDashPad = ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1,
 			InputManager::JOYPAD_BTN::L_TRIGGER);
+
 	}
 
 	// キーボードとゲームパッドの入力を統合

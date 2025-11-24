@@ -30,7 +30,7 @@ void Enemy::Update()
 
 		enemyAttack_->Update();
 		enemyMagicAttack_->Update();
-		enemyRockAttack_->Update();
+		//enemyRockAttack_->Update();
 
 		cntAttack_++;
 
@@ -101,7 +101,7 @@ void Enemy::Draw(void)
 
 		enemyAttack_->Draw();
 		enemyMagicAttack_->Draw();
-		enemyRockAttack_->Draw();
+		//enemyRockAttack_->Draw();
 
 		switch (state_)
 		{
