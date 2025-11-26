@@ -104,19 +104,19 @@ public:
 
 	// 通常攻撃
 	// プレイヤーNORMALダメージ
-	static constexpr int PLAYER_NORMAL_DAMAGE = 20.0f;
+	static constexpr int PLAYER_NORMAL_DAMAGE = 40.0f;
 	// プレイヤーHARDダメージ
-	static constexpr int PLAYER_HARD_DAMAGE = 10.0f;
+	static constexpr int PLAYER_HARD_DAMAGE = 20.0f;
 	// プレイヤーSOFTダメージ
-	static constexpr int PLAYER_SOFT_DAMAGE = 30.0f;
+	static constexpr int PLAYER_SOFT_DAMAGE = 60.0f;
 
 	// 魔法攻撃
 	// プレイヤーNORMALダメージ
-	static constexpr int PLAYER_NORMAL_MAGIC = 2.0f;
+	static constexpr int PLAYER_NORMAL_MAGIC = 200.0f;
 	// プレイヤーHARDダメージ
-	static constexpr int PLAYER_HARD_MAGIC = 1.0f;
+	static constexpr int PLAYER_HARD_MAGIC = 100.0f;
 	// プレイヤーSOFTダメージ
-	static constexpr int PLAYER_SOFT_MAGIC = 3.0f;
+	static constexpr int PLAYER_SOFT_MAGIC = 300.0f;
 
 	// コンストラクタ
 	Player(void);

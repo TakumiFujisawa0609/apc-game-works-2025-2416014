@@ -233,7 +233,6 @@ private:
 	// 被ダメージ間隔用カウンタ
 	int cntDamaged_;
 
-
 	// Normalタイマー
 	int normalTimer_;
 
@@ -251,6 +250,12 @@ private:
 	//無敵時間
 	int invincibleTimer_;
 	bool isInvincible_;
+
+	// 岩モデル情報
+	int rockModelId_;
+	VECTOR rockPos_;
+	VECTOR rockScl_;
+
 
 	// 索敵
 	void Search(void);
