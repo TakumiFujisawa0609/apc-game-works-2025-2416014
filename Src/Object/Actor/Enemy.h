@@ -254,8 +254,10 @@ private:
 	// Šâƒ‚ƒfƒ‹î•ñ
 	int rockModelId_;
 	VECTOR rockPos_;
+	VECTOR rockAngles_;
+	VECTOR rockLocalAngles_;
 	VECTOR rockScl_;
-
+	bool isRockAlive_;
 
 	// õ“G
 	void Search(void);
@@ -269,7 +271,7 @@ private:
 	// ˆÚ“®
 	void Move(void);
 
-	// ƒ[ƒ‹UŒ‚
+	// ŠâUŒ‚
 	void RockAttack(void);
 
 	// ó‘Ô‘JˆÚ

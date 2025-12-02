@@ -64,9 +64,6 @@ public:
 	// プレイヤー回避距離
 	static constexpr float DODGE_SPEED = 10.0f;
 
-	//重力
-	static constexpr float GRAVITY_POW = 0.8f;
-
 	// 衝突判定用半径
 	static constexpr float PLAYER_RADIUS = 40.0f;
 

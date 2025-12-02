@@ -24,6 +24,7 @@ void Enemy::SetTarget(Player* player)
 
 void Enemy::Update()
 {
+	// 生存している時だけ更新
 	if (isAlive_)
 	{
 		ActorBase::Update();
@@ -34,11 +35,10 @@ void Enemy::Update()
 
 		cntAttack_++;
 
+		// プレイヤーを見る
 		LookPlayer();
 		// 索敵
 		Search();
-		// 回転攻撃
-		RockAttack();
 		// 敵を探して攻撃
 		AttackSearch();
 
@@ -82,6 +82,10 @@ void Enemy::Update()
 			UpdateSoft();
 			break;
 		}
+
+		// 岩モデルの位置更新
+		MV1SetPosition(rockModelId_, rockPos_);
+
 	}
 
 	// 無敵時間のカウントダウン
@@ -103,7 +107,10 @@ void Enemy::Draw(void)
 		enemyMagicAttack_->Draw();
 		//enemyRockAttack_->Draw();
 
-		MV1DrawModel(rockModelId_);
+		if (isRockAlive_)
+		{
+			MV1DrawModel(rockModelId_);
+		}
 
 		switch (state_)
 		{
@@ -371,20 +378,27 @@ void Enemy::InitTransform(void)
 	// モデルの大きさ設定
 	scales_ = { 2.0f, 2.0f, 2.0f };
 
-	// モデルの位置設定
-	rockPos_ = VGet(0.0f, 0.0f, 0.0f);
-	// モデルの大きさ設定
-	scales_ = { 2.0f, 2.0f, 2.0f };
-
 	// モデルの初期速度
 	speed_ = SPEED_MOVE;
 
+	// 岩モデルの位置設定
+	rockPos_ = VGet(0.0f, 0.0f, 0.0f);
+	// モデルの初期角度
+	rockAngles_ = { 0.0f, 0.0f, 0.0f };
+	rockLocalAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
+	// 岩モデルの大きさ設定
+	rockScl_ = { 200.0f,200.0f,200.0f };
 
 	// 移動・攻撃判定用フラグ
 	isMove_ = false;
 	isAlive_ = true;
 	isAttack_ = false;
+	
+	// 岩モデル用のフラグ
+	isRockAlive_ = true;
 
+	MV1SetPosition(rockModelId_, rockPos_);
+	MV1SetScale(rockModelId_, rockScl_);
 }
 
 void Enemy::InitAnimation(void)
@@ -712,12 +726,11 @@ void Enemy::Move(void)
 
 void Enemy::RockAttack(void)
 {
-	MV1SetPosition(rockModelId_, rockPos_);
-	MV1SetScale(rockModelId_, rockScl_);
 }
 
 void Enemy::ChangeIdle(void)
 {
+	//isRockAlive_ = false;
 
 	// 待機アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
@@ -745,6 +758,8 @@ void Enemy::ChangeMagic(void)
 
 void Enemy::ChangeRock(void)
 {
+	isRockAlive_ = true;
+
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::ROCK), false);
 }
@@ -824,8 +839,6 @@ void Enemy::UpdateRock(void)
 	//攻撃アニメーションが終わったら通常状態に戻る
 	if (animationController_->IsEnd())
 	{
-		rockCount_ = 0;
-
 		ChangeState(STATE::IDLE);
 	}
 }

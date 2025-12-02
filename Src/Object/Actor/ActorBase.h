@@ -10,6 +10,9 @@ public:
 	// アニメーションの再生速度
 	static constexpr float SPEED_ANIM = 20.0f;
 
+	//重力
+	static constexpr float GRAVITY_POW = 0.8f;
+
 	// コンストラクタ
 	ActorBase(void);
 	// デストラクタ
