@@ -95,7 +95,7 @@ public:
 	static constexpr int TERM_ATTACK = 200;
 
 	// 魔法攻撃用
-	static constexpr int MAGIC_TERM_ATTACK = 1;
+	static constexpr int MAGIC_TERM_ATTACK = 2;
 
 	// 魔法攻撃用
 	static constexpr int ROCK_TERM_ATTACK = 1;

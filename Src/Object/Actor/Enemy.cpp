@@ -7,7 +7,6 @@
 #include "./Enemy.h"
 #include "./EnemyAttack.h"
 #include "./EnemyMagicAttack.h"
-#include "./EnemyRockAttack.h"
 
 Enemy::Enemy()
 {
@@ -31,7 +30,6 @@ void Enemy::Update()
 
 		enemyAttack_->Update();
 		enemyMagicAttack_->Update();
-		//enemyRockAttack_->Update();
 
 		cntAttack_++;
 
@@ -55,9 +53,6 @@ void Enemy::Update()
 			break;
 		case STATE::MAGIC:
 			UpdateMagic();
-			break;
-		case STATE::ROCK:
-			UpdateRock();
 			break;
 		case STATE::DAMAGE:
 			UpdateDamage();
@@ -83,9 +78,6 @@ void Enemy::Update()
 			break;
 		}
 
-		// 岩モデルの位置更新
-		MV1SetPosition(rockModelId_, rockPos_);
-
 	}
 
 	// 無敵時間のカウントダウン
@@ -105,12 +97,6 @@ void Enemy::Draw(void)
 
 		enemyAttack_->Draw();
 		enemyMagicAttack_->Draw();
-		//enemyRockAttack_->Draw();
-
-		if (isRockAlive_)
-		{
-			MV1DrawModel(rockModelId_);
-		}
 
 		switch (state_)
 		{
@@ -125,9 +111,6 @@ void Enemy::Draw(void)
 			break;
 		case STATE::MAGIC:
 			DrawMagic();
-			break;
-		case STATE::ROCK:
-			DrawRock();
 			break;
 		case STATE::DAMAGE:
 			DrawDamage();
@@ -228,7 +211,6 @@ void Enemy::Release(void)
 	ActorBase::Release();
 	enemyAttack_->Release();
 	enemyMagicAttack_->Release();
-	enemyRockAttack_->Release();
 }
 
 void Enemy::ChangeState(STATE state)
@@ -247,9 +229,6 @@ void Enemy::ChangeState(STATE state)
 		break;
 	case STATE::MAGIC:
 		ChangeMagic();
-		break;
-	case STATE::ROCK:
-		ChangeRock();
 		break;
 	case STATE::DAMAGE:
 		ChangeDamage();
@@ -365,7 +344,6 @@ void Enemy::InitLoad(void)
 {
 	// モデル読み込み
 	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Enemy.mv1").c_str());
-	rockModelId_ = MV1LoadModel((Application::PATH_MODEL + "Rock.mv1").c_str());
 }
 
 void Enemy::InitTransform(void)
@@ -381,24 +359,11 @@ void Enemy::InitTransform(void)
 	// モデルの初期速度
 	speed_ = SPEED_MOVE;
 
-	// 岩モデルの位置設定
-	rockPos_ = VGet(0.0f, 0.0f, 0.0f);
-	// モデルの初期角度
-	rockAngles_ = { 0.0f, 0.0f, 0.0f };
-	rockLocalAngles_ = { 0.0f, AsoUtility::Deg2RadF(180.0f), 0.0f };
-	// 岩モデルの大きさ設定
-	rockScl_ = { 200.0f,200.0f,200.0f };
-
 	// 移動・攻撃判定用フラグ
 	isMove_ = false;
 	isAlive_ = true;
 	isAttack_ = false;
-	
-	// 岩モデル用のフラグ
-	isRockAlive_ = true;
 
-	MV1SetPosition(rockModelId_, rockPos_);
-	MV1SetScale(rockModelId_, rockScl_);
 }
 
 void Enemy::InitAnimation(void)
@@ -412,8 +377,6 @@ void Enemy::InitAnimation(void)
 		static_cast<int>(ANIM_TYPE::WALK), 30.0f, Application::PATH_MODEL + "Enemy/Walk.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::MAGIC), 30.0f, Application::PATH_MODEL + "Enemy/Magic.mv1");
-	animationController_->Add(
-		static_cast<int>(ANIM_TYPE::ROCK), 30.0f, Application::PATH_MODEL + "Enemy/RockAttack.mv1");
 	animationController_->Add(
 		static_cast<int>(ANIM_TYPE::ATTACK), 40.0f, Application::PATH_MODEL + "Enemy/Attack.mv1");
 	animationController_->Add(
@@ -433,10 +396,6 @@ void Enemy::InitPost(void)
 	// エネミー魔法攻撃用
 	enemyMagicAttack_ = new EnemyMagicAttack();
 	enemyMagicAttack_->Init();
-
-	// エネミー岩攻撃用
-	enemyRockAttack_ = new EnemyRockAttack();
-	enemyRockAttack_->Init();
 
 	// 衝突判定用半径
 	collisionRadius_ = ENEMY_DEMON_RADIUS;
@@ -574,21 +533,14 @@ void Enemy::Search(void)
 		// 一定間隔で攻撃させる
 		if (cntAttack_ % TERM_ATTACK == 0)
 		{
-			if (magicCount_ > MAGIC_TERM_ATTACK)
+			magicCount_++;
+
+			if (magicCount_ % MAGIC_TERM_ATTACK == 0 && hp_ < ENEMY_HP / 2)
 			{
-				if (rockCount_ > ROCK_TERM_ATTACK && hp_ < ENEMY_HP / 2)
-				{
-					ChangeState(STATE::ROCK);
-				}
-				else
-				{
-					ChangeState(STATE::MAGIC);
-				}
+				ChangeState(STATE::MAGIC);
 			}
 			else
 			{
-				magicCount_++;
-				rockCount_++;
 				hp_ = 450; // テスト用
 				ChangeState(STATE::ATTACK);
 			}
@@ -665,15 +617,6 @@ void Enemy::AttackSearch(void)
 		enemyMagicAttack_->SetPos(magicPos);
 		enemyMagicAttack_->SetAlive(true);
 	}
-	else if (isAttackable_ && state_ == (STATE::ROCK))
-	{
-		// エネミーの位置から前方にオフセット
-		float offsetDistance = ATTACK_COL_OFFSET;
-		VECTOR rockPos = VAdd(VGet(pos_.x, pos_.y + 100, pos_.z), VScale(forward, offsetDistance));
-
-		rockPos_ = VScale(moveDir_, speed_);
-	}
-
 	else
 	{
 		enemyAttack_->SetAlive(false);
@@ -724,13 +667,8 @@ void Enemy::Move(void)
 
 }
 
-void Enemy::RockAttack(void)
-{
-}
-
 void Enemy::ChangeIdle(void)
 {
-	//isRockAlive_ = false;
 
 	// 待機アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE), true);
@@ -754,14 +692,6 @@ void Enemy::ChangeMagic(void)
 {	
 	// 攻撃アニメーション再生
 	animationController_->Play(static_cast<int>(ANIM_TYPE::MAGIC), false);
-}
-
-void Enemy::ChangeRock(void)
-{
-	isRockAlive_ = true;
-
-	// 攻撃アニメーション再生
-	animationController_->Play(static_cast<int>(ANIM_TYPE::ROCK), false);
 }
 
 void Enemy::ChangeDamage(void)
@@ -831,18 +761,6 @@ void Enemy::UpdateMagic(void)
 	}
 }
 
-void Enemy::UpdateRock(void)
-{	
-	// 攻撃カウンタを0にする
-	rockCount_ = 0;
-
-	//攻撃アニメーションが終わったら通常状態に戻る
-	if (animationController_->IsEnd())
-	{
-		ChangeState(STATE::IDLE);
-	}
-}
-
 void Enemy::UpdateDamage(void)
 {
 	cntDamaged_--;
@@ -886,11 +804,6 @@ void Enemy::DrawAttack(void)
 }
 
 void Enemy::DrawMagic(void)
-{
-	MV1DrawModel(modelId_);
-}
-
-void Enemy::DrawRock(void)
 {
 	MV1DrawModel(modelId_);
 }

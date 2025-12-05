@@ -32,7 +32,7 @@ void GameClear::Init(void)
 	// モデルの位置設定
 	pos_ = VGet(180.0f,0.0f, 0.0f);
 	rot_ = VGet(0.0f, AsoUtility::Deg2RadF(0.0f), 0.0f);
-	scl_ = { 1.5f,1.5f,1.5f };
+	scl_ = { 3.0f,3.0f,3.0f };
 
 	MV1SetPosition(modelId_, pos_);
 	MV1SetRotationXYZ(modelId_, rot_);
@@ -41,7 +41,7 @@ void GameClear::Init(void)
 	// エネミーモデルの位置設定
 	ePos_ = VGet(-180.0f, 0.0f, 0.0f);
 	eRot_ = VGet(0.0f, AsoUtility::Deg2RadF(0.0f), 0.0f);
-	eScl_ = { 1.5f,1.5f,1.5f };
+	eScl_ = { 3.0f,3.0f,3.0f };
 
 	MV1SetPosition(enemyModelId_, ePos_);
 	MV1SetRotationXYZ(enemyModelId_, eRot_);
@@ -115,6 +115,9 @@ void GameClear::Release(void)
 {
 	DeleteGraph(imgGameClear_);
 	DeleteGraph(imgBack_);
+
+	MV1DeleteModel(modelId_);
+	MV1DeleteModel(enemyModelId_);
 
 	// アニメーションコントローラーの削除
 	if (playerAnimationController_ != nullptr)

@@ -133,14 +133,8 @@ void GameScene::Update()
 	}
 
 	// デバッグ
-	// 敵が倒されたらゲームクリアへ遷移する
-	if (!enemy_->IsAlive())
-	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMECLEAR);
-	}
-
-	// スペースキーとOキーが押下されたら、ゲームオーバーへ遷移する
-	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_SPACE) && InputManager::GetInstance().IsTrgDown(KEY_INPUT_O))
+	// プレイヤーが倒されたらゲームクリアへ遷移する
+	if (player_->GetHp() == 0)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 	}
@@ -191,11 +185,11 @@ void GameScene::Release(void)
 
 	// プレイヤー解放
 	player_->Release();
-	delete player_;
+	//delete player_;
 
 	// エネミー解放
 	enemy_->Release();
-	delete enemy_;
+	//delete enemy_;
 
 	//// Ui解放
 	//hpManager_->Release();
