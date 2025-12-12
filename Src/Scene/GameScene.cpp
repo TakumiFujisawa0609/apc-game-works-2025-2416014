@@ -133,7 +133,7 @@ void GameScene::Update()
 	}
 
 	// デバッグ
-	// プレイヤーが倒されたらゲームクリアへ遷移する
+	// プレイヤーが倒されたらゲームオーバーへ遷移する
 	if (player_->GetHp() == 0)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
@@ -198,6 +198,7 @@ void GameScene::Release(void)
 	// エネミーアイコン
 	enemyIcon_->Release();
 	delete enemyIcon_;
+
 	// 数字アイコン
 	countIcon_->Release();
 	delete countIcon_;

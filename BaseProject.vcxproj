@@ -94,6 +94,9 @@
     <ClInclude Include="Src\Scene\Tutorial.h" />
     <ClInclude Include="Src\Ui\UiManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Model\Player\Dance.mv1" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{EAE8EE94-FD52-4CCB-AF50-ECC1E6485C92}</ProjectGuid>

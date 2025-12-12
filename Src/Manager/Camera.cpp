@@ -131,9 +131,9 @@ void Camera::SetBeforeDrawFollow(void)
 	VECTOR cameraLocalRotPos = VTransform(FOLLOW_CAMERA_LOCAL_POS, mat);
 	pos_ = VAdd(followPos, cameraLocalRotPos);
 
-	// 注視点（プレイヤーより少し前or上を見る）
-	VECTOR targetLocalRotPos = VTransform(FOLLOW_TARGET_LOCAL_POS, mat);
-	targetPos_ = VAdd(followPos, targetLocalRotPos);
+	//// 注視点（プレイヤーより少し前or上を見る）
+	//VECTOR targetLocalRotPos = VTransform(FOLLOW_TARGET_LOCAL_POS, mat);
+	//targetPos_ = VAdd(followPos, targetLocalRotPos);
 
 	// カメラの上方向
 	VECTOR up = VTransform(AsoUtility::DIR_U, mat);

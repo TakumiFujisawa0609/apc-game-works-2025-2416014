@@ -155,7 +155,7 @@ void Enemy::Draw(void)
 	//	AsoUtility::Rad2DegF(angles_.y),
 	//	AsoUtility::Rad2DegF(angles_.z)
 	//);
-
+	
 	//DrawFormatString(
 	//	0, 110, 0xffffff,
 	//	"エネミー座標　 ：(% .1f, % .1f, % .1f)",
@@ -185,7 +185,7 @@ void Enemy::Draw(void)
 
 	// 攻撃範囲描画
 	const int ATA = 32;
-	for (int i = 0; i < DIV; i++)
+	for (int i = 0; i < ATA; i++)
 	{
 		float angle1 = (float)i / DIV * DX_TWO_PI;
 		float angle2 = (float)(i + 1) / DIV * DX_TWO_PI;
@@ -196,13 +196,13 @@ void Enemy::Draw(void)
 		DrawLine3D(p1, p2, GetColor(255, 0, 0));
 	}
 
-	DrawFormatString(0, 150, 0xffffff, "ヒットポイント: %d", hp_);
-	DrawFormatString(0, 180, 0xffffff, "攻撃間隔カウンタ: %d", cntAttack_);
+	DrawFormatString(0, 150, 0xffffff, "敵ヒットポイント: %d", hp_);
+	//DrawFormatString(0, 180, 0xffffff, "攻撃間隔カウンタ: %d", cntAttack_);
 
 
-	DrawFormatString(0, 400, 0xffffff, "Normalカウンタ: %d", normalTimer_);
-	DrawFormatString(0, 420, 0xffffff, "hardカウンタ: %d", hardTimer_);
-	DrawFormatString(0, 440, 0xffffff, "Softカウンタ: %d", softTimer_);
+	//DrawFormatString(0, 400, 0xffffff, "Normalカウンタ: %d", normalTimer_);
+	//DrawFormatString(0, 420, 0xffffff, "hardカウンタ: %d", hardTimer_);
+	//DrawFormatString(0, 440, 0xffffff, "Softカウンタ: %d", softTimer_);
 
 }
 
@@ -448,13 +448,13 @@ void Enemy::DrawViewRange(void)
 	// 正面から時計回り
 	VECTOR pos3 = VAdd(pos0, VScale(right, VIEW_RANGE));
 
-	// 視野の描画
-	pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;	// 地面の少し上
-	DrawTriangle3D(pos0, pos2, pos1, 0x0000ff, true);
-	DrawTriangle3D(pos0, pos1, pos3, 0x0000ff, true);
-	DrawLine3D(pos0, pos1, 0xffff00);
-	DrawLine3D(pos0, pos2, 0xffff00);
-	DrawLine3D(pos0, pos3, 0xffff00);
+	//// 視野の描画
+	//pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;	// 地面の少し上
+	//DrawTriangle3D(pos0, pos2, pos1, 0x0000ff, true);
+	//DrawTriangle3D(pos0, pos1, pos3, 0x0000ff, true);
+	//DrawLine3D(pos0, pos1, 0xffff00);
+	//DrawLine3D(pos0, pos2, 0xffff00);
+	//DrawLine3D(pos0, pos3, 0xffff00);
 }
 
 void Enemy::Search(void)
@@ -541,7 +541,7 @@ void Enemy::Search(void)
 			}
 			else
 			{
-				hp_ = 450; // テスト用
+			//	hp_ = 450; // テスト用
 				ChangeState(STATE::ATTACK);
 			}
 		}

@@ -54,7 +54,7 @@ void GameClear::Init(void)
 
 	enemyAnimationController_ = new AnimationController(enemyModelId_);
 	enemyAnimationController_->Add(
-		static_cast<int>(ANIM_TYPE::DANCE), 30.0f, Application::PATH_MODEL + "Player/Dance.mv1");
+		static_cast<int>(ANIM_TYPE::DANCE), 30.0f, Application::PATH_MODEL + "Enemy/Dance.mv1");
 
 }
 

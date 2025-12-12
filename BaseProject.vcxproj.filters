@@ -264,4 +264,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Model\Player\Dance.mv1" />
+  </ItemGroup>
 </Project>

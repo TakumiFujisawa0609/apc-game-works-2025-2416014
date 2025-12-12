@@ -88,7 +88,7 @@ void TitleScene::Draw(void)
 	DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2 - 150, 1.5f, 0.0f, imgTitle_, true);
 
 	MV1DrawModel(modelId_);
-
+	
 
 }
 

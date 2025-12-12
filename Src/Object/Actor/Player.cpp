@@ -105,7 +105,11 @@ void Player::Update(void)
 
 void Player::Draw(void)
 {
-	ActorBase::Draw();
+
+	// 武器モデルの描画
+	MV1DrawModel(swordModelId_);
+	// シールドモデルの描画
+	MV1DrawModel(shieldModelId_);
 
 	rangeAttack_->Draw();
 
@@ -155,10 +159,7 @@ void Player::Draw(void)
 		}
 	}
 
-	// 武器モデルの描画
-	MV1DrawModel(swordModelId_);
-	// シールドモデルの描画
-	MV1DrawModel(shieldModelId_);
+	ActorBase::Draw();
 
 	//DrawFormatString(
 	//	0, 50, 0xffffff,
@@ -212,7 +213,18 @@ void Player::Draw(void)
 	//DrawFormatString(0, 300, 0xFFFFFF, "isShieldAlive_: %s", isShieldAlive_ ? "ON" : "OFF");
 	//DrawFormatString(0, 360, 0xFFFFFF, "isRangeAttackActive_: %s", isRangeAttackActive_ ? "true" : "false");
 
+	// 攻撃範囲描画
+	const int ATA = 32;
+	for (int i = 0; i < ATA; i++)
+	{
+		float angle1 = (float)i / ATA * DX_TWO_PI;
+		float angle2 = (float)(i + 1) / ATA * DX_TWO_PI;
 
+		VECTOR p1 = VAdd(pos_, VGet(cosf(angle1) * VIEW_RANGE, .0f, sinf(angle1) * VIEW_RANGE));
+		VECTOR p2 = VAdd(pos_, VGet(cosf(angle2) * VIEW_RANGE, 0.0f, sinf(angle2) * VIEW_RANGE));
+
+		DrawLine3D(p1, p2, GetColor(255, 0, 0));
+	}
 }
 
 void Player::Release(void)
@@ -495,6 +507,9 @@ void Player::InitPost(void)
 
 	// 盾判定用半径
 	shieldCollisionRadius_ = SHIELD_RADIUS;
+
+	// 初期アニメーション再生
+	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
 
 	// 剣・盾モデルの初期化
 	InitSword();
@@ -1354,13 +1369,13 @@ void Player::DrawViewRange(void)
 	// 正面から時計回り
 	VECTOR pos3 = VAdd(pos0, VScale(right, VIEW_RANGE));
 
-	// 視野の描画
-	pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;	// 地面の少し上
-	DrawTriangle3D(pos0, pos2, pos1, 0x0000ff, true);
-	DrawTriangle3D(pos0, pos1, pos3, 0x0000ff, true);
-	DrawLine3D(pos0, pos1, 0xffff00);
-	DrawLine3D(pos0, pos2, 0xffff00);
-	DrawLine3D(pos0, pos3, 0xffff00);
+	//// 視野の描画
+	//pos0.y = pos1.y = pos2.y = pos3.y = 10.0f;	// 地面の少し上
+	//DrawTriangle3D(pos0, pos2, pos1, 0x0000ff, true);
+	//DrawTriangle3D(pos0, pos1, pos3, 0x0000ff, true);
+	//DrawLine3D(pos0, pos1, 0xffff00);
+	//DrawLine3D(pos0, pos2, 0xffff00);
+	//DrawLine3D(pos0, pos3, 0xffff00);
 
 
 
@@ -1374,13 +1389,13 @@ void Player::DrawViewRange(void)
 	// 正面から時計回り
 	VECTOR rangePos3 = VAdd(pos0, VScale(right, RANGE_ATTACK_REACH));
 
-	// 範囲攻撃可能エリアの描画
-	pos0.y = rangePos1.y = rangePos2.y = rangePos3.y = 10.0f;	// 地面の少し上
-	DrawTriangle3D(pos0, rangePos2, rangePos1, 0xffff00, true);
-	DrawTriangle3D(pos0, rangePos1, rangePos3, 0xffff00, true);
-	DrawLine3D(pos0, rangePos1, 0xffff00);
-	DrawLine3D(pos0, rangePos2, 0xffff00);
-	DrawLine3D(pos0, rangePos3, 0xffff00);
+	//// 範囲攻撃可能エリアの描画
+	//pos0.y = rangePos1.y = rangePos2.y = rangePos3.y = 10.0f;	// 地面の少し上
+	//DrawTriangle3D(pos0, rangePos2, rangePos1, 0xffff00, true);
+	//DrawTriangle3D(pos0, rangePos1, rangePos3, 0xffff00, true);
+	//DrawLine3D(pos0, rangePos1, 0xffff00);
+	//DrawLine3D(pos0, rangePos2, 0xffff00);
+	//DrawLine3D(pos0, rangePos3, 0xffff00);
 
 
 }
