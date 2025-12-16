@@ -160,7 +160,7 @@ void Camera::DrawDebug(void)
 	//	AsoUtility::Rad2DegF(angles_.z)
 	//);
 
-	DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
+	//DrawSphere3D(targetPos_, 20.0f, 10, 0xff0000, 0xff0000, true);
 }
 
 void Camera::ChangeMode(MODE mode)
