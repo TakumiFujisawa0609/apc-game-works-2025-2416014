@@ -541,7 +541,6 @@ void Enemy::Search(void)
 			}
 			else
 			{
-			//	hp_ = 450; // テスト用
 				ChangeState(STATE::ATTACK);
 			}
 		}
